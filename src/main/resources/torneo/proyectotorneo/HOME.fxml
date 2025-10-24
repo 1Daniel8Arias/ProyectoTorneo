@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController">
+
+    <!-- Barra Superior -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" styleClass="top-bar">
+            <padding>
+                <Insets bottom="10" left="20" right="20" top="10" />
+            </padding>
+
+            <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                <!-- Aquí iría el logo FCF -->
+            </ImageView>
+
+            <VBox spacing="2" stylesheets="@style/estilo1.css">
+                <Label styleClass="app-title" text="FCF">
+                    <font>
+                        <Font name="System Bold" size="16" />
+                    </font>
+                </Label>
+                <Label styleClass="app-subtitle" text="Sistema de Gestión">
+                    <font>
+                        <Font size="11" />
+                    </font>
+                </Label>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Button styleClass="user-button" text="👤 Usuario" />
+            <Button styleClass="user-profile-button" text="Usuario FCF" />
+        </HBox>
+    </top>
+
+    <!-- Contenido Principal -->
+    <center>
+        <HBox prefHeight="1069.0" prefWidth="953.0" spacing="0">
+
+            <!-- Área de Contenido -->
+            <VBox spacing="20" styleClass="main-content" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+
+                <!-- Header de Bienvenida -->
+                <VBox spacing="5" styleClass="welcome-header">
+                    <padding>
+                        <Insets bottom="30" left="30" right="30" top="30" />
+                    </padding>
+                    <Label styleClass="welcome-title" text="Bienvenido, Usuario FCF">
+                        <font>
+                            <Font name="System Bold" size="28" />
+                        </font>
+                    </Label>
+                    <Label styleClass="welcome-subtitle" text="Consulta toda la información del Campeonato de Fútbol Colombiano">
+                        <font>
+                            <Font size="14" />
+                        </font>
+                    </Label>
+                </VBox>
+
+                <!-- Cards de Estadísticas -->
+                <GridPane hgap="20" vgap="20">
+                    <!-- Card Equipos -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Equipos">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-blue" text="👕" />
+                        </HBox>
+                        <Label styleClass="stat-value" text="8">
+                            <font>
+                                <Font name="System Bold" size="36" />
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Card Jugadores -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Jugadores">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-green" text="👤" />
+                        </HBox>
+                        <Label styleClass="stat-value" text="8">
+                            <font>
+                                <Font name="System Bold" size="36" />
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Card Partidos -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Partidos">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-yellow" text="⚽" />
+                        </HBox>
+                        <Label styleClass="stat-value" text="4">
+                            <font>
+                                <Font name="System Bold" size="36" />
+                            </font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Card Jornadas -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Jornadas">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-red" text="📅" />
+                        </HBox>
+                        <Label styleClass="stat-value" text="2">
+                            <font>
+                                <Font name="System Bold" size="36" />
+                            </font>
+                        </Label>
+                    </VBox>
+               <columnConstraints>
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+                  <ColumnConstraints />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+
+                <!-- Sección de Tablas -->
+                <HBox spacing="20" VBox.vgrow="ALWAYS">
+                    <!-- Tabla de Posiciones -->
+                    <VBox spacing="15" styleClass="content-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Label styleClass="section-title" text="🏆 Top 5 - Tabla de Posiciones">
+                            <font>
+                                <Font name="System Bold" size="16" />
+                            </font>
+                        </Label>
+
+                        <TableView fx:id="tablaPosiciones" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colPosicion" prefWidth="40" text="#" />
+                                <TableColumn fx:id="colEquipo" prefWidth="200" text="Equipo" />
+                                <TableColumn fx:id="colPartidosJugados" prefWidth="50" text="PJ" />
+                                <TableColumn fx:id="colPuntos" prefWidth="60" text="Pts" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Próximos Partidos -->
+                    <VBox prefWidth="400" spacing="15" styleClass="content-card">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Label styleClass="section-title" text="📅 Próximos Partidos">
+                            <font>
+                                <Font name="System Bold" size="16" />
+                            </font>
+                        </Label>
+
+                        <VBox fx:id="proximosPartidosContainer" spacing="15">
+                            <!-- Partido 1 -->
+                            <VBox spacing="8" styleClass="match-card">
+                                <padding>
+                                    <Insets bottom="15" left="15" right="15" top="15" />
+                                </padding>
+                                <Label styleClass="match-jornada" text="Jornada 2">
+                                    <font>
+                                        <Font size="11" />
+                                    </font>
+                                </Label>
+                                <HBox alignment="CENTER" spacing="20">
+                                    <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="match-team" text="Millonarios FC">
+                                            <font>
+                                                <Font name="System Bold" size="13" />
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <Label styleClass="match-vs" text="vs">
+                                        <font>
+                                            <Font size="12" />
+                                        </font>
+                                    </Label>
+                                    <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="match-team" text="América de Cali">
+                                            <font>
+                                                <Font name="System Bold" size="13" />
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                </HBox>
+                                <HBox alignment="CENTER_RIGHT" spacing="5">
+                                    <Label styleClass="match-datetime" text="2024-01-27 - 18:00">
+                                        <font>
+                                            <Font size="11" />
+                                        </font>
+                                    </Label>
+                                </HBox>
+                            </VBox>
+                        </VBox>
+                    </VBox>
+                </HBox>
+
+                <!-- Resultados Recientes -->
+                <VBox spacing="15" styleClass="content-card">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <Label styleClass="section-title" text="⚽ Resultados Recientes">
+                        <font>
+                            <Font name="System Bold" size="16" />
+                        </font>
+                    </Label>
+
+                    <HBox fx:id="resultadosRecientesContainer" spacing="20">
+                        <!-- Resultado 1 -->
+                        <VBox spacing="8" styleClass="result-card" HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets bottom="15" left="15" right="15" top="15" />
+                            </padding>
+                            <Label styleClass="result-info" text="Jornada 1 - 2024-01-20">
+                                <font>
+                                    <Font size="11" />
+                                </font>
+                            </Label>
+                            <HBox alignment="CENTER" spacing="15">
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="Atlético Nacional">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="2">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                                <Label text="-">
+                                    <font>
+                                        <Font size="18" />
+                                    </font>
+                                </Label>
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="Millonarios FC">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="1">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Resultado 2 -->
+                        <VBox spacing="8" styleClass="result-card" HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets bottom="15" left="15" right="15" top="15" />
+                            </padding>
+                            <Label styleClass="result-info" text="Jornada 1 - 2024-01-20">
+                                <font>
+                                    <Font size="11" />
+                                </font>
+                            </Label>
+                            <HBox alignment="CENTER" spacing="15">
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="América de Cali">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="1">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                                <Label text="-">
+                                    <font>
+                                        <Font size="18" />
+                                    </font>
+                                </Label>
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="Deportivo Cali">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="1">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+
+                        <!-- Resultado 3 -->
+                        <VBox spacing="8" styleClass="result-card" HBox.hgrow="ALWAYS">
+                            <padding>
+                                <Insets bottom="15" left="15" right="15" top="15" />
+                            </padding>
+                            <Label styleClass="result-info" text="Jornada 2 - 2024-01-27">
+                                <font>
+                                    <Font size="11" />
+                                </font>
+                            </Label>
+                            <HBox alignment="CENTER" spacing="15">
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="Junior FC">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="3">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                                <Label text="-">
+                                    <font>
+                                        <Font size="18" />
+                                    </font>
+                                </Label>
+                                <VBox alignment="CENTER" spacing="5" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="result-team" text="Independiente Medellín">
+                                        <font>
+                                            <Font name="System Bold" size="13" />
+                                        </font>
+                                    </Label>
+                                    <Label styleClass="result-score" text="0">
+                                        <font>
+                                            <Font name="System Bold" size="24" />
+                                        </font>
+                                    </Label>
+                                </VBox>
+                            </HBox>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+   <left>
+         <!-- Menú Lateral -->
+         <VBox prefWidth="200" spacing="5" styleClass="sidebar" BorderPane.alignment="CENTER">
+             <padding>
+                 <Insets bottom="10" left="10" right="10" top="10" />
+             </padding>
+
+             <Button maxWidth="Infinity" styleClass="menu-item, menu-item-active" text="🏠 Inicio" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="👕 Equipos" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="👤 Jugadores" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="⚽ Partidos" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="🏆 Árbitros" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="📊 Estadios" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="⚖️ Sanciones" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="📋 Tabla" />
+             <Button maxWidth="Infinity" styleClass="menu-item" text="📄 Reportes" />
+         </VBox>
+   </left>
+</BorderPane>

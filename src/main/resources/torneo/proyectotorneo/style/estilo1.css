@@ -1,0 +1,230 @@
+/* dashboard.css */
+
+/* Colores principales */
+.root {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Barra superior */
+.top-bar {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.app-title {
+    -fx-text-fill: #2c3e50;
+}
+
+.app-subtitle {
+    -fx-text-fill: #7f8c8d;
+}
+
+.user-button, .user-profile-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a6c7d;
+    -fx-cursor: hand;
+    -fx-padding: 8 15;
+    -fx-background-radius: 5;
+}
+
+.user-profile-button {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+.user-button:hover, .user-profile-button:hover {
+    -fx-opacity: 0.8;
+}
+
+/* Menú lateral */
+.sidebar {
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 1 0 0;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+    -fx-text-fill: #5a6c7d;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 12 15;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+}
+
+.menu-item:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.menu-item-active {
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #1976d2;
+}
+
+/* Contenido principal */
+.main-content {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Header de bienvenida */
+.welcome-header {
+    -fx-background-color: linear-gradient(to right, #4a90e2, #357abd);
+    -fx-background-radius: 10;
+}
+
+.welcome-title {
+    -fx-text-fill: white;
+}
+
+.welcome-subtitle {
+    -fx-text-fill: rgba(255, 255, 255, 0.9);
+}
+
+/* Cards de estadísticas */
+.stat-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.stat-label {
+    -fx-text-fill: #7f8c8d;
+}
+
+.stat-value {
+    -fx-text-fill: #2c3e50;
+}
+
+.stat-icon-blue {
+    -fx-background-color: #4a90e2;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 20px;
+}
+
+.stat-icon-green {
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 20px;
+}
+
+.stat-icon-yellow {
+    -fx-background-color: #ffc107;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 20px;
+}
+
+.stat-icon-red {
+    -fx-background-color: #f44336;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 20px;
+}
+
+/* Cards de contenido */
+.content-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+.section-title {
+    -fx-text-fill: #2c3e50;
+}
+
+/* Tabla */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #5a6c7d;
+    -fx-font-weight: bold;
+    -fx-padding: 10 5;
+}
+
+.table-view .table-cell {
+    -fx-padding: 10 5;
+    -fx-text-fill: #2c3e50;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f8f9fa;
+}
+
+.table-row-cell:even {
+    -fx-background-color: white;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #e3f2fd;
+}
+
+/* Card de partido */
+.match-card {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.match-jornada {
+    -fx-text-fill: #7f8c8d;
+}
+
+.match-team {
+    -fx-text-fill: #2c3e50;
+}
+
+.match-vs {
+    -fx-text-fill: #7f8c8d;
+}
+
+.match-datetime {
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Card de resultado */
+.result-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.result-info {
+    -fx-text-fill: #7f8c8d;
+}
+
+.result-team {
+    -fx-text-fill: #2c3e50;
+}
+
+.result-score {
+    -fx-text-fill: #4a90e2;
+}
+
+/* Scroll bars */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #95a5a6;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
