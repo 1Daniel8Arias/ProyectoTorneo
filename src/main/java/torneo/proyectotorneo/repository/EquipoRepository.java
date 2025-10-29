@@ -27,7 +27,7 @@ public class EquipoRepository implements Repository<Equipo> {
             }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al listar los equipos");
+            throw new RepositoryException("Error al listar los equipos "+ e.getMessage());
         }
 
         return equipos;
@@ -35,7 +35,7 @@ public class EquipoRepository implements Repository<Equipo> {
 
     @Override
     public Equipo buscarPorId(int id) throws RepositoryException {
-        String sql="SELET * FROM EQUIPO WHERE ID_EQUIPO =?";
+        String sql="SELECT * FROM EQUIPO WHERE ID_EQUIPO =?";
         Equipo equipo=null;
 
         try (Connection conn= Conexion.getInstance();
@@ -55,7 +55,7 @@ public class EquipoRepository implements Repository<Equipo> {
 
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar el equipo por ID");
+            throw new RepositoryException("Error al buscar el equipo por ID "+ e.getMessage());
         }
         return equipo;
     }
@@ -77,7 +77,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al guardar el equipo");
+            throw new RepositoryException("Error al guardar el equipo "+e.getMessage());
         }
 
     }
@@ -99,7 +99,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al actualizar el equipo");
+            throw new RepositoryException("Error al actualizar el equipo "+ e.getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al eliminar el equipo");
+            throw new RepositoryException("Error al eliminar el equipo "+ e.getMessage());
         }
     }
 }
