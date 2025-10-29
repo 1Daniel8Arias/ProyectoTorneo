@@ -1,5 +1,4 @@
 package torneo.proyectotorneo.repository;
-
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.repository.service.Repository;
@@ -113,5 +112,151 @@ public class PartidoRepository implements Repository<Partido> {
         } catch (SQLException e) {
             throw new RepositoryException("Error al eliminar el partido: " + e.getMessage());
         }
+    }
+
+    /**
+     * Busca todos los partidos de un equipo (como local o visitante)
+     */
+    public ArrayList<Partido> buscarPartidosPorEquipo(int idEquipo) throws RepositoryException {
+        String sql = "SELECT * FROM PARTIDO WHERE ID_EQUIPO_LOCAL = ? OR ID_EQUIPO_VISITANTE = ? ORDER BY FECHA DESC";
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEquipo);
+            ps.setInt(2, idEquipo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+                    partidos.add(partido);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar partidos por equipo: " + e.getMessage());
+        }
+
+        return partidos;
+    }
+
+    /**
+     * Busca todos los partidos donde el equipo juega como local
+     */
+    public ArrayList<Partido> buscarPartidosComoLocal(int idEquipo) throws RepositoryException {
+        String sql = "SELECT * FROM PARTIDO WHERE ID_EQUIPO_LOCAL = ? ORDER BY FECHA DESC";
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEquipo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+                    partidos.add(partido);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar partidos como local: " + e.getMessage());
+        }
+
+        return partidos;
+    }
+
+    /**
+     * Busca todos los partidos donde el equipo juega como visitante
+     */
+    public ArrayList<Partido> buscarPartidosComoVisitante(int idEquipo) throws RepositoryException {
+        String sql = "SELECT * FROM PARTIDO WHERE ID_EQUIPO_VISITANTE = ? ORDER BY FECHA DESC";
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEquipo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+                    partidos.add(partido);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar partidos como visitante: " + e.getMessage());
+        }
+
+        return partidos;
+    }
+
+    /**
+     * Busca todos los partidos de una jornada específica
+     */
+    public ArrayList<Partido> buscarPartidosPorJornada(int idJornada) throws RepositoryException {
+        String sql = "SELECT * FROM PARTIDO WHERE ID_JORNADA = ? ORDER BY FECHA, HORA";
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idJornada);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+                    partidos.add(partido);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar partidos por jornada: " + e.getMessage());
+        }
+
+        return partidos;
+    }
+
+    /**
+     * Busca todos los partidos jugados en un estadio específico
+     */
+    public ArrayList<Partido> buscarPartidosPorEstadio(int idEstadio) throws RepositoryException {
+        String sql = "SELECT * FROM PARTIDO WHERE ID_ESTADIO = ? ORDER BY FECHA DESC";
+        ArrayList<Partido> partidos = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idEstadio);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+                    partidos.add(partido);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar partidos por estadio: " + e.getMessage());
+        }
+
+        return partidos;
     }
 }
