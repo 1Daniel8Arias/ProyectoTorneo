@@ -109,4 +109,34 @@ public class ArbitroRepository implements Repository<Arbitro> {
             throw new RepositoryException("Error al eliminar el árbitro: " + e.getMessage());
         }
     }
+
+    //consulta avanzada 7
+
+    public ArrayList<Arbitro> listarArbitrosConConteoDePartidos() throws RepositoryException {
+        String sql = "SELECT a.ID_ARBITRO, a.NOMBRE, a.APELLIDO, " +
+                "(SELECT COUNT(*) FROM ARBITRO_PARTIDO ap WHERE ap.ID_ARBITRO = a.ID_ARBITRO) AS PARTIDOS_ARBITRADOS " +
+                "FROM ARBITRO a ORDER BY PARTIDOS_ARBITRADOS DESC";
+
+        ArrayList<Arbitro> lista = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Arbitro a = new Arbitro();
+                a.setIdArbitro(rs.getInt("ID_ARBITRO"));
+                a.setNombre(rs.getString("NOMBRE"));
+                a.setApellido(rs.getString("APELLIDO"));
+                a.setPartidosArbitrados(rs.getInt("PARTIDOS_ARBITRADOS"));
+                lista.add(a);
+            }
+
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarArbitrosConConteoDePartidos: " + ex.getMessage());
+        }
+
+        return lista;
+    }
+
 }

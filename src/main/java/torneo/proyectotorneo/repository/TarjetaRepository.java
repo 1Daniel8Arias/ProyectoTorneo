@@ -1,7 +1,10 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.model.Tarjeta;
+import torneo.proyectotorneo.model.enums.TipoTarjeta;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -106,4 +109,50 @@ public class TarjetaRepository implements Repository<Tarjeta> {
             throw new RepositoryException("Error al eliminar la tarjeta: " + e.getMessage());
         }
     }
+
+    //consulta intermedia 8
+
+    public ArrayList<Tarjeta> listarTarjetasPorPartido() throws RepositoryException {
+        String sql = "SELECT p.ID_PARTIDO, t.ID_TARJETA, t.TIPO, " +
+                "j.ID_JUGADOR, j.NOMBRE AS NOMBRE_JUGADOR, j.APELLIDO AS APELLIDO_JUGADOR " +
+                "FROM TARJETA t " +
+                "JOIN JUGADOR j ON t.ID_JUGADOR = j.ID_JUGADOR " +
+                "JOIN PARTIDO p ON t.ID_PARTIDO = p.ID_PARTIDO";
+
+        ArrayList<Tarjeta> lista = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Tarjeta tarjeta = new Tarjeta();
+                tarjeta.setIdTarjeta(rs.getInt("ID_TARJETA"));
+
+                // conversión del texto del campo TIPO a enum TipoTarjeta
+                String tipoStr = rs.getString("TIPO");
+                if (tipoStr != null) {
+                    tarjeta.setTipo(TipoTarjeta.valueOf(tipoStr.toUpperCase()));
+                }
+
+                Jugador jugador = new Jugador();
+                jugador.setId(rs.getInt("ID_JUGADOR"));
+                jugador.setNombre(rs.getString("NOMBRE_JUGADOR"));
+                jugador.setApellido(rs.getString("APELLIDO_JUGADOR"));
+                tarjeta.setJugador(jugador);
+
+                Partido partido = new Partido();
+                partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                tarjeta.setPartido(partido);
+
+                lista.add(tarjeta);
+            }
+
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarTarjetasPorPartido: " + ex.getMessage());
+        }
+
+        return lista;
+    }
+
 }

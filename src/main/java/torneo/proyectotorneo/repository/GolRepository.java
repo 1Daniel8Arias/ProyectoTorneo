@@ -2,6 +2,8 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Gol;
+import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -110,4 +112,42 @@ public class GolRepository implements Repository<Gol> {
             throw new RepositoryException("Error al eliminar el gol: " + e.getMessage());
         }
     }
+
+    //consulta intermedia 6
+
+    public ArrayList<Gol> listarGolesConJugadorYPartido() throws RepositoryException {
+        String sql = "SELECT g.ID_GOL, g.NUMERO_GOLES, " +
+                "j.ID_JUGADOR, j.NOMBRE AS J_NOMBRE, j.APELLIDO AS J_APELLIDO, " +
+                "p.ID_PARTIDO, p.FECHA, p.HORA " +
+                "FROM GOL g JOIN JUGADOR j ON g.ID_JUGADOR = j.ID_JUGADOR " +
+                "JOIN PARTIDO p ON g.ID_PARTIDO = p.ID_PARTIDO";
+        ArrayList<Gol> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Gol gol = new Gol();
+                gol.setIdGol(rs.getInt("ID_GOL"));
+                gol.setNumeroGoles(rs.getInt("NUMERO_GOLES"));
+
+                Jugador j = new Jugador();
+                j.setId(rs.getInt("ID_JUGADOR"));
+                j.setNombre(rs.getString("J_NOMBRE"));
+                j.setApellido(rs.getString("J_APELLIDO"));
+                gol.setJugador(j);
+
+                Partido p = new Partido();
+                p.setIdPartido(rs.getInt("ID_PARTIDO"));
+                p.setFecha(rs.getDate("FECHA").toLocalDate());
+                p.setHora(rs.getString("HORA"));
+                gol.setPartido(p);
+
+                lista.add(gol);
+            }
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarGolesConJugadorYPartido: " + ex.getMessage());
+        }
+        return lista;
+    }
+
 }

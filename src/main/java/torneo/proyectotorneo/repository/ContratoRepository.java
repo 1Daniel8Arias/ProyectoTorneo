@@ -2,6 +2,7 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Contrato;
+import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 

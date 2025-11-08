@@ -19,6 +19,7 @@ public class Equipo {
     private ArrayList<Partido> listaPartidosLocal;
     private ArrayList<Partido> listaPartidosVisitante;
     private TablaPosicion tablaPosicion;
+    private int cantidadJugadores;
 
 
 

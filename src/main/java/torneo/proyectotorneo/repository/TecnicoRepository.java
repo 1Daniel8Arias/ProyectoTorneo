@@ -161,4 +161,30 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
         return false;
     }
+
+    //avanzada 4
+    public ArrayList<Tecnico> listarTecnicosSinEquipo() throws RepositoryException {
+        String sql = "SELECT t.ID_TECNICO, t.NOMBRE, t.APELLIDO " +
+                "FROM TECNICO t WHERE t.ID_EQUIPO NOT IN (" +
+                "SELECT e.ID_EQUIPO FROM EQUIPO e)";
+        ArrayList<Tecnico> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Tecnico t = new Tecnico();
+                t.setId(rs.getInt("ID_TECNICO"));
+                t.setNombre(rs.getString("NOMBRE"));
+                t.setApellido(rs.getString("APELLIDO"));
+                lista.add(t);
+            }
+
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarTecnicosSinEquipo: " + ex.getMessage());
+        }
+        return lista;
+    }
+
+
 }

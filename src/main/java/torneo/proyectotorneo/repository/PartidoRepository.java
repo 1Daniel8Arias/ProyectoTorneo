@@ -1,5 +1,7 @@
 package torneo.proyectotorneo.repository;
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Estadio;
 import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
@@ -259,4 +261,49 @@ public class PartidoRepository implements Repository<Partido> {
 
         return partidos;
     }
+
+    //consulta intermedia 5
+
+    public ArrayList<Partido> listarPartidosConEquiposYEstadio() throws RepositoryException {
+        String sql = "SELECT p.ID_PARTIDO, p.FECHA, p.HORA, " +
+                "el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS LOCAL_NOMBRE, " +
+                "ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS VISITANTE_NOMBRE, " +
+                "s.ID_ESTADIO, s.NOMBRE AS ESTADIO_NOMBRE " +
+                "FROM PARTIDO p " +
+                "JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO " +
+                "JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO " +
+                "JOIN ESTADIO s ON p.ID_ESTADIO = s.ID_ESTADIO";
+        ArrayList<Partido> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Partido p = new Partido();
+                p.setIdPartido(rs.getInt("ID_PARTIDO"));
+                p.setFecha(rs.getDate("FECHA").toLocalDate());
+                p.setHora(rs.getString("HORA"));
+
+                Equipo local = new Equipo();
+                local.setId(rs.getInt("ID_LOCAL"));
+                local.setNombre(rs.getString("LOCAL_NOMBRE"));
+                p.setEquipoLocal(local);
+
+                Equipo visitante = new Equipo();
+                visitante.setId(rs.getInt("ID_VISITANTE"));
+                visitante.setNombre(rs.getString("VISITANTE_NOMBRE"));
+                p.setEquipoVisitante(visitante);
+
+                Estadio s = new Estadio();
+                s.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                s.setNombre(rs.getString("ESTADIO_NOMBRE"));
+                p.setEstadio(s);
+
+                lista.add(p);
+            }
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarPartidosConEquiposYEstadio: " + ex.getMessage());
+        }
+        return lista;
+    }
+
 }

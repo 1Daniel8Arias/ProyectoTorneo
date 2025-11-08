@@ -14,4 +14,5 @@ public class Arbitro {
     private String nombre;
     private String apellido;
     private ArrayList<ArbitroPartido> arbitrosPartidos;
+    private int partidosArbitrados;
 }

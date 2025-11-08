@@ -1,7 +1,9 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Arbitro;
 import torneo.proyectotorneo.model.ArbitroPartido;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.utils.Conexion;
 
 import java.sql.*;
@@ -19,7 +21,18 @@ public class ArbitroPartidoRepository {
 
             while (rs.next()) {
                 ArbitroPartido ap = new ArbitroPartido();
+
+                Partido partido = new Partido();
+                partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+
+                Arbitro arbitro = new Arbitro();
+                arbitro.setIdArbitro(rs.getInt("ID_ARBITRO"));
                 ap.setTipo(rs.getString("TIPO"));
+
+
+                ap.setArbitro(arbitro);
+                ap.setPartido(partido);
+
                 arbitrosPartidos.add(ap);
             }
 
