@@ -31,6 +31,11 @@ public class JugadorRepository implements Repository<Jugador> {
                 jugador.setApellido(rs.getString("APELLIDO"));
                 jugador.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
                 jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                jugador.setEquipo(equipo);
+
                 jugadores.add(jugador);
 
 
@@ -60,6 +65,10 @@ public class JugadorRepository implements Repository<Jugador> {
                     jugador.setApellido(rs.getString("APELLIDO"));
                     jugador.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
                     jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                    Equipo equipo = new Equipo();
+                    equipo.setId(rs.getInt("ID_EQUIPO"));
+                    jugador.setEquipo(equipo);
                 }
             }
 

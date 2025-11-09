@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController">
+<BorderPane stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.HomeViewController">
 
     <!-- Barra Superior -->
     <top>
@@ -53,7 +53,7 @@
         <HBox prefHeight="1069.0" prefWidth="953.0" spacing="0">
 
             <!-- Área de Contenido -->
-            <VBox spacing="20" styleClass="main-content" HBox.hgrow="ALWAYS">
+            <VBox fx:id="VBoxContenido" spacing="20" styleClass="main-content" HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
@@ -91,7 +91,7 @@
                             <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-icon-blue" text="👕" />
                         </HBox>
-                        <Label styleClass="stat-value" text="8">
+                        <Label fx:id="LabelNumeroDeEquipos" styleClass="stat-value" text="8">
                             <font>
                                 <Font name="System Bold" size="36" />
                             </font>
@@ -112,7 +112,7 @@
                             <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-icon-green" text="👤" />
                         </HBox>
-                        <Label styleClass="stat-value" text="8">
+                        <Label fx:id="LabelNumeroDeJugadores" styleClass="stat-value" text="8">
                             <font>
                                 <Font name="System Bold" size="36" />
                             </font>
@@ -133,7 +133,7 @@
                             <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-icon-yellow" text="⚽" />
                         </HBox>
-                        <Label styleClass="stat-value" text="4">
+                        <Label fx:id="LabelNumeroDePartidosJugados" styleClass="stat-value" text="4">
                             <font>
                                 <Font name="System Bold" size="36" />
                             </font>
@@ -154,7 +154,7 @@
                             <Region HBox.hgrow="ALWAYS" />
                             <Label styleClass="stat-icon-red" text="📅" />
                         </HBox>
-                        <Label styleClass="stat-value" text="2">
+                        <Label fx:id="LabelNumeroDeJornadas" styleClass="stat-value" text="2">
                             <font>
                                 <Font name="System Bold" size="36" />
                             </font>

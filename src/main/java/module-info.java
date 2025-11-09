@@ -8,4 +8,6 @@ module torneo.proyectotorneo {
 
     opens torneo.proyectotorneo to javafx.fxml;
     exports torneo.proyectotorneo;
+    exports torneo.proyectotorneo.viewController;
+    opens torneo.proyectotorneo.viewController to javafx.fxml;
 }

@@ -3,6 +3,7 @@ package torneo.proyectotorneo.repository;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.Estadio;
+import torneo.proyectotorneo.model.Jornada;
 import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
@@ -25,6 +26,21 @@ public class PartidoRepository implements Repository<Partido> {
                 partido.setIdPartido(rs.getInt("ID_PARTIDO"));
                 partido.setFecha(rs.getDate("FECHA").toLocalDate());
                 partido.setHora(rs.getString("HORA"));
+
+                Equipo local = new Equipo();
+                local.setId(rs.getInt("ID_EQUIPO_LOCAL"));
+                Equipo visitante = new Equipo();
+                visitante.setId(rs.getInt("ID_EQUIPO_VISITANTE"));
+                Estadio estadio = new Estadio();
+                estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                Jornada jornada = new Jornada();
+                jornada.setIdJornada(rs.getInt("ID_JORNADA"));
+
+                partido.setEquipoLocal(local);
+                partido.setEquipoVisitante(visitante);
+                partido.setEstadio(estadio);
+                partido.setJornada(jornada);
+
                 partidos.add(partido);
             }
 
@@ -51,6 +67,20 @@ public class PartidoRepository implements Repository<Partido> {
                     partido.setIdPartido(rs.getInt("ID_PARTIDO"));
                     partido.setFecha(rs.getDate("FECHA").toLocalDate());
                     partido.setHora(rs.getString("HORA"));
+
+                    Equipo local = new Equipo();
+                    local.setId(rs.getInt("ID_EQUIPO_LOCAL"));
+                    Equipo visitante = new Equipo();
+                    visitante.setId(rs.getInt("ID_EQUIPO_VISITANTE"));
+                    Estadio estadio = new Estadio();
+                    estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                    Jornada jornada = new Jornada();
+                    jornada.setIdJornada(rs.getInt("ID_JORNADA"));
+
+                    partido.setEquipoLocal(local);
+                    partido.setEquipoVisitante(visitante);
+                    partido.setEstadio(estadio);
+                    partido.setJornada(jornada);
                 }
             }
 

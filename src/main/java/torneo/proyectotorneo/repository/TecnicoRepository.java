@@ -1,6 +1,7 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.Tecnico;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
@@ -27,6 +28,9 @@ public class TecnicoRepository implements Repository<Tecnico> {
                 tecnico.setId(rs.getInt("ID_TECNICO"));
                 tecnico.setNombre(rs.getString("NOMBRE"));
                 tecnico.setApellido(rs.getString("APELLIDO"));
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                tecnico.setEquipo(equipo);
                 tecnicos.add(tecnico);
             }
 
@@ -53,6 +57,10 @@ public class TecnicoRepository implements Repository<Tecnico> {
                     tecnico.setId(rs.getInt("ID_TECNICO"));
                     tecnico.setNombre(rs.getString("NOMBRE"));
                     tecnico.setApellido(rs.getString("APELLIDO"));
+
+                    Equipo equipo = new Equipo();
+                    equipo.setId(rs.getInt("ID_EQUIPO"));
+                    tecnico.setEquipo(equipo);
                 }
             }
 
