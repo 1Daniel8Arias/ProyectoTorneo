@@ -189,6 +189,12 @@
                                 <TableColumn fx:id="colPosicion" prefWidth="40" text="#" />
                                 <TableColumn fx:id="colEquipo" prefWidth="200" text="Equipo" />
                                 <TableColumn fx:id="colPartidosJugados" prefWidth="50" text="PJ" />
+                        <TableColumn fx:id="colPartidosGanados" prefWidth="75.0" text="G" />
+                        <TableColumn prefWidth="75.0" text="E" />
+                        <TableColumn prefWidth="75.0" text="P" />
+                        <TableColumn prefWidth="75.0" text="GF" />
+                        <TableColumn prefWidth="75.0" text="GC" />
+                        <TableColumn prefWidth="75.0" text="DG" />
                                 <TableColumn fx:id="colPuntos" prefWidth="60" text="Pts" />
                             </columns>
                         </TableView>
