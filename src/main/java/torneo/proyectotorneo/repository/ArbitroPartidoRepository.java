@@ -6,7 +6,10 @@ import torneo.proyectotorneo.model.ArbitroPartido;
 import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.utils.Conexion;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ArbitroPartidoRepository {

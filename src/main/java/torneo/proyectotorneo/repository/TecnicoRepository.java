@@ -5,7 +5,10 @@ import torneo.proyectotorneo.model.Tecnico;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class TecnicoRepository implements Repository<Tecnico> {

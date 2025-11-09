@@ -241,5 +241,16 @@ public class PartidoService {
             throw new PartidoNoEncontradoException("La jornada es obligatoria");
         }
     }
+    /**
+     * Consulta Intermedia 5: Lista partidos con equipos y estadio
+     */
+    public ArrayList<Partido> listarPartidosConEquiposYEstadio() throws PartidoNoEncontradoException {
+        try {
+            return partidoRepository.listarPartidosConEquiposYEstadio();
+        } catch (RepositoryException e) {
+            throw new PartidoNoEncontradoException("Error al listar partidos completos: " + e.getMessage());
+        }
+    }
+
 }
 

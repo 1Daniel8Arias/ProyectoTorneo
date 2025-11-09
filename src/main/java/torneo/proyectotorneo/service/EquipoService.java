@@ -181,5 +181,48 @@ public class EquipoService {
             throw new EquipoInvalidoException("El nombre del equipo no puede exceder 100 caracteres");
         }
     }
+
+
+    // ============================================================
+    // CONSULTAS INTERMEDIAS
+    // ============================================================
+
+    /**
+     * Consulta Intermedia 2: Lista equipos con su técnico
+     */
+    public ArrayList<Equipo> listarEquiposConTecnico() throws EquipoNoEncontradoException {
+        try {
+            return equipoRepository.listarEquiposConTecnico();
+        } catch (RepositoryException e) {
+            throw new EquipoNoEncontradoException("Error al listar equipos con técnico: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Intermedia 3: Lista equipos con cantidad de jugadores
+     */
+    public ArrayList<Equipo> listarEquiposConCantidadDeJugadores() throws EquipoNoEncontradoException {
+        try {
+            return equipoRepository.listarEquiposConCantidadDeJugadores();
+        } catch (RepositoryException e) {
+            throw new EquipoNoEncontradoException("Error al listar equipos con cantidad de jugadores: " + e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // CONSULTAS AVANZADAS
+    // ============================================================
+
+    /**
+     * Consulta Avanzada 3: Lista equipos con jugadores sancionados
+     */
+    public ArrayList<Equipo> listarEquiposConSanciones() throws EquipoNoEncontradoException {
+        try {
+            return equipoRepository.listarEquiposConSanciones();
+        } catch (RepositoryException e) {
+            throw new EquipoNoEncontradoException("Error al listar equipos con sanciones: " + e.getMessage());
+        }
+    }
+
 }
 

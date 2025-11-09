@@ -18,14 +18,14 @@ import java.util.List;
 public class JugadorRepository implements Repository<Jugador> {
     @Override
     public ArrayList<Jugador> listarTodos() throws RepositoryException {
-        String sql="SELECT * FROM JUGADOR";
-        ArrayList<Jugador>jugadores = new ArrayList<>();
+        String sql = "SELECT * FROM JUGADOR";
+        ArrayList<Jugador> jugadores = new ArrayList<>();
 
-        try(Connection conn=Conexion.getInstance();
-        PreparedStatement ps= conn.prepareStatement(sql);
-            ResultSet rs= ps.executeQuery();){
-            while (rs.next()){
-                Jugador jugador=new Jugador();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Jugador jugador = new Jugador();
                 jugador.setId(rs.getInt("ID_JUGADOR"));
                 jugador.setNombre(rs.getString("NOMBRE"));
                 jugador.setApellido(rs.getString("APELLIDO"));
@@ -72,15 +72,15 @@ public class JugadorRepository implements Repository<Jugador> {
 
     @Override
     public void guardar(Jugador jugador) throws RepositoryException {
-        String sql="INSERT INTO JUGADOR(NOMBRE,APELLIDO,POSICION,NUMERO_CAMISETA,ID_EQUIPO) VALUES(?;?;?;?,?)";
-        try (Connection conn =Conexion.getInstance();
-        PreparedStatement ps=conn.prepareStatement(sql)){
+        String sql = "INSERT INTO JUGADOR(NOMBRE,APELLIDO,POSICION,NUMERO_CAMISETA,ID_EQUIPO) VALUES(?;?;?;?,?)";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1,jugador.getNombre());
+            ps.setString(1, jugador.getNombre());
             ps.setString(2, jugador.getApellido());
-            ps.setString(3,jugador.getPosicion().name());
+            ps.setString(3, jugador.getPosicion().name());
             ps.setString(4, jugador.getNumeroCamiseta());
-            ps.setInt(5,jugador.getEquipo().getId());
+            ps.setInt(5, jugador.getEquipo().getId());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -111,10 +111,10 @@ public class JugadorRepository implements Repository<Jugador> {
 
     @Override
     public void eliminar(int id) throws RepositoryException {
-        String sql ="DELETE FROM JUGADOR WHERE ID_JUGADOR=?";
-        try (Connection conn=Conexion.getInstance();
-        PreparedStatement ps= conn.prepareStatement(sql)){
-            ps.setInt(1,id);
+        String sql = "DELETE FROM JUGADOR WHERE ID_JUGADOR=?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new RepositoryException("Error al eliminar el jugador: " + e.getMessage());
@@ -153,7 +153,8 @@ public class JugadorRepository implements Repository<Jugador> {
         }
         return lista;
     }
-//consulta intermedia 4
+
+    //consulta intermedia 4
     public ArrayList<Jugador> listarJugadoresConContratoYEquipo() throws RepositoryException {
         String sql = "SELECT j.ID_JUGADOR, j.NOMBRE AS J_NOMBRE, j.APELLIDO AS J_APELLIDO, " +
                 "e.ID_EQUIPO, e.NOMBRE AS E_NOMBRE, " +
@@ -193,33 +194,33 @@ public class JugadorRepository implements Repository<Jugador> {
         }
         return lista;
     }
-//consulta intermedia 7
-public ArrayList<Jugador> listarCapitanes() throws RepositoryException {
-    String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, e.ID_EQUIPO, e.NOMBRE AS E_NOMBRE " +
-            "FROM JUGADOR j JOIN EQUIPO e ON e.ID_JUGADOR_CAPITAN = j.ID_JUGADOR";
-    ArrayList<Jugador> lista = new ArrayList<>();
-    try (Connection conn = Conexion.getInstance();
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-            Jugador j = new Jugador();
-            j.setId(rs.getInt("ID_JUGADOR"));
-            j.setNombre(rs.getString("NOMBRE"));
-            j.setApellido(rs.getString("APELLIDO"));
 
-            Equipo e = new Equipo();
-            e.setId(rs.getInt("ID_EQUIPO"));
-            e.setNombre(rs.getString("E_NOMBRE"));
-            j.setEquipo(e);
+    //consulta intermedia 7
+    public ArrayList<Jugador> listarCapitanes() throws RepositoryException {
+        String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, e.ID_EQUIPO, e.NOMBRE AS E_NOMBRE " +
+                "FROM JUGADOR j JOIN EQUIPO e ON e.ID_JUGADOR_CAPITAN = j.ID_JUGADOR";
+        ArrayList<Jugador> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Jugador j = new Jugador();
+                j.setId(rs.getInt("ID_JUGADOR"));
+                j.setNombre(rs.getString("NOMBRE"));
+                j.setApellido(rs.getString("APELLIDO"));
 
-            lista.add(j);
+                Equipo e = new Equipo();
+                e.setId(rs.getInt("ID_EQUIPO"));
+                e.setNombre(rs.getString("E_NOMBRE"));
+                j.setEquipo(e);
+
+                lista.add(j);
+            }
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarCapitanes: " + ex.getMessage());
         }
-    } catch (SQLException ex) {
-        throw new RepositoryException("Error listarCapitanes: " + ex.getMessage());
+        return lista;
     }
-    return lista;
-}
-
 
 
 //consulta avanzada 1

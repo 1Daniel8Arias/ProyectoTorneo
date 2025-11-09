@@ -8,7 +8,6 @@ import torneo.proyectotorneo.repository.ArbitroPartidoRepository;
 import torneo.proyectotorneo.repository.ArbitroRepository;
 import torneo.proyectotorneo.repository.PartidoRepository;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ArbitroService {
@@ -225,5 +224,17 @@ public class ArbitroService {
             throw new RepositoryException("El apellido del árbitro es obligatorio");
         }
     }
+
+    // ============================================================
+    // CONSULTAS AVANZADAS
+    // ============================================================
+
+    /**
+     * Consulta Avanzada 7: Lista árbitros con conteo de partidos arbitrados
+     */
+    public ArrayList<Arbitro> listarArbitrosConConteoDePartidos() throws RepositoryException {
+        return arbitroRepository.listarArbitrosConConteoDePartidos();
+    }
+
 }
 

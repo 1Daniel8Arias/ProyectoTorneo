@@ -2,8 +2,13 @@ package torneo.proyectotorneo.service;
 
 import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
-import torneo.proyectotorneo.model.*;
-import torneo.proyectotorneo.repository.*;
+import torneo.proyectotorneo.model.Contrato;
+import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.Sancion;
+import torneo.proyectotorneo.repository.ContratoRepository;
+import torneo.proyectotorneo.repository.EquipoRepository;
+import torneo.proyectotorneo.repository.JugadorRepository;
+import torneo.proyectotorneo.repository.SancionRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,13 +49,6 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Registra un nuevo jugador
-     * Validaciones:
-     * - Nombre y apellido obligatorios
-     * - Número de camiseta único en el equipo
-     * - Posición válida
-     */
     public void registrarJugador(Jugador jugador) throws JugadorNoEncontradoException {
         validarJugador(jugador);
 
@@ -61,9 +59,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Actualiza la información de un jugador
-     */
+
     public void actualizarJugador(Jugador jugador) throws JugadorNoEncontradoException {
         validarJugador(jugador);
 
@@ -78,12 +74,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Registra un contrato para un jugador
-     * Validaciones:
-     * - Fecha inicio debe ser anterior a fecha fin
-     * - Salario debe ser positivo
-     */
+
     public void registrarContrato(Contrato contrato) throws JugadorNoEncontradoException {
         if (contrato == null) {
             throw new JugadorNoEncontradoException("El contrato no puede ser nulo");
@@ -112,10 +103,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Aplica una sanción a un jugador
-     * Las sanciones afectan la participación en partidos futuros
-     */
+
     public void aplicarSancion(Sancion sancion) throws JugadorNoEncontradoException {
         if (sancion == null) {
             throw new JugadorNoEncontradoException("La sanción no puede ser nula");
@@ -144,9 +132,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Verifica si un jugador está sancionado en una fecha específica
-     */
+
     public boolean estaSancionado(int idJugador, LocalDate fecha) throws JugadorNoEncontradoException {
         try {
             Jugador jugador = jugadorRepository.buscarPorId(idJugador);
@@ -172,9 +158,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Obtiene todas las sanciones de un jugador
-     */
+
     public ArrayList<Sancion> obtenerSancionesJugador(int idJugador) throws JugadorNoEncontradoException {
         try {
             Jugador jugador = jugadorRepository.buscarPorId(idJugador);
@@ -187,9 +171,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Obtiene el historial de contratos de un jugador
-     */
+
     public ArrayList<Contrato> obtenerContratosJugador(int idJugador) throws JugadorNoEncontradoException {
         try {
             Jugador jugador = jugadorRepository.buscarPorId(idJugador);
@@ -202,9 +184,7 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Obtiene el rendimiento de un jugador (goles, tarjetas, etc.)
-     */
+
     public String obtenerRendimientoJugador(int idJugador) throws JugadorNoEncontradoException {
         try {
             Jugador jugador = jugadorRepository.buscarPorId(idJugador);
@@ -224,9 +204,6 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Elimina un jugador del sistema
-     */
     public void eliminarJugador(int id) throws JugadorNoEncontradoException {
         try {
             Jugador jugador = jugadorRepository.buscarPorId(id);
@@ -240,9 +217,6 @@ public class JugadorService {
         }
     }
 
-    /**
-     * Validaciones para un jugador
-     */
     private void validarJugador(Jugador jugador) throws JugadorNoEncontradoException {
         if (jugador == null) {
             throw new JugadorNoEncontradoException("El jugador no puede ser nulo");
@@ -266,6 +240,98 @@ public class JugadorService {
 
         if (jugador.getEquipo() == null) {
             throw new JugadorNoEncontradoException("El equipo del jugador es obligatorio");
+        }
+    }
+
+    /**
+            * Consulta Intermedia 1: Lista jugadores con su equipo
+     */
+    public ArrayList<Jugador> listarJugadoresConEquipo() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresConEquipo();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores con equipo: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Intermedia 4: Lista jugadores con contrato y equipo
+     */
+    public ArrayList<Jugador> listarJugadoresConContratoYEquipo() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresConContratoYEquipo();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores con contrato: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Intermedia 7: Lista capitanes de equipos
+     */
+    public ArrayList<Jugador> listarCapitanes() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarCapitanes();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar capitanes: " + e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // CONSULTAS AVANZADAS
+    // ============================================================
+
+    /**
+     * Consulta Avanzada 1: Jugadores con salario superior al promedio
+     */
+    public ArrayList<Jugador> listarJugadoresConSalarioSuperiorPromedio() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresConSalarioSuperiorPromedio();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores con salario superior: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Avanzada 2: Jugadores que han marcado goles en más de un partido
+     */
+    public ArrayList<Jugador> listarJugadoresConGolesEnMasDeUnPartido() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresConGolesEnMasDeUnPartido();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores goleadores: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Avanzada 3: Jugadores sin contrato activo
+     */
+    public ArrayList<Jugador> listarJugadoresSinContratoActivo() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresSinContratoActivo();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores sin contrato: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Avanzada 5: Delanteros sin goles
+     */
+    public ArrayList<Jugador> listarDelanterosSinGoles() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarDelanterosSinGoles();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar delanteros sin goles: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Consulta Avanzada 6: Jugadores con mayor salario por posición
+     */
+    public ArrayList<Jugador> listarJugadoresConMayorSalarioPorPosicion() throws JugadorNoEncontradoException {
+        try {
+            return jugadorRepository.listarJugadoresConMayorSalarioPorPosicion();
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores con mayor salario: " + e.getMessage());
         }
     }
 }

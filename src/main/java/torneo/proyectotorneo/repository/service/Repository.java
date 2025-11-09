@@ -4,7 +4,7 @@ import torneo.proyectotorneo.exeptions.RepositoryException;
 
 import java.util.ArrayList;
 
-public interface Repository <T>{
+public interface Repository<T> {
 
     ArrayList<T> listarTodos() throws RepositoryException;
 
@@ -14,6 +14,6 @@ public interface Repository <T>{
 
     void actualizar(T t) throws RepositoryException;
 
-    void eliminar(int t)throws RepositoryException ;
+    void eliminar(int t) throws RepositoryException;
 
 }

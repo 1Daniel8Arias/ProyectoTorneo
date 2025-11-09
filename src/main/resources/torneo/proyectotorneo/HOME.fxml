@@ -78,7 +78,7 @@
                 <!-- Cards de Estadísticas -->
                 <GridPane hgap="20" vgap="20">
                     <!-- Card Equipos -->
-                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <VBox prefWidth="400.0" spacing="10" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
@@ -99,7 +99,7 @@
                     </VBox>
 
                     <!-- Card Jugadores -->
-                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <VBox prefWidth="400.0" spacing="10" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
@@ -120,7 +120,7 @@
                     </VBox>
 
                     <!-- Card Partidos -->
-                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                    <VBox prefWidth="400.0" spacing="10" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
@@ -141,7 +141,7 @@
                     </VBox>
 
                     <!-- Card Jornadas -->
-                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                    <VBox prefWidth="400.0" spacing="10" styleClass="stat-card" GridPane.columnIndex="3" GridPane.rowIndex="0">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>

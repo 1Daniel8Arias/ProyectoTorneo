@@ -16,6 +16,6 @@ public class Estadio {
     private int capacidad;
     private Departamento departamento;
     private ArrayList<EquipoEstadio> equipoEstadios;
-    private ArrayList<Partido>listaPartidos;
+    private ArrayList<Partido> listaPartidos;
 
 }

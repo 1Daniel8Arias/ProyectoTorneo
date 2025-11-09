@@ -292,4 +292,19 @@ public class TecnicoService {
             throw new TecnicoNoEncontradoException("El equipo es obligatorio");
         }
     }
+
+// ============================================================
+    // CONSULTAS AVANZADAS
+    // ============================================================
+
+    /**
+     * Consulta Avanzada 4: Lista técnicos sin equipo
+     */
+    public ArrayList<Tecnico> listarTecnicosSinEquipo() throws TecnicoNoEncontradoException {
+        try {
+            return tecnicoRepository.listarTecnicosSinEquipo();
+        } catch (RepositoryException e) {
+            throw new TecnicoNoEncontradoException("Error al listar técnicos sin equipo: " + e.getMessage());
+        }
+    }
 }

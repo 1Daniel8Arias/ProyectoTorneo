@@ -28,7 +28,7 @@ public class EquipoRepository implements Repository<Equipo> {
             }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al listar los equipos "+ e.getMessage());
+            throw new RepositoryException("Error al listar los equipos " + e.getMessage());
         }
 
         return equipos;
@@ -36,17 +36,17 @@ public class EquipoRepository implements Repository<Equipo> {
 
     @Override
     public Equipo buscarPorId(int id) throws RepositoryException {
-        String sql="SELECT * FROM EQUIPO WHERE ID_EQUIPO =?";
-        Equipo equipo=null;
+        String sql = "SELECT * FROM EQUIPO WHERE ID_EQUIPO =?";
+        Equipo equipo = null;
 
-        try (Connection conn= Conexion.getInstance();
-        PreparedStatement ps= conn.prepareStatement(sql);
-        ){
-            ps.setInt(1,id);
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
 
-            try (ResultSet rs= ps.executeQuery();){
-                if (rs.next()){
-                    equipo=new Equipo();
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    equipo = new Equipo();
                     equipo.setId(rs.getInt("ID_EQUIPO"));
                     equipo.setNombre(rs.getString("NOMBRE"));
 
@@ -56,7 +56,7 @@ public class EquipoRepository implements Repository<Equipo> {
 
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar el equipo por ID "+ e.getMessage());
+            throw new RepositoryException("Error al buscar el equipo por ID " + e.getMessage());
         }
         return equipo;
     }
@@ -78,7 +78,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al guardar el equipo "+e.getMessage());
+            throw new RepositoryException("Error al guardar el equipo " + e.getMessage());
         }
 
     }
@@ -100,7 +100,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al actualizar el equipo "+ e.getMessage());
+            throw new RepositoryException("Error al actualizar el equipo " + e.getMessage());
         }
     }
 
@@ -116,7 +116,7 @@ public class EquipoRepository implements Repository<Equipo> {
             ps.executeUpdate();
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al eliminar el equipo "+ e.getMessage());
+            throw new RepositoryException("Error al eliminar el equipo " + e.getMessage());
         }
     }
 
@@ -150,6 +150,7 @@ public class EquipoRepository implements Repository<Equipo> {
         }
         return lista;
     }
+
     //intermedia 3
     public ArrayList<Equipo> listarEquiposConCantidadDeJugadores() throws RepositoryException {
         String sql = "SELECT e.ID_EQUIPO, e.NOMBRE AS E_NOMBRE, COUNT(j.ID_JUGADOR) AS CANTIDAD_JUGADORES " +
@@ -179,25 +180,25 @@ public class EquipoRepository implements Repository<Equipo> {
         return lista;
     }
 
-//avanzada 3
-public ArrayList<Equipo> listarEquiposConSanciones() throws RepositoryException {
-    String sql = "SELECT e.ID_EQUIPO, e.NOMBRE FROM EQUIPO e WHERE e.ID_EQUIPO IN (" +
-            "SELECT j.ID_EQUIPO FROM JUGADOR j JOIN SANCION s ON s.ID_JUGADOR = j.ID_JUGADOR)";
-    ArrayList<Equipo> lista = new ArrayList<>();
-    try (Connection conn = Conexion.getInstance();
-         PreparedStatement ps = conn.prepareStatement(sql);
-         ResultSet rs = ps.executeQuery()) {
-        while (rs.next()) {
-            Equipo e = new Equipo();
-            e.setId(rs.getInt("ID_EQUIPO"));
-            e.setNombre(rs.getString("NOMBRE"));
-            lista.add(e);
+    //avanzada 7
+    public ArrayList<Equipo> listarEquiposConSanciones() throws RepositoryException {
+        String sql = "SELECT e.ID_EQUIPO, e.NOMBRE FROM EQUIPO e WHERE e.ID_EQUIPO IN (" +
+                "SELECT j.ID_EQUIPO FROM JUGADOR j JOIN SANCION s ON s.ID_JUGADOR = j.ID_JUGADOR)";
+        ArrayList<Equipo> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Equipo e = new Equipo();
+                e.setId(rs.getInt("ID_EQUIPO"));
+                e.setNombre(rs.getString("NOMBRE"));
+                lista.add(e);
+            }
+        } catch (SQLException ex) {
+            throw new RepositoryException("Error listarEquiposConSanciones: " + ex.getMessage());
         }
-    } catch (SQLException ex) {
-        throw new RepositoryException("Error listarEquiposConSanciones: " + ex.getMessage());
+        return lista;
     }
-    return lista;
-}
 
 
 }

@@ -1,4 +1,5 @@
 package torneo.proyectotorneo.repository;
+
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.Estadio;

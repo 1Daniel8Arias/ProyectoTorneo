@@ -1,8 +1,10 @@
 package torneo.proyectotorneo.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
+
 import java.util.ArrayList;
 
 
@@ -18,9 +20,9 @@ public class Jugador {
     private Equipo equipo;
     private ArrayList<Contrato> listaContratos;
     private ArrayList<Sancion> listaSanciones;
-    private ArrayList<Gol>listaGoles;
-    private ArrayList<Tarjeta>listaTarjetas;
-    private ArrayList<Sustitucion>listaSustitucionesEntradas;
-    private ArrayList<Sustitucion>listaSustitucionesSalidas;
+    private ArrayList<Gol> listaGoles;
+    private ArrayList<Tarjeta> listaTarjetas;
+    private ArrayList<Sustitucion> listaSustitucionesEntradas;
+    private ArrayList<Sustitucion> listaSustitucionesSalidas;
 
 }
