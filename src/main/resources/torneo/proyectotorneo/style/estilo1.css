@@ -228,3 +228,30 @@
 .scroll-bar .track {
     -fx-background-color: transparent;
 }
+
+/* LOGIN */
+.login-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 40;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+.text-input {
+    -fx-background-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8;
+    -fx-padding: 10;
+}
+
+.button-primary {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 20;
+}
+
+.button-primary:hover {
+    -fx-opacity: 0.9;
+}

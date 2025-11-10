@@ -2,6 +2,7 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Usuario;
+import torneo.proyectotorneo.model.enums.TipoUsuario;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -103,5 +104,34 @@ public class UsuarioRepository implements Repository<Usuario> {
         } catch (SQLException e) {
             throw new RepositoryException("Error al eliminar el usuario: " + e.getMessage());
         }
+    }
+
+    public Usuario buscarUsuario(String usuari, String contrasenia) {
+        String sql = "SELECT * FROM USUARIO WHERE NOMBRE_USUARIO = ? AND CONTRASENIA = ?";
+        Usuario usuario = null;
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, usuari);
+            ps.setString(2, contrasenia);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    usuario = new Usuario();
+                    usuario.setIdUsuario(rs.getInt("ID_USUARIO"));
+                    usuario.setNombreUsuario(rs.getString("NOMBRE_USUARIO"));
+                    usuario.setContrasena(rs.getString("CONTRASENIA"));
+                    usuario.setRol(TipoUsuario.valueOf(rs.getString("TIPO")));
+
+
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar el usuario por nombre y contraseña: " + e.getMessage());
+        }
+
+        return usuario;
     }
 }

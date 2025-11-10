@@ -8,86 +8,61 @@ import java.util.ArrayList;
 
 public class TorneoService {
 
-    private final EquipoRepository equipoRepository;
-    private final PartidoRepository partidoRepository;
-    private final JornadaRepository jornadaRepository;
-    private final ArbitroRepository arbitroRepository;
-    private final JugadorRepository jugadorRepository;
-    private final GolRepository golRepository;
-    private final EstadioRepository estadioRepository;
-    private final TecnicoRepository tecnicoRepository;
+    private  EquipoService EquipoService;
+    private  PartidoService PartidoService;
+    private  JornadaService JornadaService;
+    private  ArbitroService ArbitroService;
+    private  JugadorService JugadorService;
+    private  GolService GolService;
+    private  EstadioService EstadioService;
+    private  TecnicoService TecnicoService;
+    private UsuarioService UsuarioService;
 
 
     public TorneoService() {
-        this.equipoRepository = new EquipoRepository();
-        this.partidoRepository = new PartidoRepository();
-        this.jornadaRepository = new JornadaRepository();
-        this.arbitroRepository = new ArbitroRepository();
-        this.jugadorRepository = new JugadorRepository();
-        this.golRepository = new GolRepository();
-        this.estadioRepository = new EstadioRepository();
-        this.tecnicoRepository = new TecnicoRepository();
+        this.EquipoService = new EquipoService();
+        this.PartidoService = new PartidoService();
+        this.JornadaService = new JornadaService();
+        this.ArbitroService = new ArbitroService();
+        this.JugadorService = new JugadorService();
+        this.GolService = new GolService();
+        this.EstadioService = new EstadioService();
+        this.TecnicoService = new TecnicoService();
+        this.UsuarioService= new UsuarioService();
     }
 
     // ================== EQUIPOS ==================
     public ArrayList<Equipo> listarEquipos() throws RepositoryException {
-        return equipoRepository.listarTodos();
+        return EquipoService.listarTodosLosEquipos();
     }
 
     public void registrarEquipo(Equipo equipo) throws RepositoryException {
-        equipoRepository.guardar(equipo);
+        EquipoService.registrarEquipo(equipo);
     }
 
     public void actualizarEquipo(Equipo equipo) throws RepositoryException {
-        equipoRepository.actualizar(equipo);
+        EquipoService.actualizarEquipo(equipo);
     }
 
     public void eliminarEquipo(int id) throws RepositoryException {
-        equipoRepository.eliminar(id);
+        EquipoService.eliminarEquipo(id);
     }
 
     public ArrayList<Equipo> listarEquiposConTecnico() throws RepositoryException {
-        return equipoRepository.listarEquiposConTecnico();
+        return EquipoService.listarEquiposConTecnico();
     }
 
     // ================== PARTIDOS ==================
     public ArrayList<Partido> listarPartidos() throws RepositoryException {
-        return partidoRepository.listarTodos();
+        return PartidoService.listarTodosLosPartidos();
     }
 
     public void registrarPartido(Partido partido) throws RepositoryException {
-        partidoRepository.guardar(partido);
+        PartidoService.guardar(partido);
     }
 
-    // ================== JORNADAS ==================
-    public ArrayList<Jornada> listarJornadas() throws RepositoryException {
-        return jornadaRepository.listarTodos();
+    public Usuario obtenerUsuario(String usuario, String contrasenia) {
+        
+        return UsuarioService.buscarUsuario(usuario,contrasenia);
     }
-
-    // ================== JUGADORES ==================
-    public ArrayList<Jugador> listarJugadores() throws RepositoryException {
-        return jugadorRepository.listarTodos();
-    }
-
-    // ================== ÁRBITROS ==================
-    public ArrayList<Arbitro> listarArbitros() throws RepositoryException {
-        return arbitroRepository.listarTodos();
-    }
-
-    // ================== GOLES ==================
-    public ArrayList<Gol> listarGoles() throws RepositoryException {
-        return golRepository.listarTodos();
-    }
-
-    // ================== ESTADIOS ==================
-    public ArrayList<Estadio> listarEstadios() throws RepositoryException {
-        return estadioRepository.listarTodos();
-    }
-
-    // ================== TÉCNICOS ==================
-    public ArrayList<Tecnico> listarTecnicos() throws RepositoryException {
-        return tecnicoRepository.listarTodos();
-    }
-
-
 }

@@ -24,6 +24,10 @@ public class ModelFactoryController {
         this.torneoService = new TorneoService();
     }
 
+    public TorneoService getTorneoService() {
+        return torneoService;
+    }
+
     private void cargarDatosIniciales() {
     }
 
@@ -39,28 +43,9 @@ public class ModelFactoryController {
         return torneoService.listarPartidos();
     }
 
-    public ArrayList<Jornada> obtenerJornadas() throws RepositoryException {
-        return torneoService.listarJornadas();
-    }
 
-    public ArrayList<Jugador> obtenerJugadores() throws RepositoryException {
-        return torneoService.listarJugadores();
-    }
 
-    public ArrayList<Arbitro> obtenerArbitros() throws RepositoryException {
-        return torneoService.listarArbitros();
+    public Usuario obtenerUsuario(String usuario, String contrasenia) {
+        return torneoService.obtenerUsuario( usuario,  contrasenia);
     }
-
-    public ArrayList<Gol> obtenerGoles() throws RepositoryException {
-        return torneoService.listarGoles();
-    }
-
-    public ArrayList<Estadio> obtenerEstadios() throws RepositoryException {
-        return torneoService.listarEstadios();
-    }
-
-    public ArrayList<Tecnico> obtenerTecnicos() throws RepositoryException {
-        return torneoService.listarTecnicos();
-    }
-
 }

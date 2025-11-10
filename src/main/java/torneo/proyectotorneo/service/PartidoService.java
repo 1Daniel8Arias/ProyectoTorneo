@@ -59,7 +59,7 @@ public class PartidoService {
      * - La fecha debe ser válida
      * - El estadio debe existir
      */
-    public void programarPartido(Partido partido) throws PartidoNoEncontradoException {
+    public void guardar(Partido partido) throws PartidoNoEncontradoException {
         validarPartido(partido);
 
         try {
