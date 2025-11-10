@@ -63,7 +63,7 @@
                     <padding>
                         <Insets bottom="30" left="30" right="30" top="30" />
                     </padding>
-                    <Label styleClass="welcome-title" text="Bienvenido, Usuario FCF">
+                    <Label styleClass="welcome-title" text="Bienvenido">
                         <font>
                             <Font name="System Bold" size="28" />
                         </font>
@@ -407,15 +407,15 @@
                  <Insets bottom="10" left="10" right="10" top="10" />
              </padding>
 
-             <Button maxWidth="Infinity" styleClass="menu-item, menu-item-active" text="🏠 Inicio" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="👕 Equipos" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="👤 Jugadores" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="⚽ Partidos" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="🏆 Árbitros" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="📊 Estadios" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="⚖️ Sanciones" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="📋 Tabla" />
-             <Button maxWidth="Infinity" styleClass="menu-item" text="📄 Reportes" />
+             <Button fx:id="btnInicio" maxWidth="Infinity" styleClass="menu-item, menu-item-active" text="🏠 Inicio" />
+             <Button fx:id="btnEquipos" maxWidth="Infinity" styleClass="menu-item" text="👕 Equipos" />
+             <Button fx:id="btnJugadores" maxWidth="Infinity" styleClass="menu-item" text="👤 Jugadores" />
+             <Button fx:id="btnPartidos" maxWidth="Infinity" styleClass="menu-item" text="⚽ Partidos" />
+             <Button fx:id="arbitros" maxWidth="Infinity" styleClass="menu-item" text="🏆 Árbitros" />
+             <Button fx:id="btnEstadisticas" maxWidth="Infinity" styleClass="menu-item" text="📊 Estadios" />
+             <Button fx:id="btnSanciones" maxWidth="Infinity" styleClass="menu-item" text="⚖ Sanciones" />
+             <Button fx:id="btnTabla" maxWidth="Infinity" styleClass="menu-item" text="📋 Tabla" />
+             <Button fx:id="btnReportes" maxWidth="Infinity" styleClass="menu-item" text="📄 Reportes" />
          </VBox>
    </left>
 </BorderPane>
