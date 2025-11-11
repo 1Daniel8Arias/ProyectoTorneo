@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="torneo.proyectotorneo.viewController.JugadorViewController"
+            stylesheets="@style/styles.css">
+
+    <!-- Header -->
+    <top>
+        <VBox spacing="10" styleClass="header-container">
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Jugadores" styleClass="page-title">
+                    <font>
+                        <Font name="System Bold" size="32"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="btnNuevoJugador" text="+ Nuevo Jugador" styleClass="btn-primary"
+                        onAction="#handleNuevoJugador">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Button>
+            </HBox>
+
+            <Label text="Gestión de jugadores del campeonato" styleClass="subtitle">
+                <font>
+                    <Font size="14"/>
+                </font>
+            </Label>
+        </VBox>
+    </top>
+
+    <!-- Main Content -->
+    <center>
+        <VBox spacing="15" styleClass="content-container">
+            <padding>
+                <Insets top="20" right="30" bottom="20" left="30"/>
+            </padding>
+
+            <!-- Search and Filters -->
+            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-bar">
+                <TextField fx:id="txtBuscar" promptText="Buscar por nombre..."
+                           prefWidth="300" styleClass="search-field">
+                    <font>
+                        <Font size="13"/>
+                    </font>
+                </TextField>
+
+                <ComboBox fx:id="cmbEquipo" promptText="Todos los equipos"
+                          prefWidth="200" styleClass="filter-combo">
+                </ComboBox>
+
+                <ComboBox fx:id="cmbPosicion" promptText="Todas las posiciones"
+                          prefWidth="200" styleClass="filter-combo">
+                </ComboBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Consultas Avanzadas Menu -->
+                <MenuButton text="Consultas" styleClass="btn-secondary">
+                    <items>
+                        <Menu text="Intermedias">
+                            <items>
+                                <MenuItem fx:id="menuJugadoresConEquipo" text="Jugadores con Equipo"
+                                          onAction="#handleJugadoresConEquipo"/>
+                                <MenuItem fx:id="menuJugadoresConContrato" text="Jugadores con Contrato y Equipo"
+                                          onAction="#handleJugadoresConContrato"/>
+                                <MenuItem fx:id="menuCapitanes" text="Capitanes"
+                                          onAction="#handleCapitanes"/>
+                            </items>
+                        </Menu>
+                        <Menu text="Avanzadas">
+                            <items>
+                                <MenuItem fx:id="menuSalarioSuperior" text="Salario Superior al Promedio"
+                                          onAction="#handleSalarioSuperior"/>
+                                <MenuItem fx:id="menuGolesVariosPartidos" text="Goles en Múltiples Partidos"
+                                          onAction="#handleGolesVariosPartidos"/>
+                                <MenuItem fx:id="menuSinContratoActivo" text="Sin Contrato Activo"
+                                          onAction="#handleSinContratoActivo"/>
+                                <MenuItem fx:id="menuDelanterosSinGoles" text="Delanteros Sin Goles"
+                                          onAction="#handleDelanterosSinGoles"/>
+                                <MenuItem fx:id="menuMayorSalarioPosicion" text="Mayor Salario por Posición"
+                                          onAction="#handleMayorSalarioPosicion"/>
+                            </items>
+                        </Menu>
+                        <SeparatorMenuItem/>
+                        <MenuItem fx:id="menuMostrarTodos" text="Mostrar Todos"
+                                  onAction="#handleMostrarTodos"/>
+                    </items>
+                </MenuButton>
+
+                <Button fx:id="btnBuscar" text="Buscar" styleClass="btn-secondary"
+                        onAction="#handleBuscar">
+                    <font>
+                        <Font size="13"/>
+                    </font>
+                </Button>
+            </HBox>
+
+            <!-- Table Container -->
+            <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
+                <Label text="Lista de Jugadores (0)" fx:id="lblContador" styleClass="table-header">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                    <padding>
+                        <Insets top="10" bottom="10"/>
+                    </padding>
+                </Label>
+
+                <!-- Table -->
+                <TableView fx:id="tableJugadores" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colNumero" text="N°" prefWidth="50" styleClass="col-center">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="id"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="nombreCompleto"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colEquipo" text="Equipo" prefWidth="180">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="nombreEquipo"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colPosicion" text="Posición" prefWidth="140">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="posicion"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colNumCamiseta" text="N° Camiseta" prefWidth="100" styleClass="col-center">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="numeroCamiseta"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colEdad" text="Edad" prefWidth="80" styleClass="col-center">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="edad"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colContrato" text="Contrato" prefWidth="120" styleClass="col-center">
+                            <cellValueFactory>
+                                <javafx.scene.control.cell.PropertyValueFactory property="fechaContrato"/>
+                            </cellValueFactory>
+                        </TableColumn>
+
+                        <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="200" styleClass="col-center">
+                        </TableColumn>
+                    </columns>
+
+                    <placeholder>
+                        <VBox alignment="CENTER" spacing="10">
+                            <Label text="No hay jugadores registrados" styleClass="empty-message">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Label text="Haz clic en 'Nuevo Jugador' para agregar uno" styleClass="empty-hint">
+                                <font>
+                                    <Font size="12"/>
+                                </font>
+                            </Label>
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+
+</BorderPane>

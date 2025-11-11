@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import java.net.URL?>
+<?import java.lang.String?>
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="torneo.proyectotorneo.viewController.PartidoViewController"
+            stylesheets="@style/partidos.css">
+
+    <!-- Header Section -->
+    <top>
+        <VBox spacing="20" styleClass="header-section">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Title and Actions -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="Gestión de Partidos" styleClass="page-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Admin Action Buttons -->
+                <HBox fx:id="adminActions" spacing="10" alignment="CENTER_RIGHT">
+                    <Button text="+ Nuevo Partido" onAction="#handleNuevoPartido"
+                            styleClass="btn-primary"/>
+                    <Button text="Gestionar Jornadas" onAction="#handleGestionarJornadas"
+                            styleClass="btn-secondary"/>
+                </HBox>
+            </HBox>
+
+            <!-- Filters Section -->
+            <VBox spacing="15" styleClass="filters-section">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+
+                <Label text="Filtros de Búsqueda" styleClass="section-title">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Label>
+
+                <!-- First Row of Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <!-- Team Filter -->
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Equipo" styleClass="filter-label"/>
+                        <ComboBox fx:id="equipoComboBox" promptText="Seleccionar equipo"
+                                  onAction="#handleFiltroChanged" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Team Type Filter -->
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Tipo de Equipo" styleClass="filter-label"/>
+                        <ComboBox fx:id="tipoEquipoComboBox" promptText="Local/Visitante"
+                                  onAction="#handleFiltroChanged" maxWidth="Infinity">
+                            <items>
+                                <javafx.collections.FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Ambos"/>
+                                    <String fx:value="Local"/>
+                                    <String fx:value="Visitante"/>
+                                </javafx.collections.FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Jornada Filter -->
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Jornada" styleClass="filter-label"/>
+                        <ComboBox fx:id="jornadaComboBox" promptText="Seleccionar jornada"
+                                  onAction="#handleFiltroChanged" maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Stadium Filter -->
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Estadio" styleClass="filter-label"/>
+                        <ComboBox fx:id="estadioComboBox" promptText="Seleccionar estadio"
+                                  onAction="#handleFiltroChanged" maxWidth="Infinity"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Second Row of Filters -->
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <!-- Status Filter Tabs -->
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <Label text="Estado del Partido" styleClass="filter-label"/>
+                        <HBox spacing="5" styleClass="status-tabs">
+                            <ToggleButton fx:id="todosToggle" text="Todos" selected="true"
+                                          onAction="#handleEstadoChanged" styleClass="status-tab"/>
+                            <ToggleButton fx:id="programadosToggle" text="Programados"
+                                          onAction="#handleEstadoChanged" styleClass="status-tab"/>
+                            <ToggleButton fx:id="enCursoToggle" text="En Curso"
+                                          onAction="#handleEstadoChanged" styleClass="status-tab"/>
+                            <ToggleButton fx:id="finalizadosToggle" text="Finalizados"
+                                          onAction="#handleEstadoChanged" styleClass="status-tab"/>
+                        </HBox>
+                    </VBox>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+
+                    <!-- Clear Filters Button -->
+                    <Button text="Limpiar Filtros" onAction="#handleLimpiarFiltros"
+                            styleClass="btn-outline" VBox.vgrow="NEVER">
+                        <VBox.margin>
+                            <Insets top="20"/>
+                        </VBox.margin>
+                    </Button>
+                </HBox>
+
+                <!-- Active Filters Display -->
+                <FlowPane fx:id="activeFiltrosPane" hgap="8" vgap="8" visible="false" managed="false"/>
+            </VBox>
+        </VBox>
+    </top>
+
+    <!-- Main Content - Matches Table -->
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <!-- Results Counter -->
+            <Label fx:id="resultadosLabel" text="Mostrando 0 partidos" styleClass="results-label"/>
+
+            <!-- TableView -->
+            <TableView fx:id="partidosTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <!-- ID Column -->
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50" minWidth="50"/>
+
+                    <!-- Jornada Column -->
+                    <TableColumn fx:id="jornadaColumn" text="Jornada" prefWidth="80" minWidth="80"/>
+
+                    <!-- Local Team Column -->
+                    <TableColumn fx:id="equipoLocalColumn" text="Equipo Local" prefWidth="150" minWidth="120"/>
+
+                    <!-- Score Column -->
+                    <TableColumn fx:id="marcadorColumn" text="Marcador" prefWidth="100" minWidth="80"/>
+
+                    <!-- Visiting Team Column -->
+                    <TableColumn fx:id="equipoVisitanteColumn" text="Equipo Visitante" prefWidth="150" minWidth="120"/>
+
+                    <!-- Stadium Column -->
+                    <TableColumn fx:id="estadioColumn" text="Estadio" prefWidth="150" minWidth="120"/>
+
+                    <!-- Date and Time Column -->
+                    <TableColumn fx:id="fechaHoraColumn" text="Fecha y Hora" prefWidth="150" minWidth="130"/>
+
+                    <!-- Referee Column -->
+                    <TableColumn fx:id="arbitroColumn" text="Árbitro" prefWidth="150" minWidth="120"/>
+
+                    <!-- Status Column -->
+                    <TableColumn fx:id="estadoColumn" text="Estado" prefWidth="120" minWidth="100"/>
+
+                    <!-- Actions Column (Admin only) -->
+                    <TableColumn fx:id="accionesColumn" text="Acciones" prefWidth="150" minWidth="150" visible="false"/>
+                </columns>
+
+                <placeholder>
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="No hay partidos para mostrar" styleClass="empty-label">
+                            <font>
+                                <Font size="14"/>
+                            </font>
+                        </Label>
+                        <Label text="Ajusta los filtros o crea un nuevo partido" styleClass="empty-sublabel">
+                            <font>
+                                <Font size="12"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+
+</BorderPane>

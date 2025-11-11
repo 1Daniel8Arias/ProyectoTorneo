@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="cardPartido" spacing="15" styleClass="@style/partidos.css" stylesheets="@style/partidos.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets bottom="20" left="25" right="25" top="20" />
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="card-header" stylesheets="@style/partidos.css">
+        <Label fx:id="lblJornada" styleClass="jornada-label" text="Jornada 2" />
+        <Label fx:id="lblEstado" styleClass="estado-label" text="Programado" />
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <HBox alignment="CENTER_RIGHT" spacing="10" stylesheets="@style/partidos.css">
+            <Button fx:id="btnEditar" styleClass="btn-outline" text="Editar" />
+            <Button fx:id="btnEliminar" styleClass="btn-outline-danger" text="Eliminar" />
+            <Button fx:id="btnDetalles" styleClass="btn-outline-primary" text="Ver detalles" />
+        </HBox>
+    </HBox>
+
+    <Separator styleClass="card-separator" />
+
+    <!-- Equipos -->
+    <HBox alignment="CENTER" spacing="30" styleClass="equipos-container" stylesheets="@style/partidos.css">
+
+        <!-- Local -->
+        <VBox alignment="CENTER" spacing="8" stylesheets="@style/partidos.css" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblEquipoLocal" styleClass="equipo-nombre" text="Millonarios FC" wrapText="true" />
+            <Label fx:id="lblResultadoLocal" styleClass="equipo-resultado" text="0" />
+            <Label fx:id="lblPosicionLocal" styleClass="equipo-posicion" text="Local" />
+        </VBox>
+
+        <!-- VS o Marcador -->
+        <VBox alignment="CENTER" minWidth="80" spacing="5" stylesheets="@style/partidos.css">
+            <Label fx:id="lblVS" styleClass="vs-label" text="VS" />
+            <HBox fx:id="hboxMarcador" alignment="CENTER" managed="false" spacing="8" visible="false">
+                <Label fx:id="lblGolesLocal" styleClass="goles-label" text="3" />
+                <Label styleClass="guion-label" text="-" />
+                <Label fx:id="lblGolesVisitante" styleClass="goles-label" text="0" />
+            </HBox>
+        </VBox>
+
+        <!-- Visitante -->
+        <VBox alignment="CENTER" spacing="8" stylesheets="@style/partidos.css" HBox.hgrow="ALWAYS">
+            <Label fx:id="lblEquipoVisitante" styleClass="equipo-nombre" text="América de Cali" wrapText="true" />
+            <Label fx:id="lblResultadoVisitante" styleClass="equipo-resultado" text="0" />
+            <Label fx:id="lblPosicionVisitante" styleClass="equipo-posicion" text="Visitante" />
+        </VBox>
+    </HBox>
+
+    <Separator styleClass="card-separator" />
+
+    <!-- Información adicional -->
+    <HBox alignment="CENTER" spacing="40" styleClass="info-extra" stylesheets="@style/partidos.css">
+        <HBox alignment="CENTER_LEFT" spacing="6" stylesheets="@style/partidos.css">
+            <Label styleClass="info-label" text="Fecha:" />
+            <Label fx:id="lblFecha" styleClass="info-value" text="2024-01-27 - 18:00" />
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="6" stylesheets="@style/partidos.css">
+            <Label styleClass="info-label" text="Estadio:" />
+            <Label fx:id="lblEstadio" styleClass="info-value" text="El Campín" />
+        </HBox>
+
+        <HBox alignment="CENTER_LEFT" spacing="6" stylesheets="@style/partidos.css">
+            <Label styleClass="info-label" text="Árbitro:" />
+            <Label fx:id="lblArbitro" styleClass="info-value" text="Nicolás Gallo" />
+        </HBox>
+    </HBox>
+
+</VBox>
