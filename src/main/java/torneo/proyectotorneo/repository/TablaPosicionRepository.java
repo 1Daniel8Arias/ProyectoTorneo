@@ -1,6 +1,7 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.TablaPosicion;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
@@ -15,7 +16,11 @@ public class TablaPosicionRepository implements Repository<TablaPosicion> {
 
     @Override
     public ArrayList<TablaPosicion> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM TABLA_POSICION ORDER BY PUNTOS DESC, DIFERENCIA_GOLES DESC";
+        String sql = " SELECT tp.*, e.NOMBRE AS NOMBRE_EQUIPO\n" +
+                "    FROM TABLA_POSICION tp\n" +
+                "    JOIN EQUIPO e ON tp.ID_EQUIPO = e.ID_EQUIPO\n" +
+                "    ORDER BY tp.PUNTOS DESC, tp.DIFERENCIA_GOLES DESC\n" +
+                "    ";
         ArrayList<TablaPosicion> tabla = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -32,6 +37,13 @@ public class TablaPosicionRepository implements Repository<TablaPosicion> {
                 posicion.setGolesEnContra(rs.getInt("GOLES_EN_CONTRA"));
                 posicion.setDiferenciaGoles(rs.getInt("DIFERENCIA_GOLES"));
                 posicion.setPuntos(rs.getInt("PUNTOS"));
+
+
+                Equipo equipo =new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                posicion.setEquipo(equipo);
+
                 tabla.add(posicion);
             }
 

@@ -255,3 +255,18 @@
 .button-primary:hover {
     -fx-opacity: 0.9;
 }
+
+.table-view {
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f1f3f5;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-border-color: transparent;
+}

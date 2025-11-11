@@ -10,4 +10,8 @@ module torneo.proyectotorneo {
     exports torneo.proyectotorneo;
     exports torneo.proyectotorneo.viewController;
     opens torneo.proyectotorneo.viewController to javafx.fxml;
+    opens torneo.proyectotorneo.model to javafx.base, javafx.fxml;
+    opens torneo.proyectotorneo.model.enums to javafx.base, javafx.fxml;
+    exports torneo.proyectotorneo.model;
+    exports torneo.proyectotorneo.model.enums;
 }

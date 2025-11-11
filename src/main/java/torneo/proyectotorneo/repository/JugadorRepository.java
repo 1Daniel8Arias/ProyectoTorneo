@@ -44,7 +44,7 @@ public class JugadorRepository implements Repository<Jugador> {
             throw new RepositoryException("Error al buscar el jugadores : " + e.getMessage());
         }
 
-        return null;
+        return jugadores;
     }
 
     @Override

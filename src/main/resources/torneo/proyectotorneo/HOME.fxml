@@ -174,7 +174,7 @@
                 <!-- Sección de Tablas -->
                 <HBox spacing="20" VBox.vgrow="ALWAYS">
                     <!-- Tabla de Posiciones -->
-                    <VBox spacing="15" styleClass="content-card" HBox.hgrow="ALWAYS">
+                    <VBox alignment="TOP_CENTER" spacing="15" styleClass="content-card" HBox.hgrow="ALWAYS">
                         <padding>
                             <Insets bottom="20" left="20" right="20" top="20" />
                         </padding>
@@ -184,19 +184,22 @@
                             </font>
                         </Label>
 
-                        <TableView fx:id="tablaPosiciones" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tablaPosiciones" editable="true" nodeOrientation="LEFT_TO_RIGHT" stylesheets="@style/estilo1.css" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colPosicion" prefWidth="40" text="#" />
                                 <TableColumn fx:id="colEquipo" prefWidth="200" text="Equipo" />
                                 <TableColumn fx:id="colPartidosJugados" prefWidth="50" text="PJ" />
                         <TableColumn fx:id="colPartidosGanados" prefWidth="75.0" text="G" />
-                        <TableColumn prefWidth="75.0" text="E" />
-                        <TableColumn prefWidth="75.0" text="P" />
-                        <TableColumn prefWidth="75.0" text="GF" />
-                        <TableColumn prefWidth="75.0" text="GC" />
-                        <TableColumn prefWidth="75.0" text="DG" />
+                        <TableColumn fx:id="colEmpates" prefWidth="75.0" text="E" />
+                        <TableColumn fx:id="colPerdidos" prefWidth="75.0" text="P" />
+                        <TableColumn fx:id="colGolesAFavor" prefWidth="75.0" text="GF" />
+                        <TableColumn fx:id="colEncontra" prefWidth="75.0" text="GC" />
+                        <TableColumn fx:id="colDiderencia" prefWidth="75.0" text="DG" />
                                 <TableColumn fx:id="colPuntos" prefWidth="60" text="Pts" />
                             </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
                         </TableView>
                     </VBox>
 
