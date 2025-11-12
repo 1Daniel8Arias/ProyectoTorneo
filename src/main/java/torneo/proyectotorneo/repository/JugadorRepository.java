@@ -172,7 +172,7 @@ public class JugadorRepository implements Repository<Jugador> {
 
     public ArrayList<Jugador> listarJugadoresPorEquipoYPosicion(int idEquipo, String posicion) throws RepositoryException {
         String sql = """
-        SELECT J.ID_JUGADOR, J.NOMBRE, J.APELLIDO, J.NUMERO_CAMISETA,
+        SELECT J.ID_JUGADOR, J.NOMBRE, J.APELLIDO, J.NUMERO_CAMISETA,J.POSICION,
                E.ID_EQUIPO, E.NOMBRE AS E_NOMBRE
         FROM JUGADOR J
         JOIN EQUIPO E ON J.ID_EQUIPO = E.ID_EQUIPO
@@ -192,6 +192,7 @@ public class JugadorRepository implements Repository<Jugador> {
                 j.setNombre(rs.getString("NOMBRE"));
                 j.setApellido(rs.getString("APELLIDO"));
                 j.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
 
                 Equipo e = new Equipo();
                 e.setId(rs.getInt("ID_EQUIPO"));
@@ -208,8 +209,10 @@ public class JugadorRepository implements Repository<Jugador> {
 
     public ArrayList<Jugador> listarJugadoresPorPosicion(String posicion) throws RepositoryException {
         String sql = """
-        SELECT ID_EQUIPO,ID_JUGADOR, NOMBRE, APELLIDO, NUMERO_CAMISETA,POSICION      
-        FROM JUGADOR 
+        SELECT J.ID_JUGADOR, J.NOMBRE, J.APELLIDO, J.NUMERO_CAMISETA,J.POSICION,
+               E.ID_EQUIPO, E.NOMBRE AS E_NOMBRE
+        FROM JUGADOR J
+        JOIN EQUIPO E ON J.ID_EQUIPO = E.ID_EQUIPO 
         WHERE POSICION = ?
         """;
 
@@ -231,6 +234,7 @@ public class JugadorRepository implements Repository<Jugador> {
 
                     Equipo e = new Equipo();
                     e.setId(rs.getInt("ID_EQUIPO"));
+                    e.setNombre(rs.getString("E_NOMBRE"));
                     j.setEquipo(e);
 
                     lista.add(j);
@@ -345,9 +349,17 @@ public class JugadorRepository implements Repository<Jugador> {
 //consulta avanzada 1
 
     public ArrayList<Jugador> listarJugadoresConSalarioSuperiorPromedio() throws RepositoryException {
-        String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO " +
-                "FROM JUGADOR j JOIN CONTRATO c ON c.ID_JUGADOR = j.ID_JUGADOR " +
-                "WHERE c.SALARIO > (SELECT AVG(SALARIO) FROM CONTRATO)";
+        String sql = """
+                SELECT j.ID_JUGADOR,
+                   j.NOMBRE AS J_NOMBRE,
+                   j.APELLIDO AS J_APELLIDO,
+                   c.SALARIO,
+                   e.NOMBRE AS E_NOMBRE
+            FROM JUGADOR j
+            JOIN EQUIPO e ON e.ID_EQUIPO = j.ID_EQUIPO
+            JOIN CONTRATO c ON c.ID_JUGADOR = j.ID_JUGADOR
+            WHERE c.SALARIO > (SELECT AVG(SALARIO) FROM CONTRATO)
+              """;
         ArrayList<Jugador> lista = new ArrayList<>();
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -355,8 +367,21 @@ public class JugadorRepository implements Repository<Jugador> {
             while (rs.next()) {
                 Jugador j = new Jugador();
                 j.setId(rs.getInt("ID_JUGADOR"));
-                j.setNombre(rs.getString("NOMBRE"));
-                j.setApellido(rs.getString("APELLIDO"));
+                j.setNombre(rs.getString("J_NOMBRE"));
+                j.setApellido(rs.getString("J_APELLIDO"));
+
+                Equipo e = new Equipo();
+                e.setNombre(rs.getString("E_NOMBRE"));
+                j.setEquipo(e);
+
+                Contrato c = new Contrato();
+                c.setSalario(rs.getDouble("SALARIO"));
+
+                if (j.getListaContratos() == null) {
+                    j.setListaContratos(new ArrayList<>());
+                }
+                j.getListaContratos().add(c);
+
                 lista.add(j);
             }
         } catch (SQLException ex) {
@@ -413,10 +438,13 @@ public class JugadorRepository implements Repository<Jugador> {
 //avanzado 5
 
     public ArrayList<Jugador> listarDelanterosSinGoles() throws RepositoryException {
-        String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION " +
-                "FROM JUGADOR j " +
-                "WHERE j.POSICION = 'Delantero' " +
-                "AND j.ID_JUGADOR NOT IN (SELECT g.ID_JUGADOR FROM GOL g)";
+        String sql = """
+                SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION,e.ID_EQUIPO,e.NOMBRE AS EQUIPO
+                FROM JUGADOR j
+                JOIN EQUIPO e ON e.ID_EQUIPO = j.ID_EQUIPO
+                WHERE j.POSICION = 'Delantero'
+                AND j.ID_JUGADOR NOT IN (SELECT g.ID_JUGADOR FROM GOL g)
+""";
 
         ArrayList<Jugador> lista = new ArrayList<>();
 
@@ -429,7 +457,13 @@ public class JugadorRepository implements Repository<Jugador> {
                 j.setId(rs.getInt("ID_JUGADOR"));
                 j.setNombre(rs.getString("NOMBRE"));
                 j.setApellido(rs.getString("APELLIDO"));
-                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION").toUpperCase())); // si es enum
+                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                equipo.setNombre(rs.getString("EQUIPO"));
+
+                j.setEquipo(equipo);
                 lista.add(j);
             }
 
@@ -442,16 +476,17 @@ public class JugadorRepository implements Repository<Jugador> {
 //avanzada 6
 
     public ArrayList<Jugador> listarJugadoresConMayorSalarioPorPosicion() throws RepositoryException {
-        String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, " +
-                "e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO, c.SALARIO " +
-                "FROM JUGADOR j " +
-                "JOIN CONTRATO c ON c.ID_JUGADOR = j.ID_JUGADOR " +
-                "JOIN EQUIPO e ON e.ID_EQUIPO = j.ID_EQUIPO " +
-                "WHERE c.SALARIO = ( " +
-                "SELECT MAX(c2.SALARIO) FROM CONTRATO c2 " +
-                "JOIN JUGADOR j2 ON c2.ID_JUGADOR = j2.ID_JUGADOR " +
-                "WHERE j2.POSICION = j.POSICION)";
-
+        String sql = """ 
+                SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION,
+                e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO, c.SALARIO
+                FROM JUGADOR j
+                JOIN CONTRATO c ON c.ID_JUGADOR = j.ID_JUGADOR
+                JOIN EQUIPO e ON e.ID_EQUIPO = j.ID_EQUIPO
+                WHERE c.SALARIO = (
+                SELECT MAX(c2.SALARIO) FROM CONTRATO c2
+                JOIN JUGADOR j2 ON c2.ID_JUGADOR = j2.ID_JUGADOR
+                WHERE j2.POSICION = j.POSICION)
+""";
         ArrayList<Jugador> lista = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -463,7 +498,7 @@ public class JugadorRepository implements Repository<Jugador> {
                 j.setId(rs.getInt("ID_JUGADOR"));
                 j.setNombre(rs.getString("NOMBRE"));
                 j.setApellido(rs.getString("APELLIDO"));
-                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION").toUpperCase())); // si usas enum
+                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
 
                 Contrato c = new Contrato();
                 c.setSalario(rs.getDouble("SALARIO"));

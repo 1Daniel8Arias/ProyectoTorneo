@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import torneo.proyectotorneo.controller.JugadorController;
 import torneo.proyectotorneo.exeptions.RepositoryException;
@@ -72,6 +73,7 @@ public class JugadorViewController {
         colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("NombreCompleto"));;
         colPosicion.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("posicion"));
         colNumCamiseta.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("numeroCamiseta"));
+        colSalario.setCellValueFactory(new PropertyValueFactory<>("salarioActual"));
         mostrarColumnas("numero", "nombre", "posicion","camiseta");
 
 
@@ -206,7 +208,7 @@ public class JugadorViewController {
     @FXML
     void handleCapitanes(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarCapitanes());
-        mostrarColumnas("numero", "nombre", "equipo", "posicion");
+        mostrarColumnas("numero", "nombre", "equipo");
 
     }
 

@@ -41,5 +41,11 @@ public class Jugador {
         Contrato ultimo = listaContratos.get(listaContratos.size() - 1);
         return ultimo.getFechaInicio() != null ? ultimo.getFechaInicio().toString() : "N/A";
     }
+    public Double getSalarioActual() {
+        if (listaContratos != null && !listaContratos.isEmpty()) {
+            return listaContratos.get(0).getSalario();
+        }
+        return null;
+    }
 
 }
