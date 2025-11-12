@@ -5,17 +5,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import torneo.proyectotorneo.controller.JugadorController;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
 
 
 public class JugadorViewController {
@@ -54,6 +58,10 @@ public class JugadorViewController {
 
     private ObservableList<Jugador> jugadoresObservable;
 
+    public TableView<Jugador> getTableJugadores() {
+        return tableJugadores;
+    }
+
     @FXML
     void initialize() {
         jugadorController = new JugadorController();
@@ -63,16 +71,16 @@ public class JugadorViewController {
     }
 
     private void configurarTabla() {
-     configurarColumnaAccion();
+        configurarColumnaAccion();
         colNumero.setCellValueFactory(cellData -> {
             Jugador jugador = cellData.getValue();
             int index = tableJugadores.getItems().indexOf(jugador) + 1;
             return new javafx.beans.property.SimpleIntegerProperty(index).asObject();
         });
-        colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("NombreCompleto"));;
+        colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("NombreCompleto"));
         colPosicion.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("posicion"));
         colNumCamiseta.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("numeroCamiseta"));
-        mostrarColumnas("numero", "nombre", "posicion","camiseta");
+        mostrarColumnas("numero", "nombre", "posicion", "camiseta");
 
 
     }
@@ -97,19 +105,19 @@ public class JugadorViewController {
 
                 btnVer.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                   // verDetallesJugador(jugador);
+                    verDetallesJugador(jugador);
                 });
 
 
                 btnEditar.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                   // editarJugador(jugador);
+                    editarJugador(jugador);
                 });
 
 
                 btnEliminar.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                   // eliminarJugador(jugador);
+                    eliminarJugador(jugador);
                 });
             }
 
@@ -158,18 +166,18 @@ public class JugadorViewController {
             if (equipoSeleccionado != null && posicionSeleccionada != null) {
                 int idEquipo = jugadorController.obtenerIdEquipoPorNombre(equipoSeleccionado);
                 resultado = jugadorController.listarJugadoresPorEquipoYPosicion(idEquipo, posicionSeleccionada);
-                mostrarColumnas("numero","nombre","accion","posicion","equipo");
+                mostrarColumnas("numero", "nombre", "accion", "posicion", "equipo");
 
                 // ✅ Caso 2: solo por equipo
             } else if (equipoSeleccionado != null) {
                 int idEquipo = jugadorController.obtenerIdEquipoPorNombre(equipoSeleccionado);
                 resultado = jugadorController.listarJugadoresPorEquipo(idEquipo);
-                mostrarColumnas("numero","nombre","accion");
+                mostrarColumnas("numero", "nombre", "accion");
 
                 // ✅ Caso 3: solo por posición
             } else if (posicionSeleccionada != null) {
                 resultado = jugadorController.listarJugadoresPorPosicion(posicionSeleccionada);
-                mostrarColumnas("numero","nombre","accion","posicion","equipo");
+                mostrarColumnas("numero", "nombre", "accion", "posicion", "equipo");
 
                 // ✅ Caso 4: texto de búsqueda
             } else if (!texto.isEmpty()) {
@@ -177,7 +185,7 @@ public class JugadorViewController {
                         j -> j.getNombreCompleto().toLowerCase().contains(texto)
                 );
                 resultado = new ArrayList<>(filtrados);
-                mostrarColumnas("numero","nombre","accion","equipo");
+                mostrarColumnas("numero", "nombre", "accion", "equipo");
 
                 // ✅ Caso 5: sin filtros
             } else {
@@ -198,7 +206,7 @@ public class JugadorViewController {
     @FXML
     void handleJugadoresConEquipo(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarJugadoresConEquipo());
-        mostrarColumnas("numero", "nombre", "equipo", "posicion", "camiseta","accion");
+        mostrarColumnas("numero", "nombre", "equipo", "posicion", "camiseta", "accion");
     }
 
     @FXML
@@ -218,13 +226,13 @@ public class JugadorViewController {
     @FXML
     void handleSalarioSuperior(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarJugadoresConSalarioSuperiorPromedio());
-        mostrarColumnas("numero", "nombre", "equipo","salario");
+        mostrarColumnas("numero", "nombre", "equipo", "salario");
     }
 
     @FXML
     void handleGolesVariosPartidos(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarJugadoresConGolesEnMasDeUnPartido());
-        mostrarColumnas("numero", "nombre", "equipo","posicion");
+        mostrarColumnas("numero", "nombre", "equipo", "posicion");
     }
 
     @FXML
@@ -236,13 +244,13 @@ public class JugadorViewController {
     @FXML
     void handleDelanterosSinGoles(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarDelanterosSinGoles());
-        mostrarColumnas("numero", "nombre", "equipo","posicion");
+        mostrarColumnas("numero", "nombre", "equipo", "posicion");
     }
 
     @FXML
     void handleMayorSalarioPosicion(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarJugadoresConMayorSalarioPorPosicion());
-        mostrarColumnas("numero", "nombre", "equipo","posicion","salario");
+        mostrarColumnas("numero", "nombre", "equipo", "posicion", "salario");
     }
 
     @FXML
@@ -252,7 +260,42 @@ public class JugadorViewController {
 
     @FXML
     void handleNuevoJugador(ActionEvent event) {
-        mostrarAlerta("Acción pendiente", "Aquí puedes abrir el formulario para crear un nuevo jugador.", Alert.AlertType.INFORMATION);
+        try {
+            // Cargo la vista
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/NuevoJugador.fxml"));
+
+            // Cargo la ventana
+            Parent root = loader.load();
+
+            // Cojo el controlador
+            NuevoJugadorViewController controlador = loader.getController();
+            controlador.initAttributtes(jugadoresObservable);
+
+            // Creo el Scene
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            // cojo la persona devuelta
+            Jugador p = controlador.getJugador();
+            if (p != null) {
+
+                // Añado la persona
+                this.jugadoresObservable.add(p);
+
+                // Refresco la tabla
+                this.tableJugadores.refresh();
+            }
+
+        } catch (IOException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setTitle("Error");
+            alert.setContentText(ex.getMessage());
+            alert.showAndWait();
+        }
     }
 
     // ──────────────── MÉTODOS AUXILIARES ────────────────
@@ -274,12 +317,6 @@ public class JugadorViewController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    // Interfaz funcional para consultas
-    @FunctionalInterface
-    private interface ConsultaJugador {
-        ArrayList<Jugador> ejecutar() throws RepositoryException;
     }
 
     private void mostrarColumnas(String... columnasVisibles) {
@@ -305,6 +342,71 @@ public class JugadorViewController {
                 case "salario" -> colSalario.setVisible(true);
             }
         }
+    }
+
+    private void eliminarJugador(Jugador jugador) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmar eliminación");
+        confirm.setHeaderText(null);
+        confirm.setContentText("¿Seguro que deseas eliminar al jugador " + jugador.getNombreCompleto() + "?");
+
+        if (confirm.showAndWait().get() == ButtonType.OK) {
+            try {
+                jugadorController.eliminarJugador(jugador.getId());
+                jugadoresObservable.remove(jugador);
+                tableJugadores.refresh();
+                mostrarAlerta("Éxito", "Jugador eliminado correctamente", Alert.AlertType.INFORMATION);
+            } catch (RepositoryException e) {
+                mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+
+    private void editarJugador(Jugador jugador) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/NuevoJugador.fxml"));
+            Parent root = loader.load();
+
+            NuevoJugadorViewController controlador = loader.getController();
+            controlador.initAttributtes(jugadoresObservable, jugador);
+            controlador.setJugadorViewController(this);
+            controlador.setEsEdicion(true); // 🔹 indicamos que es edición
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            tableJugadores.refresh();
+        } catch (IOException e) {
+            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    private void verDetallesJugador(Jugador jugador) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/DetalleJugador.fxml"));
+            Parent root = loader.load();
+
+            DetalleJugadorViewController controlador = loader.getController();
+            controlador.mostrarDetalles(jugador);
+
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.showAndWait();
+        } catch (IOException e) {
+            mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+
+    // Interfaz funcional para consultas
+    @FunctionalInterface
+    private interface ConsultaJugador {
+        ArrayList<Jugador> ejecutar() throws RepositoryException;
     }
 
 }

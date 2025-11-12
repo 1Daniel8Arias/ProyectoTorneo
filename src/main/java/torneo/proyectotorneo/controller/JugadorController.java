@@ -1,6 +1,7 @@
 package torneo.proyectotorneo.controller;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Contrato;
 import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
@@ -31,6 +32,7 @@ public class JugadorController {
 
     public void guardarJugador(Jugador jugador) throws RepositoryException {
         modelFactoryController.getTorneoService().guardarJugador(jugador);
+
     }
 
     public void actualizarJugador(Jugador jugador) throws RepositoryException {
@@ -125,6 +127,10 @@ public class JugadorController {
 
     public int obtenerIdEquipoPorNombre(String nombreEquipo) throws RepositoryException {
         return modelFactoryController.getTorneoService().obtenerIdEquipoPorNombre(nombreEquipo);
+    }
+
+    public void registrarContrato(Contrato contrato) throws RepositoryException {
+        modelFactoryController.getTorneoService().getJugadorService().registrarContrato(contrato);
     }
 
 }

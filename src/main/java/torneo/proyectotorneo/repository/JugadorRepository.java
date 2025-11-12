@@ -81,7 +81,7 @@ public class JugadorRepository implements Repository<Jugador> {
 
     @Override
     public void guardar(Jugador jugador) throws RepositoryException {
-        String sql = "INSERT INTO JUGADOR(NOMBRE,APELLIDO,POSICION,NUMERO_CAMISETA,ID_EQUIPO) VALUES(?;?;?;?,?)";
+        String sql = "INSERT INTO JUGADOR (NOMBRE, APELLIDO, POSICION, NUMERO_CAMISETA, ID_EQUIPO) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 

@@ -1,5 +1,6 @@
 package torneo.proyectotorneo.service;
 
+import torneo.proyectotorneo.controller.JugadorController;
 import torneo.proyectotorneo.exeptions.EquipoNoEncontradoException;
 import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
@@ -176,7 +177,7 @@ public class TorneoService {
 
     public void guardarJugador(Jugador jugador) throws RepositoryException {
         try {
-            jugadorService.guardarJugador(jugador);
+             jugadorService.guardarJugador(jugador);
         } catch (JugadorNoEncontradoException e) {
             throw new RepositoryException(e.getMessage());
         }
@@ -288,4 +289,9 @@ public class TorneoService {
             throw new RepositoryException(e.getMessage());
         }
     }
+
+    public JugadorService getJugadorService() {
+        return jugadorService;
+    }
+
 }
