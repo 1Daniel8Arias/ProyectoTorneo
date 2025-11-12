@@ -98,28 +98,45 @@ public class JugadorService {
 
 
     public void registrarContrato(Contrato contrato) throws JugadorNoEncontradoException {
+        // Validar que el contrato no sea nulo
         if (contrato == null) {
             throw new JugadorNoEncontradoException("El contrato no puede ser nulo");
         }
 
-        if (contrato.getJugador() == null) {
-            throw new JugadorNoEncontradoException("El jugador es obligatorio");
+        // Validar que el jugador no sea nulo
+        if (contrato.getJugador() == null || contrato.getJugador().getId() == null) {
+            throw new JugadorNoEncontradoException("El jugador es obligatorio y debe tener un ID válido");
         }
 
-        if (contrato.getFechaInicio() == null || contrato.getFechaFin() == null) {
-            throw new JugadorNoEncontradoException("Las fechas de inicio y fin son obligatorias");
+        // Validar fechas
+        if (contrato.getFechaInicio() == null) {
+            throw new JugadorNoEncontradoException("La fecha de inicio del contrato es obligatoria");
         }
 
-        if (contrato.getFechaInicio().isAfter(contrato.getFechaFin())) {
-            throw new JugadorNoEncontradoException("La fecha de inicio debe ser anterior a la fecha de fin");
+        if (contrato.getFechaFin() == null) {
+            throw new JugadorNoEncontradoException("La fecha de fin del contrato es obligatoria");
         }
 
+        // Validar que la fecha de fin sea posterior a la fecha de inicio
+        if (contrato.getFechaFin().isBefore(contrato.getFechaInicio())) {
+            throw new JugadorNoEncontradoException("La fecha de fin debe ser posterior a la fecha de inicio");
+        }
+
+        // Validar salario
         if (contrato.getSalario() <= 0) {
             throw new JugadorNoEncontradoException("El salario debe ser mayor a cero");
         }
 
+        // Verificar que el jugador exista
         try {
+            Jugador jugadorExistente = jugadorRepository.buscarPorId(contrato.getJugador().getId());
+            if (jugadorExistente == null) {
+                throw new JugadorNoEncontradoException("No existe un jugador con el ID proporcionado");
+            }
+
+            // Guardar el contrato
             contratoRepository.guardar(contrato);
+
         } catch (RepositoryException e) {
             throw new JugadorNoEncontradoException("Error al registrar el contrato: " + e.getMessage());
         }

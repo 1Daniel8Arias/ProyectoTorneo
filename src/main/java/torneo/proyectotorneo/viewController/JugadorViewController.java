@@ -80,6 +80,7 @@ public class JugadorViewController {
         colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("NombreCompleto"));
         colPosicion.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("posicion"));
         colNumCamiseta.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("numeroCamiseta"));
+        colSalario.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("SalarioActual"));
         mostrarColumnas("numero", "nombre", "posicion", "camiseta");
 
 
@@ -219,7 +220,7 @@ public class JugadorViewController {
     @FXML
     void handleCapitanes(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarCapitanes());
-        mostrarColumnas("numero", "nombre", "equipo", "posicion");
+        mostrarColumnas("numero", "nombre", "equipo");
 
     }
 

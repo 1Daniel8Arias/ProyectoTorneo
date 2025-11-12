@@ -64,16 +64,28 @@ public class ContratoRepository implements Repository<Contrato> {
 
     @Override
     public void guardar(Contrato contrato) throws RepositoryException {
-        String sql = "INSERT INTO CONTRATO (FECHA_INICIO, FECHA_FIN, SALARIO, ID_JUGADOR) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO CONTRATO (FECHA_INICIO, FECHA_FIN, SALARIO, ID_JUGADOR) " +
+                "VALUES (?, ?, ?, ?)";
 
         try (Connection conn = Conexion.getInstance();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, new String[]{"ID_CONTRATO"})) {
 
-            ps.setDate(1, Date.valueOf(contrato.getFechaInicio()));
-            ps.setDate(2, Date.valueOf(contrato.getFechaFin()));
+            // Convertir LocalDate a java.sql.Date
+            ps.setDate(1, java.sql.Date.valueOf(contrato.getFechaInicio()));
+            ps.setDate(2, java.sql.Date.valueOf(contrato.getFechaFin()));
             ps.setDouble(3, contrato.getSalario());
             ps.setInt(4, contrato.getJugador().getId());
-            ps.executeUpdate();
+
+            int filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID generado automáticamente (opcional, pero buena práctica)
+            if (filasAfectadas > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        contrato.setIdContrato(generatedKeys.getInt(1));
+                    }
+                }
+            }
 
         } catch (SQLException e) {
             throw new RepositoryException("Error al guardar el contrato: " + e.getMessage());

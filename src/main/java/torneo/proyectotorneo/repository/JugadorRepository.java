@@ -81,21 +81,34 @@ public class JugadorRepository implements Repository<Jugador> {
 
     @Override
     public void guardar(Jugador jugador) throws RepositoryException {
-        String sql = "INSERT INTO JUGADOR (NOMBRE, APELLIDO, POSICION, NUMERO_CAMISETA, ID_EQUIPO) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO JUGADOR (NOMBRE, APELLIDO, POSICION, NUMERO_CAMISETA, ID_EQUIPO) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        //   Agregar el segundo parámetro para obtener las claves generadas
         try (Connection conn = Conexion.getInstance();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql, new String[]{"ID_JUGADOR"})) {
 
             ps.setString(1, jugador.getNombre());
             ps.setString(2, jugador.getApellido());
             ps.setString(3, jugador.getPosicion().name());
             ps.setString(4, jugador.getNumeroCamiseta());
             ps.setInt(5, jugador.getEquipo().getId());
-            ps.executeUpdate();
+
+            int filasAfectadas = ps.executeUpdate();
+
+            // Obtener el ID generado automáticamente
+            if (filasAfectadas > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        // Asignar el ID generado al objeto jugador
+                        jugador.setId(generatedKeys.getInt(1));
+                    }
+                }
+            }
 
         } catch (SQLException e) {
             throw new RepositoryException("Error al guardar el jugador: " + e.getMessage());
         }
-
     }
 
     @Override

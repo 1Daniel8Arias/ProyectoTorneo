@@ -140,7 +140,7 @@ public class NuevoJugadorViewController {
     }
 
     private void crearNuevoJugador() throws RepositoryException {
-        // Validar campos
+        // Validar campos obligatorios
         if (txtNombre.getText().trim().isEmpty() ||
                 txtApellido.getText().trim().isEmpty() ||
                 txtNumeroCamiseta.getText().trim().isEmpty() ||
@@ -150,13 +150,14 @@ public class NuevoJugadorViewController {
             return;
         }
 
+        // Crear el nuevo jugador
         Jugador nuevoJugador = new Jugador();
         nuevoJugador.setNombre(txtNombre.getText().trim());
         nuevoJugador.setApellido(txtApellido.getText().trim());
         nuevoJugador.setNumeroCamiseta(txtNumeroCamiseta.getText().trim());
         nuevoJugador.setPosicion(cmbPosicion.getValue());
 
-        // Equipo
+        // Asignar equipo
         String nombreEquipo = cmbEquipo.getValue();
         int idEquipo = jugadorController.obtenerIdEquipoPorNombre(nombreEquipo);
         Equipo equipo = new Equipo();
@@ -164,28 +165,59 @@ public class NuevoJugadorViewController {
         equipo.setNombre(nombreEquipo);
         nuevoJugador.setEquipo(equipo);
 
-        // Guardar jugador y obtener su ID (ya lo tienes implementado)
-         jugadorController.guardarJugador(nuevoJugador);
+        // Guardar jugador (esto asignará el ID automáticamente al objeto jugador)
+        jugadorController.guardarJugador(nuevoJugador);
 
-        // ✅ Si hay datos de contrato, guardarlo a través del servicio de jugador
+        // Verificar que el jugador tenga un ID asignado
+        if (nuevoJugador.getId() == null) {
+            MensajeUtil.mostrarError("Error: No se pudo obtener el ID del jugador guardado");
+            return;
+        }
+
+        // Si hay datos de contrato, guardarlo
         if (dpFechaInicio.getValue() != null &&
                 dpFechaFin.getValue() != null &&
                 !txtSalario.getText().trim().isEmpty()) {
 
-            Contrato contrato = new Contrato();
-            contrato.setFechaInicio(dpFechaInicio.getValue());
-            contrato.setFechaFin(dpFechaFin.getValue());
-            contrato.setSalario(Double.parseDouble(txtSalario.getText().trim()));
+            try {
+                // Validar que el salario sea un número válido
+                double salario = Double.parseDouble(txtSalario.getText().trim());
 
-            Jugador jugadorRef = new Jugador();
-            jugadorRef.setId(idJugador);
-            contrato.setJugador(jugadorRef);
+                if (salario <= 0) {
+                    MensajeUtil.mostrarError("El salario debe ser mayor a cero");
+                    return;
+                }
 
-            // Aquí usamos el JugadorService (a través del TorneoService)
-            jugadorController.registrarContrato(contrato);
+                // Validar que la fecha de fin sea posterior a la fecha de inicio
+                if (dpFechaFin.getValue().isBefore(dpFechaInicio.getValue())) {
+                    MensajeUtil.mostrarError("La fecha de fin debe ser posterior a la fecha de inicio");
+                    return;
+                }
+
+                // Crear el contrato
+                Contrato contrato = new Contrato();
+                contrato.setFechaInicio(dpFechaInicio.getValue());
+                contrato.setFechaFin(dpFechaFin.getValue());
+                contrato.setSalario(salario);
+
+                // Asignar el jugador al contrato (con su ID ya obtenido)
+                Jugador jugadorRef = new Jugador();
+                jugadorRef.setId(nuevoJugador.getId());
+                contrato.setJugador(jugadorRef);
+
+                // Guardar el contrato
+                jugadorController.registrarContrato(contrato);
+
+                MensajeUtil.mostrarConfirmacion("Jugador y contrato guardados correctamente");
+
+            } catch (NumberFormatException e) {
+                MensajeUtil.mostrarError("El salario debe ser un número válido");
+                return;
+            }
+        } else {
+            // Si no hay datos de contrato, solo mostrar mensaje de jugador guardado
+            MensajeUtil.mostrarConfirmacion("Jugador guardado correctamente");
         }
-
-        MensajeUtil.mostrarConfirmacion("Jugador y contrato guardados correctamente");
     }
 
 
