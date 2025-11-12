@@ -387,11 +387,19 @@ public class JugadorViewController {
 
     private void verDetallesJugador(Jugador jugador) {
         try {
+            // 🔹 Cargar los datos completos del jugador desde la BD
+            Jugador jugadorCompleto = jugadorController.buscarPorId(jugador.getId());
+
+            if (jugadorCompleto == null) {
+                mostrarAlerta("Error", "No se encontró el jugador", Alert.AlertType.ERROR);
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/DetalleJugador.fxml"));
             Parent root = loader.load();
 
             DetalleJugadorViewController controlador = loader.getController();
-            controlador.mostrarDetalles(jugador);
+            controlador.mostrarDetalles(jugadorCompleto);
 
             Scene scene = new Scene(root);
             Stage stage = new Stage();
@@ -400,6 +408,8 @@ public class JugadorViewController {
             stage.showAndWait();
         } catch (IOException e) {
             mostrarAlerta("Error", e.getMessage(), Alert.AlertType.ERROR);
+        } catch (RepositoryException e) {
+            mostrarAlerta("Error", "Error al cargar datos del jugador: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

@@ -407,23 +407,44 @@ public class JugadorRepository implements Repository<Jugador> {
 //consulta avanzada 2
 
     public ArrayList<Jugador> listarJugadoresConGolesEnMasDeUnPartido() throws RepositoryException {
-        String sql = "SELECT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO " +
-                "FROM JUGADOR j WHERE j.ID_JUGADOR IN (" +
-                "SELECT g.ID_JUGADOR FROM GOL g GROUP BY g.ID_JUGADOR HAVING COUNT(DISTINCT g.ID_PARTIDO) > 1)";
+        String sql = """
+        SELECT DISTINCT j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, j.NUMERO_CAMISETA,
+               e.ID_EQUIPO, e.NOMBRE AS E_NOMBRE,
+               COUNT(DISTINCT g.ID_PARTIDO) AS PARTIDOS_CON_GOLES
+        FROM JUGADOR j
+        JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
+        JOIN GOL g ON g.ID_JUGADOR = j.ID_JUGADOR
+        GROUP BY j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, j.NUMERO_CAMISETA, e.ID_EQUIPO, e.NOMBRE
+        HAVING COUNT(DISTINCT g.ID_PARTIDO) > 1
+        ORDER BY PARTIDOS_CON_GOLES DESC
+    """;
+
         ArrayList<Jugador> lista = new ArrayList<>();
+
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
+
             while (rs.next()) {
                 Jugador j = new Jugador();
                 j.setId(rs.getInt("ID_JUGADOR"));
                 j.setNombre(rs.getString("NOMBRE"));
                 j.setApellido(rs.getString("APELLIDO"));
+                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+                j.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                equipo.setNombre(rs.getString("E_NOMBRE"));
+                j.setEquipo(equipo);
+
                 lista.add(j);
             }
+
         } catch (SQLException ex) {
             throw new RepositoryException("Error listarJugadoresConGolesEnMasDeUnPartido: " + ex.getMessage());
         }
+
         return lista;
     }
 

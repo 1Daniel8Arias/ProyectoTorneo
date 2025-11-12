@@ -1,5 +1,6 @@
 package torneo.proyectotorneo.controller;
 
+import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Contrato;
 import torneo.proyectotorneo.model.Jugador;
@@ -25,6 +26,17 @@ public class JugadorController {
     }
 
     // ──────────────── CRUD ────────────────
+
+    /**
+     * Busca un jugador por ID con TODOS sus datos completos
+     */
+    public Jugador buscarPorId(int id) throws RepositoryException {
+        try {
+            return modelFactoryController.getTorneoService().getJugadorService().buscarJugadorPorId(id);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
 
     public ArrayList<Jugador> listarTodos() throws RepositoryException {
         return modelFactoryController.getTorneoService().listarJugadores();
