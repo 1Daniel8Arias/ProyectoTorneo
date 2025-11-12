@@ -132,6 +132,116 @@ public class JugadorRepository implements Repository<Jugador> {
 
     }
 
+    public ArrayList<Jugador> listarJugadoresPorEquipo(int id) throws RepositoryException {
+        String sql = """
+        SELECT J.ID_JUGADOR, J.NOMBRE AS J_NOMBRE, J.APELLIDO AS J_APELLIDO,
+               E.ID_EQUIPO, E.NOMBRE AS E_NOMBRE
+        FROM JUGADOR J
+        JOIN EQUIPO E ON J.ID_EQUIPO = E.ID_EQUIPO
+        WHERE E.ID_EQUIPO = ?
+        """;
+
+        ArrayList<Jugador> lista = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id); // ✅ Establecer parámetro
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Jugador j = new Jugador();
+                    j.setId(rs.getInt("ID_JUGADOR"));
+                    j.setNombre(rs.getString("J_NOMBRE"));
+                    j.setApellido(rs.getString("J_APELLIDO"));
+
+                    Equipo e = new Equipo();
+                    e.setId(rs.getInt("ID_EQUIPO"));
+                    e.setNombre(rs.getString("E_NOMBRE"));
+                    j.setEquipo(e);
+
+                    lista.add(j);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error listarJugadoresPorEquipo: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorEquipoYPosicion(int idEquipo, String posicion) throws RepositoryException {
+        String sql = """
+        SELECT J.ID_JUGADOR, J.NOMBRE, J.APELLIDO, J.NUMERO_CAMISETA,
+               E.ID_EQUIPO, E.NOMBRE AS E_NOMBRE
+        FROM JUGADOR J
+        JOIN EQUIPO E ON J.ID_EQUIPO = E.ID_EQUIPO
+        WHERE E.ID_EQUIPO = ? AND J.POSICION = ?
+        """;
+
+        ArrayList<Jugador> lista = new ArrayList<>();
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ps.setString(2, posicion);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Jugador j = new Jugador();
+                j.setId(rs.getInt("ID_JUGADOR"));
+                j.setNombre(rs.getString("NOMBRE"));
+                j.setApellido(rs.getString("APELLIDO"));
+                j.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                Equipo e = new Equipo();
+                e.setId(rs.getInt("ID_EQUIPO"));
+                e.setNombre(rs.getString("E_NOMBRE"));
+                j.setEquipo(e);
+
+                lista.add(j);
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error listarJugadoresPorEquipoYPosicion: " + e.getMessage());
+        }
+        return lista;
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorPosicion(String posicion) throws RepositoryException {
+        String sql = """
+        SELECT ID_EQUIPO,ID_JUGADOR, NOMBRE, APELLIDO, NUMERO_CAMISETA,POSICION      
+        FROM JUGADOR 
+        WHERE POSICION = ?
+        """;
+
+        ArrayList<Jugador> lista = new ArrayList<>();
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, posicion);
+            try (ResultSet rs = ps.executeQuery()) {
+
+                while (rs.next()) {
+                    Jugador j = new Jugador();
+                    j.setId(rs.getInt("ID_JUGADOR"));
+                    j.setNombre(rs.getString("NOMBRE"));
+                    j.setApellido(rs.getString("APELLIDO"));
+                    j.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+                    j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+
+                    Equipo e = new Equipo();
+                    e.setId(rs.getInt("ID_EQUIPO"));
+                    j.setEquipo(e);
+
+                    lista.add(j);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RepositoryException("Error listarJugadoresPorPosicion: " + e.getMessage());
+        }
+        return lista;
+    }
+
     //consulta intermedia 1
 
     public ArrayList<Jugador> listarJugadoresConEquipo() throws RepositoryException {

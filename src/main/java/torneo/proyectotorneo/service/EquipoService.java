@@ -45,6 +45,18 @@ public class EquipoService {
             throw new EquipoNoEncontradoException("Error al buscar el equipo: " + e.getMessage());
         }
     }
+    public int obtenerIdPorNombre(String nombreEquipo) {
+        try {
+            int id=0;
+             id = equipoRepository.buscarPorNombre(nombreEquipo);
+            if (id == 0) {
+                throw new EquipoNoEncontradoException("No se encontró el equipo con ID: " + id);
+            }
+            return id;
+        } catch (RepositoryException e) {
+            throw new EquipoNoEncontradoException("Error al buscar el equipo: " + e.getMessage());
+        }
+    }
 
     /**
      * Registra un nuevo equipo
@@ -223,6 +235,7 @@ public class EquipoService {
             throw new EquipoNoEncontradoException("Error al listar equipos con sanciones: " + e.getMessage());
         }
     }
+
 
 }
 

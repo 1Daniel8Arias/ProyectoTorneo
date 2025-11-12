@@ -1,7 +1,10 @@
 package torneo.proyectotorneo.service;
 
+import torneo.proyectotorneo.exeptions.EquipoNoEncontradoException;
+import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.*;
+import torneo.proyectotorneo.model.enums.PosicionJugador;
 import torneo.proyectotorneo.repository.*;
 
 import java.time.LocalDate;
@@ -9,79 +12,79 @@ import java.util.ArrayList;
 
 public class TorneoService {
 
-    private  EquipoService EquipoService;
-    private  PartidoService PartidoService;
-    private  JornadaService JornadaService;
-    private  ArbitroService ArbitroService;
-    private  JugadorService JugadorService;
-    private  GolService GolService;
-    private  EstadioService EstadioService;
-    private  TecnicoService TecnicoService;
-    private UsuarioService UsuarioService;
+    private final EquipoService equipoService;
+    private final PartidoService partidoService;
+    private final JornadaService jornadaService;
+    private final ArbitroService arbitroService;
+    private final JugadorService jugadorService;
+    private final GolService golService;
+    private final EstadioService estadioService;
+    private final TecnicoService tecnicoService;
+    private final UsuarioService usuarioService;
 
 
     public TorneoService() {
-        this.EquipoService = new EquipoService();
-        this.PartidoService = new PartidoService();
-        this.JornadaService = new JornadaService();
-        this.ArbitroService = new ArbitroService();
-        this.JugadorService = new JugadorService();
-        this.GolService = new GolService();
-        this.EstadioService = new EstadioService();
-        this.TecnicoService = new TecnicoService();
-        this.UsuarioService= new UsuarioService();
+        this.equipoService = new EquipoService();
+        this.partidoService = new PartidoService();
+        this.jornadaService = new JornadaService();
+        this.arbitroService = new ArbitroService();
+        this.jugadorService = new JugadorService();
+        this.golService = new GolService();
+        this.estadioService = new EstadioService();
+        this.tecnicoService = new TecnicoService();
+        this.usuarioService = new UsuarioService();
     }
 
     // ================== EQUIPOS ==================
     public ArrayList<Equipo> listarEquipos() throws RepositoryException {
-        return EquipoService.listarTodosLosEquipos();
+        return equipoService.listarTodosLosEquipos();
     }
 
     public void registrarEquipo(Equipo equipo) throws RepositoryException {
-        EquipoService.registrarEquipo(equipo);
+        equipoService.registrarEquipo(equipo);
     }
 
     public void actualizarEquipo(Equipo equipo) throws RepositoryException {
-        EquipoService.actualizarEquipo(equipo);
+        equipoService.actualizarEquipo(equipo);
     }
 
     public void eliminarEquipo(int id) throws RepositoryException {
-        EquipoService.eliminarEquipo(id);
+        equipoService.eliminarEquipo(id);
     }
 
     public ArrayList<Equipo> listarEquiposConTecnico() throws RepositoryException {
-        return EquipoService.listarEquiposConTecnico();
+        return equipoService.listarEquiposConTecnico();
     }
 
     // ================== PARTIDOS ==================
     public ArrayList<Partido> listarPartidos() throws RepositoryException {
-        return PartidoService.listarTodosLosPartidos();
+        return partidoService.listarTodosLosPartidos();
     }
 
     public void registrarPartido(Partido partido) throws RepositoryException {
-        PartidoService.guardar(partido);
+        partidoService.guardar(partido);
     }
 
     public Usuario obtenerUsuario(String usuario, String contrasenia) {
-        
-        return UsuarioService.buscarUsuario(usuario,contrasenia);
+
+        return usuarioService.buscarUsuario(usuario,contrasenia);
     }
 
     // ================== ESTADÍSTICAS GENERALES ==================
     public int contarEquipos() throws RepositoryException {
-        return EquipoService.listarTodosLosEquipos().size();
+        return equipoService.listarTodosLosEquipos().size();
     }
 
     public int contarJugadores() throws RepositoryException {
-        return JugadorService.listarTodosLosJugadores().size();
+        return jugadorService.listarTodosLosJugadores().size();
     }
 
     public int contarPartidosJugados() throws RepositoryException {
-        return PartidoService.listarTodosLosPartidos().size();
+        return partidoService.listarTodosLosPartidos().size();
     }
 
     public int contarJornadas() throws RepositoryException {
-        return JornadaService.listarTodasLasJornadas().size();
+        return jornadaService.listarTodasLasJornadas().size();
     }
 
     // ================== TABLA DE POSICIONES ==================
@@ -102,7 +105,7 @@ public class TorneoService {
 
     // ================== PRÓXIMOS PARTIDOS ==================
     public ArrayList<Partido> obtenerProximosPartidos() throws RepositoryException {
-        ArrayList<Partido> todosLosPartidos = PartidoService.listarTodosLosPartidos();
+        ArrayList<Partido> todosLosPartidos = partidoService.listarTodosLosPartidos();
         ArrayList<Partido> proximosPartidos = new ArrayList<>();
 
         LocalDate hoy = LocalDate.now();
@@ -129,7 +132,7 @@ public class TorneoService {
 
     // ================== RESULTADOS RECIENTES ==================
     public ArrayList<Partido> obtenerResultadosRecientes() throws RepositoryException {
-        ArrayList<Partido> todosLosPartidos = PartidoService.listarTodosLosPartidos();
+        ArrayList<Partido> todosLosPartidos = partidoService.listarTodosLosPartidos();
         ArrayList<Partido> partidosConResultado = new ArrayList<>();
 
         // Filtrar solo partidos con resultado final
@@ -152,4 +155,138 @@ public class TorneoService {
         return resultado;
     }
 
+    // ==================   JUGADORES   ===========================
+
+
+    public ArrayList<Jugador> listarJugadores() throws RepositoryException {
+        try {
+            return jugadorService.listarTodosLosJugadores();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorEquipo(int idEquipo) throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresPorEquipo(idEquipo);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+
+    public void registrarJugador(Jugador jugador) throws RepositoryException {
+        try {
+            jugadorService.registrarJugador(jugador);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public void actualizarJugador(Jugador jugador) throws RepositoryException {
+        try {
+            jugadorService.actualizarJugador(jugador);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public void eliminarJugador(int id) throws RepositoryException {
+        try {
+            jugadorService.eliminarJugador(id);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+    // ─────────────── Consultas Intermedias ───────────────
+    public ArrayList<Jugador> listarJugadoresConEquipo() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresConEquipo();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresConContratoYEquipo() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresConContratoYEquipo();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarCapitanes() throws RepositoryException {
+        try {
+            return jugadorService.listarCapitanes();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    // ─────────────── Consultas Avanzadas ───────────────
+    public ArrayList<Jugador> listarJugadoresConSalarioSuperiorPromedio() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresConSalarioSuperiorPromedio();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresConGolesEnMasDeUnPartido() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresConGolesEnMasDeUnPartido();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresSinContratoActivo() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresSinContratoActivo();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarDelanterosSinGoles() throws RepositoryException {
+        try {
+            return jugadorService.listarDelanterosSinGoles();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresConMayorSalarioPorPosicion() throws RepositoryException {
+        try {
+            return jugadorService.listarJugadoresConMayorSalarioPorPosicion();
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+
+    public ArrayList<Jugador> listarJugadoresPorEquipoYPosicion(int idEquipo, PosicionJugador posicion) {
+        try {
+            return jugadorService.listarJugadoresPorEquipoYPosicion(idEquipo,posicion);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorPosicion(PosicionJugador posicion) {
+        try {
+            return jugadorService.listarJugadoresPorPosicion(posicion);
+        } catch (JugadorNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+
+    public int obtenerIdEquipoPorNombre(String nombreEquipo) {
+        try {
+            return equipoService.obtenerIdPorNombre(nombreEquipo);
+        } catch (EquipoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package torneo.proyectotorneo.viewController;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -49,6 +52,9 @@ public class HomeViewController {
 
     @FXML
     private VBox VBoxContenido;
+
+    @FXML
+    private VBox VBoxMenu;
 
     @FXML
     private Button arbitros;
@@ -102,7 +108,15 @@ public class HomeViewController {
 
         configurarTabla();
         cargarDatos();
+
+        btnJugadores.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Jugador.fxml"));
+
+        btnPartidos.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Partido.fxml"));
     }
+
+
 
     // ================== CONFIGURACIÓN TABLA ==================
     private void configurarTabla() {
@@ -115,6 +129,7 @@ public class HomeViewController {
             return new javafx.beans.property.SimpleIntegerProperty(index).asObject();
         });
         this.colEquipo.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEquipo().getNombre()));
+
         colPartidosJugados.setCellValueFactory(cellData -> {
             TablaPosicion t = cellData.getValue();
             int total = t.getGanados() + t.getEmpates() + t.getPerdidos();
@@ -151,6 +166,17 @@ public class HomeViewController {
         tablaPosiciones.getItems().clear();
         tablaPosiciones.getItems().addAll(posiciones);
     }
+
+    private void cambiarContenido(String fxmlPath) {
+        try {
+            Parent nuevoContenido = FXMLLoader.load(getClass().getResource(fxmlPath));
+            VBoxContenido.getChildren().setAll(nuevoContenido); // reemplaza lo que haya dentro
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la vista: " + fxmlPath);
+        }
+    }
+
 
 
 }

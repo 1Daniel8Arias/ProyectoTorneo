@@ -5,6 +5,7 @@ import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Contrato;
 import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.model.Sancion;
+import torneo.proyectotorneo.model.enums.PosicionJugador;
 import torneo.proyectotorneo.repository.ContratoRepository;
 import torneo.proyectotorneo.repository.EquipoRepository;
 import torneo.proyectotorneo.repository.JugadorRepository;
@@ -48,6 +49,27 @@ public class JugadorService {
             throw new JugadorNoEncontradoException("Error al buscar el jugador: " + e.getMessage());
         }
     }
+
+    public ArrayList<Jugador> listarJugadoresPorEquipo(int idEquipo) throws JugadorNoEncontradoException {
+        try {
+            ArrayList<Jugador> jugadores = jugadorRepository.listarJugadoresPorEquipo(idEquipo);
+            if (jugadores.isEmpty()) {
+                throw new JugadorNoEncontradoException("No hay jugadores registrados para el equipo con ID " + idEquipo);
+            }
+            return jugadores;
+        } catch (RepositoryException e) {
+            throw new JugadorNoEncontradoException("Error al listar jugadores por equipo: " + e.getMessage());
+        }
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorPosicion(PosicionJugador posicion) throws RepositoryException {
+        return jugadorRepository.listarJugadoresPorPosicion(posicion.name());
+    }
+
+    public ArrayList<Jugador> listarJugadoresPorEquipoYPosicion(int idEquipo, PosicionJugador posicion) throws RepositoryException {
+        return jugadorRepository.listarJugadoresPorEquipoYPosicion(idEquipo, posicion.name());
+    }
+
 
     public void registrarJugador(Jugador jugador) throws JugadorNoEncontradoException {
         validarJugador(jugador);

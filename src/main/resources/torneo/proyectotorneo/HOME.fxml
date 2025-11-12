@@ -405,7 +405,7 @@
     </center>
    <left>
          <!-- Menú Lateral -->
-         <VBox prefWidth="200" spacing="5" styleClass="sidebar" BorderPane.alignment="CENTER">
+         <VBox fx:id="VBoxMenu" prefWidth="200" spacing="5" styleClass="sidebar" BorderPane.alignment="CENTER">
              <padding>
                  <Insets bottom="10" left="10" right="10" top="10" />
              </padding>

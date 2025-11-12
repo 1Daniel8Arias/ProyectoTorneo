@@ -25,4 +25,21 @@ public class Jugador {
     private ArrayList<Sustitucion> listaSustitucionesEntradas;
     private ArrayList<Sustitucion> listaSustitucionesSalidas;
 
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
+    public String getNombreEquipo() {
+        return equipo != null ? equipo.getNombre() : "Sin equipo";
+    }
+
+    public String getFechaContrato() {
+        if (listaContratos == null || listaContratos.isEmpty()) {
+            return "Sin contrato";
+        }
+        Contrato ultimo = listaContratos.get(listaContratos.size() - 1);
+        return ultimo.getFechaInicio() != null ? ultimo.getFechaInicio().toString() : "N/A";
+    }
+
 }

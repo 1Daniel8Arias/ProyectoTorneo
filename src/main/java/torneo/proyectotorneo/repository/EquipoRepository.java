@@ -61,6 +61,29 @@ public class EquipoRepository implements Repository<Equipo> {
         return equipo;
     }
 
+    public int buscarPorNombre(String nombreEquipo) throws RepositoryException {
+        String sql = """
+            SELECT ID_EQUIPO FROM EQUIPO WHERE NOMBRE = ?
+            """;
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, nombreEquipo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("ID_EQUIPO");
+                } else {
+                    throw new RepositoryException("No se encontró el equipo con nombre: " + nombreEquipo);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RepositoryException("Error al buscar el equipo por nombre: " + e.getMessage());
+        }
+    }
+
     @Override
     public void guardar(Equipo equipo) throws RepositoryException {
         String sql = "INSERT INTO EQUIPO (NOMBRE, ID_JUGADOR_CAPITAN) VALUES (?, ?)";
@@ -199,6 +222,7 @@ public class EquipoRepository implements Repository<Equipo> {
         }
         return lista;
     }
+
 
 
 }

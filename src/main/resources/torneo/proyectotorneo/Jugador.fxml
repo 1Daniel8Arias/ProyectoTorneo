@@ -1,39 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="torneo.proyectotorneo.viewController.JugadorViewController"
-            stylesheets="@style/styles.css">
+<BorderPane stylesheets="@style/styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.JugadorViewController">
 
     <!-- Header -->
     <top>
         <VBox spacing="10" styleClass="header-container">
             <padding>
-                <Insets top="20" right="30" bottom="20" left="30"/>
+                <Insets bottom="20" left="30" right="30" top="20" />
             </padding>
 
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label text="Jugadores" styleClass="page-title">
+                <Label styleClass="page-title" text="Jugadores">
                     <font>
-                        <Font name="System Bold" size="32"/>
+                        <Font name="System Bold" size="32" />
                     </font>
                 </Label>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button fx:id="btnNuevoJugador" text="+ Nuevo Jugador" styleClass="btn-primary"
-                        onAction="#handleNuevoJugador">
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="btnNuevoJugador" onAction="#handleNuevoJugador" styleClass="btn-primary" text="+ Nuevo Jugador">
                     <font>
-                        <Font size="14"/>
+                        <Font size="14" />
                     </font>
                 </Button>
             </HBox>
 
-            <Label text="Gestión de jugadores del campeonato" styleClass="subtitle">
+            <Label styleClass="subtitle" text="Gestión de jugadores del campeonato">
                 <font>
-                    <Font size="14"/>
+                    <Font size="14" />
                 </font>
             </Label>
         </VBox>
@@ -43,139 +53,124 @@
     <center>
         <VBox spacing="15" styleClass="content-container">
             <padding>
-                <Insets top="20" right="30" bottom="20" left="30"/>
+                <Insets bottom="20" left="30" right="30" top="20" />
             </padding>
 
             <!-- Search and Filters -->
-            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="filter-bar">
-                <TextField fx:id="txtBuscar" promptText="Buscar por nombre..."
-                           prefWidth="300" styleClass="search-field">
+            <HBox alignment="CENTER_LEFT" spacing="15" styleClass="filter-bar">
+                <TextField fx:id="txtBuscar" prefWidth="300" promptText="Buscar por nombre..." styleClass="search-field">
                     <font>
-                        <Font size="13"/>
+                        <Font size="13" />
                     </font>
                 </TextField>
 
-                <ComboBox fx:id="cmbEquipo" promptText="Todos los equipos"
-                          prefWidth="200" styleClass="filter-combo">
+                <ComboBox fx:id="cmbEquipo" prefWidth="200" promptText="Todos los equipos" styleClass="filter-combo">
                 </ComboBox>
 
-                <ComboBox fx:id="cmbPosicion" promptText="Todas las posiciones"
-                          prefWidth="200" styleClass="filter-combo">
+                <ComboBox fx:id="cmbPosicion" prefWidth="200" promptText="Todas las posiciones" styleClass="filter-combo">
                 </ComboBox>
 
-                <Region HBox.hgrow="ALWAYS"/>
+                <Region HBox.hgrow="ALWAYS" />
 
                 <!-- Consultas Avanzadas Menu -->
-                <MenuButton text="Consultas" styleClass="btn-secondary">
+                <MenuButton styleClass="btn-secondary" text="Consultas">
                     <items>
                         <Menu text="Intermedias">
                             <items>
-                                <MenuItem fx:id="menuJugadoresConEquipo" text="Jugadores con Equipo"
-                                          onAction="#handleJugadoresConEquipo"/>
-                                <MenuItem fx:id="menuJugadoresConContrato" text="Jugadores con Contrato y Equipo"
-                                          onAction="#handleJugadoresConContrato"/>
-                                <MenuItem fx:id="menuCapitanes" text="Capitanes"
-                                          onAction="#handleCapitanes"/>
+                                <MenuItem fx:id="menuJugadoresConEquipo" onAction="#handleJugadoresConEquipo" text="Jugadores con Equipo" />
+                                <MenuItem fx:id="menuJugadoresConContrato" onAction="#handleJugadoresConContrato" text="Jugadores con Contrato y Equipo" />
+                                <MenuItem fx:id="menuCapitanes" onAction="#handleCapitanes" text="Capitanes" />
                             </items>
                         </Menu>
                         <Menu text="Avanzadas">
                             <items>
-                                <MenuItem fx:id="menuSalarioSuperior" text="Salario Superior al Promedio"
-                                          onAction="#handleSalarioSuperior"/>
-                                <MenuItem fx:id="menuGolesVariosPartidos" text="Goles en Múltiples Partidos"
-                                          onAction="#handleGolesVariosPartidos"/>
-                                <MenuItem fx:id="menuSinContratoActivo" text="Sin Contrato Activo"
-                                          onAction="#handleSinContratoActivo"/>
-                                <MenuItem fx:id="menuDelanterosSinGoles" text="Delanteros Sin Goles"
-                                          onAction="#handleDelanterosSinGoles"/>
-                                <MenuItem fx:id="menuMayorSalarioPosicion" text="Mayor Salario por Posición"
-                                          onAction="#handleMayorSalarioPosicion"/>
+                                <MenuItem fx:id="menuSalarioSuperior" onAction="#handleSalarioSuperior" text="Salario Superior al Promedio" />
+                                <MenuItem fx:id="menuGolesVariosPartidos" onAction="#handleGolesVariosPartidos" text="Goles en Múltiples Partidos" />
+                                <MenuItem fx:id="menuSinContratoActivo" onAction="#handleSinContratoActivo" text="Sin Contrato Activo" />
+                                <MenuItem fx:id="menuDelanterosSinGoles" onAction="#handleDelanterosSinGoles" text="Delanteros Sin Goles" />
+                                <MenuItem fx:id="menuMayorSalarioPosicion" onAction="#handleMayorSalarioPosicion" text="Mayor Salario por Posición" />
                             </items>
                         </Menu>
-                        <SeparatorMenuItem/>
-                        <MenuItem fx:id="menuMostrarTodos" text="Mostrar Todos"
-                                  onAction="#handleMostrarTodos"/>
+                        <SeparatorMenuItem />
                     </items>
                 </MenuButton>
 
-                <Button fx:id="btnBuscar" text="Buscar" styleClass="btn-secondary"
-                        onAction="#handleBuscar">
+                <Button fx:id="btnBuscar" onAction="#handleBuscar" styleClass="btn-secondary" text="Buscar">
                     <font>
-                        <Font size="13"/>
+                        <Font size="13" />
                     </font>
                 </Button>
             </HBox>
 
             <!-- Table Container -->
-            <VBox VBox.vgrow="ALWAYS" styleClass="table-container">
-                <Label text="Lista de Jugadores (0)" fx:id="lblContador" styleClass="table-header">
+            <VBox styleClass="table-container" VBox.vgrow="ALWAYS">
+                <Label fx:id="lblContador" styleClass="table-header" text="Lista de Jugadores (0)">
                     <font>
-                        <Font name="System Bold" size="14"/>
+                        <Font name="System Bold" size="14" />
                     </font>
                     <padding>
-                        <Insets top="10" bottom="10"/>
+                        <Insets bottom="10" top="10" />
                     </padding>
                 </Label>
 
                 <!-- Table -->
-                <TableView fx:id="tableJugadores" VBox.vgrow="ALWAYS" styleClass="data-table">
+                <TableView fx:id="tableJugadores" styleClass="data-table" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colNumero" text="N°" prefWidth="50" styleClass="col-center">
+                        <TableColumn fx:id="colNumero" prefWidth="50" styleClass="col-center" text="N°">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="id"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="id" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200">
+                        <TableColumn fx:id="colNombre" prefWidth="200" text="Nombre">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="nombreCompleto"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="nombreCompleto" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn fx:id="colEquipo" text="Equipo" prefWidth="180">
+                        <TableColumn fx:id="colEquipo" prefWidth="180" text="Equipo">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="nombreEquipo"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="nombreEquipo" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn fx:id="colPosicion" text="Posición" prefWidth="140">
+                        <TableColumn fx:id="colPosicion" prefWidth="140" text="Posición">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="posicion"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="posicion" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn fx:id="colNumCamiseta" text="N° Camiseta" prefWidth="100" styleClass="col-center">
+                        <TableColumn fx:id="colNumCamiseta" prefWidth="100" styleClass="col-center" text="N° Camiseta">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="numeroCamiseta"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="numeroCamiseta" />
                             </cellValueFactory>
                         </TableColumn>
 
-                        <TableColumn fx:id="colEdad" text="Edad" prefWidth="80" styleClass="col-center">
+                        <TableColumn fx:id="colContrato" prefWidth="120" styleClass="col-center" text="Contrato">
                             <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="edad"/>
+                                <javafx.scene.control.cell.PropertyValueFactory property="fechaContrato" />
                             </cellValueFactory>
                         </TableColumn>
+                  <TableColumn fx:id="colSalario" prefWidth="120" styleClass="col-center" text="Salario">
+                     <cellValueFactory>
+                        <PropertyValueFactory property="fechaContrato" />
+                     </cellValueFactory>
+                  </TableColumn>
 
-                        <TableColumn fx:id="colContrato" text="Contrato" prefWidth="120" styleClass="col-center">
-                            <cellValueFactory>
-                                <javafx.scene.control.cell.PropertyValueFactory property="fechaContrato"/>
-                            </cellValueFactory>
-                        </TableColumn>
-
-                        <TableColumn fx:id="colAcciones" text="Acciones" prefWidth="200" styleClass="col-center">
+                        <TableColumn fx:id="colAcciones" prefWidth="200" styleClass="col-center" text="Acciones">
                         </TableColumn>
                     </columns>
 
                     <placeholder>
                         <VBox alignment="CENTER" spacing="10">
-                            <Label text="No hay jugadores registrados" styleClass="empty-message">
+                            <Label styleClass="empty-message" text="No hay jugadores registrados">
                                 <font>
-                                    <Font size="14"/>
+                                    <Font size="14" />
                                 </font>
                             </Label>
-                            <Label text="Haz clic en 'Nuevo Jugador' para agregar uno" styleClass="empty-hint">
+                            <Label styleClass="empty-hint" text="Haz clic en 'Nuevo Jugador' para agregar uno">
                                 <font>
-                                    <Font size="12"/>
+                                    <Font size="12" />
                                 </font>
                             </Label>
                         </VBox>
