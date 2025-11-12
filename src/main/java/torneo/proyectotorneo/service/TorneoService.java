@@ -5,7 +5,6 @@ import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.*;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
-import torneo.proyectotorneo.repository.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -175,9 +174,9 @@ public class TorneoService {
     }
 
 
-    public void registrarJugador(Jugador jugador) throws RepositoryException {
+    public void guardarJugador(Jugador jugador) throws RepositoryException {
         try {
-            jugadorService.registrarJugador(jugador);
+            jugadorService.guardarJugador(jugador);
         } catch (JugadorNoEncontradoException e) {
             throw new RepositoryException(e.getMessage());
         }

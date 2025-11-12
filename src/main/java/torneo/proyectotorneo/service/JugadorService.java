@@ -71,7 +71,7 @@ public class JugadorService {
     }
 
 
-    public void registrarJugador(Jugador jugador) throws JugadorNoEncontradoException {
+    public void guardarJugador(Jugador jugador) throws JugadorNoEncontradoException {
         validarJugador(jugador);
 
         try {

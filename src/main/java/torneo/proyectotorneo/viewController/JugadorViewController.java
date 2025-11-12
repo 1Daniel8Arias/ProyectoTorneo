@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import torneo.proyectotorneo.controller.JugadorController;
 import torneo.proyectotorneo.exeptions.RepositoryException;
@@ -73,7 +72,6 @@ public class JugadorViewController {
         colNombre.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("NombreCompleto"));;
         colPosicion.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("posicion"));
         colNumCamiseta.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("numeroCamiseta"));
-        colSalario.setCellValueFactory(new PropertyValueFactory<>("salarioActual"));
         mostrarColumnas("numero", "nombre", "posicion","camiseta");
 
 
@@ -81,36 +79,40 @@ public class JugadorViewController {
 
     private void configurarColumnaAccion() {
         colAcciones.setCellFactory(col -> new TableCell<>() {
-            private final Button btnVer = new Button("Ver");
+            private final Button btnVer = new Button("Ver Detalle");
             private final Button btnEditar = new Button("Editar");
             private final Button btnEliminar = new Button("Eliminar");
             private final HBox contenedor = new HBox(5, btnVer, btnEditar, btnEliminar);
 
+
             {
                 contenedor.setStyle("-fx-alignment: center;");
 
+
+                // Estilos para los botones
+                btnVer.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;");
+                btnEditar.setStyle("-fx-background-color: #f39c12; -fx-text-fill: white; -fx-cursor: hand;");
+                btnEliminar.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
+
+
                 btnVer.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                    mostrarAlerta("Ver Jugador", "Detalles de " + jugador.getNombreCompleto(), Alert.AlertType.INFORMATION);
+                   // verDetallesJugador(jugador);
                 });
+
 
                 btnEditar.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                    mostrarAlerta("Editar Jugador", "Editando a " + jugador.getNombreCompleto(), Alert.AlertType.INFORMATION);
+                   // editarJugador(jugador);
                 });
+
 
                 btnEliminar.setOnAction(e -> {
                     Jugador jugador = getTableView().getItems().get(getIndex());
-                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "¿Eliminar a " + jugador.getNombreCompleto() + "?",
-                            ButtonType.YES, ButtonType.NO);
-                    confirm.showAndWait().ifPresent(res -> {
-                        if (res == ButtonType.YES) {
-                            getTableView().getItems().remove(jugador);
-                            actualizarContador();
-                        }
-                    });
+                   // eliminarJugador(jugador);
                 });
             }
+
 
             @Override
             protected void updateItem(Void item, boolean empty) {
@@ -119,6 +121,7 @@ public class JugadorViewController {
             }
         });
     }
+
 
     private void cargarFiltros() {
         cmbPosicion.setItems(FXCollections.observableArrayList(PosicionJugador.values()));
@@ -208,7 +211,7 @@ public class JugadorViewController {
     @FXML
     void handleCapitanes(ActionEvent event) {
         ejecutarConsulta(() -> jugadorController.listarCapitanes());
-        mostrarColumnas("numero", "nombre", "equipo");
+        mostrarColumnas("numero", "nombre", "equipo", "posicion");
 
     }
 

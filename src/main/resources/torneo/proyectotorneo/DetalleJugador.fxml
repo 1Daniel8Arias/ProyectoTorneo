@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700" prefWidth="900" stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.DetalleJugadorViewController">
+
+    <!-- Header -->
+    <top>
+        <VBox spacing="10" styleClass="header-container">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button fx:id="btnVolver" onAction="#handleVolver" styleClass="btn-secondary" text="← Volver">
+                    <font>
+                        <Font size="13" />
+                    </font>
+                </Button>
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblNombreJugador" styleClass="page-title" text="Nombre del Jugador">
+                    <font>
+                        <Font name="System Bold" size="28" />
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS" />
+            </HBox>
+            <Label styleClass="subtitle" text="Información detallada del jugador">
+                <font>
+                    <Font size="14" />
+                </font>
+            </Label>
+        </VBox>
+    </top>
+
+    <!-- Contenido Principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-container">
+            <VBox spacing="20">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+
+                <!-- Tarjetas de Información -->
+                <GridPane hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                        <ColumnConstraints percentWidth="33.33" />
+                    </columnConstraints>
+
+                    <!-- Card Equipo -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Equipo">
+                                <font><Font size="14" /></font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-blue" text="👕" />
+                        </HBox>
+                        <Label fx:id="lblEquipo" styleClass="stat-value" text="-">
+                            <font><Font name="System Bold" size="24" /></font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Card Posición -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Posición">
+                                <font><Font size="14" /></font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-green" text="⚽" />
+                        </HBox>
+                        <Label fx:id="lblPosicion" styleClass="stat-value" text="-">
+                            <font><Font name="System Bold" size="24" /></font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Card Número -->
+                    <VBox spacing="10" styleClass="stat-card" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <HBox alignment="CENTER_LEFT" spacing="15">
+                            <Label styleClass="stat-label" text="Dorsal">
+                                <font><Font size="14" /></font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Label styleClass="stat-icon-yellow" text="🔢" />
+                        </HBox>
+                        <Label fx:id="lblNumero" styleClass="stat-value" text="-">
+                            <font><Font name="System Bold" size="36" /></font>
+                        </Label>
+                    </VBox>
+               <rowConstraints>
+                  <RowConstraints />
+               </rowConstraints>
+                </GridPane>
+
+                <!-- Información Personal -->
+                <VBox spacing="15" styleClass="content-card">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <Label styleClass="section-title" text="📋 Información Personal">
+                        <font><Font name="System Bold" size="16" /></font>
+                    </Label>
+
+                    <GridPane hgap="30" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" />
+                            <ColumnConstraints percentWidth="50" />
+                        </columnConstraints>
+
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="detail-label" text="Nombre Completo" />
+                            <Label fx:id="lblNombreCompleto" styleClass="detail-value" text="-">
+                                <font><Font size="14" /></font>
+                            </Label>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="detail-label" text="ID Jugador" />
+                            <Label fx:id="lblIdJugador" styleClass="detail-value" text="-">
+                                <font><Font size="14" /></font>
+                            </Label>
+                        </VBox>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <!-- Información Contractual -->
+                <VBox spacing="15" styleClass="content-card">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <Label styleClass="section-title" text="📄 Información Contractual">
+                        <font><Font name="System Bold" size="16" /></font>
+                    </Label>
+
+                    <GridPane hgap="30" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="33.33" />
+                            <ColumnConstraints percentWidth="33.33" />
+                            <ColumnConstraints percentWidth="33.33" />
+                        </columnConstraints>
+
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="detail-label" text="Fecha Inicio" />
+                            <Label fx:id="lblFechaInicio" styleClass="detail-value" text="-">
+                                <font><Font size="14" /></font>
+                            </Label>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="detail-label" text="Fecha Fin" />
+                            <Label fx:id="lblFechaFin" styleClass="detail-value" text="-">
+                                <font><Font size="14" /></font>
+                            </Label>
+                        </VBox>
+
+                        <VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                            <Label styleClass="detail-label" text="Salario" />
+                            <Label fx:id="lblSalario" styleClass="detail-value" text="-">
+                                <font><Font size="14" /></font>
+                            </Label>
+                        </VBox>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <!-- Estadísticas -->
+                <HBox spacing="20">
+                    <!-- Goles -->
+                    <VBox spacing="15" styleClass="content-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Label styleClass="section-title" text="⚽ Goles">
+                            <font><Font name="System Bold" size="16" /></font>
+                        </Label>
+                        <TableView fx:id="tablaGoles" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colGolPartido" prefWidth="150" text="Partido" />
+                                <TableColumn fx:id="colGolFecha" prefWidth="100" text="Fecha" />
+                                <TableColumn fx:id="colCantidadGoles" prefWidth="80" text="Cantidad" />
+                            </columns>
+                            <placeholder>
+                                <Label text="Sin goles registrados" />
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+
+                    <!-- Tarjetas -->
+                    <VBox spacing="15" styleClass="content-card" HBox.hgrow="ALWAYS">
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+                        <Label styleClass="section-title" text="🟨🟥 Tarjetas">
+                            <font><Font name="System Bold" size="16" /></font>
+                        </Label>
+                        <TableView fx:id="tablaTarjetas" styleClass="data-table" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="colTarjetaPartido" prefWidth="150" text="Partido" />
+                                <TableColumn fx:id="colTarjetaFecha" prefWidth="100" text="Fecha" />
+                                <TableColumn fx:id="colTipoTarjeta" prefWidth="80" text="Tipo" />
+                            </columns>
+                            <placeholder>
+                                <Label text="Sin tarjetas registradas" />
+                            </placeholder>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <!-- Sanciones -->
+                <VBox spacing="15" styleClass="content-card">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <Label styleClass="section-title" text="⚖️ Sanciones">
+                        <font><Font name="System Bold" size="16" /></font>
+                    </Label>
+                    <TableView fx:id="tablaSanciones" prefHeight="200" styleClass="data-table">
+                        <columns>
+                            <TableColumn fx:id="colSancionFecha" prefWidth="100" text="Fecha" />
+                            <TableColumn fx:id="colSancionMotivo" prefWidth="300" text="Motivo" />
+                            <TableColumn fx:id="colSancionTipo" prefWidth="120" text="Tipo" />
+                            <TableColumn fx:id="colSancionDuracion" prefWidth="120" text="Duración (días)" />
+                        </columns>
+                        <placeholder>
+                            <Label text="Sin sanciones registradas" />
+                        </placeholder>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

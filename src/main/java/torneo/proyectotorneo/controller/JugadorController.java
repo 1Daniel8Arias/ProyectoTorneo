@@ -30,7 +30,7 @@ public class JugadorController {
     }
 
     public void guardarJugador(Jugador jugador) throws RepositoryException {
-        modelFactoryController.getTorneoService().registrarJugador(jugador);
+        modelFactoryController.getTorneoService().guardarJugador(jugador);
     }
 
     public void actualizarJugador(Jugador jugador) throws RepositoryException {
@@ -41,6 +41,8 @@ public class JugadorController {
         modelFactoryController.getTorneoService().eliminarJugador(id);
 
     }
+
+
 
 
 

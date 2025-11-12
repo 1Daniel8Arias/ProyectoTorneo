@@ -2,6 +2,7 @@ package torneo.proyectotorneo.modelFactoryController;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.*;
+import torneo.proyectotorneo.service.JugadorService;
 import torneo.proyectotorneo.service.TablaPosicionService;
 import torneo.proyectotorneo.service.TorneoService;
 
@@ -83,4 +84,5 @@ public class ModelFactoryController {
     public ArrayList<Partido> obtenerResultadosRecientes() throws RepositoryException {
         return torneoService.obtenerResultadosRecientes();
     }
+
 }
