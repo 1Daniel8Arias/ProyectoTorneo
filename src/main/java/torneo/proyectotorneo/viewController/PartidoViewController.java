@@ -275,10 +275,7 @@ public class PartidoViewController {
         limpiarFiltros();
     }
 
-    @FXML
-    void handleLimpiarFiltros(MouseEvent event) {
-        limpiarFiltros();
-    }
+
 
     /**
      * Método interno para limpiar filtros
