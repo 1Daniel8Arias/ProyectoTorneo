@@ -3,6 +3,7 @@ package torneo.proyectotorneo.service;
 import torneo.proyectotorneo.controller.JugadorController;
 import torneo.proyectotorneo.exeptions.EquipoNoEncontradoException;
 import torneo.proyectotorneo.exeptions.JugadorNoEncontradoException;
+import torneo.proyectotorneo.exeptions.PartidoNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.*;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
@@ -294,4 +295,77 @@ public class TorneoService {
         return jugadorService;
     }
 
+    public Partido buscarPartidoPorId(int id) {
+        try {
+            return partidoService.buscarPartidoPorId(id);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+
+    }
+
+    public void actualizarPartido(Partido partido) {
+        try {
+             partidoService.actualizarPartido(partido);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public void eliminarPartido(int id) {
+        try {
+            partidoService.eliminarPartido(id);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Partido> obtenerPartidosPorEquipo(int idEquipo) {
+        try {
+            return partidoService.obtenerPartidosPorEquipo(idEquipo);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+
+    }
+
+    public ArrayList<Partido> obtenerPartidosPorJornada(int idJornada) {
+        try {
+            return partidoService.obtenerPartidosPorJornada(idJornada);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Partido> obtenerPartidosPorEstadio(int idEstadio) {
+        try {
+            return partidoService.obtenerPartidosPorEstadio(idEstadio);
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Partido> listarPartidosConEquiposYEstadio() {
+        try {
+            return partidoService.listarPartidosConEquiposYEstadio();
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Jornada> listarJornadas() {
+        try {
+            return jornadaService.listarTodasLasJornadas();
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
+
+    public ArrayList<Estadio> listarEstadios() {
+        try {
+            return estadioService.listarTodosLosEstadios();
+        } catch (PartidoNoEncontradoException e) {
+            throw new RepositoryException(e.getMessage());
+        }
+    }
 }
