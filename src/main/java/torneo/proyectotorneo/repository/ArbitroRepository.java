@@ -2,6 +2,9 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Arbitro;
+import torneo.proyectotorneo.model.ArbitroPartido;
+import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -52,6 +55,13 @@ public class ArbitroRepository implements Repository<Arbitro> {
                     arbitro.setIdArbitro(rs.getInt("ID_ARBITRO"));
                     arbitro.setNombre(rs.getString("NOMBRE"));
                     arbitro.setApellido(rs.getString("APELLIDO"));
+
+                    // Cargar la lista de partidos arbitrados
+                    arbitro.setArbitrosPartidos(listarArbitrosPartidosPorArbitro(id));
+
+                    // Calcular partidos arbitrados
+                    arbitro.setPartidosArbitrados(arbitro.getArbitrosPartidos() != null ?
+                            arbitro.getArbitrosPartidos().size() : 0);
                 }
             }
 
@@ -61,6 +71,7 @@ public class ArbitroRepository implements Repository<Arbitro> {
 
         return arbitro;
     }
+
 
     @Override
     public void guardar(Arbitro arbitro) throws RepositoryException {
@@ -134,6 +145,54 @@ public class ArbitroRepository implements Repository<Arbitro> {
 
         } catch (SQLException ex) {
             throw new RepositoryException("Error listarArbitrosConConteoDePartidos: " + ex.getMessage());
+        }
+
+        return lista;
+    }
+
+    private ArrayList<ArbitroPartido> listarArbitrosPartidosPorArbitro(int idArbitro) throws SQLException {
+        ArrayList<ArbitroPartido> lista = new ArrayList<>();
+        String sql = """
+        SELECT ap.TIPO, 
+               p.ID_PARTIDO, p.FECHA, p.HORA,
+               el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS NOMBRE_LOCAL,
+               ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS NOMBRE_VISITANTE
+        FROM ARBITRO_PARTIDO ap
+        JOIN PARTIDO p ON ap.ID_PARTIDO = p.ID_PARTIDO
+        JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO
+        JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO
+        WHERE ap.ID_ARBITRO = ?
+    """;
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idArbitro);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ArbitroPartido ap = new ArbitroPartido();
+                ap.setTipo(rs.getString("TIPO"));
+
+                // Crear partido con información básica
+                Partido partido = new Partido();
+                partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                partido.setHora(rs.getString("HORA"));
+
+                // Equipos básicos
+                Equipo local = new Equipo();
+                local.setId(rs.getInt("ID_LOCAL"));
+                local.setNombre(rs.getString("NOMBRE_LOCAL"));
+                partido.setEquipoLocal(local);
+
+                Equipo visitante = new Equipo();
+                visitante.setId(rs.getInt("ID_VISITANTE"));
+                visitante.setNombre(rs.getString("NOMBRE_VISITANTE"));
+                partido.setEquipoVisitante(visitante);
+
+                ap.setPartido(partido);
+                lista.add(ap);
+            }
         }
 
         return lista;

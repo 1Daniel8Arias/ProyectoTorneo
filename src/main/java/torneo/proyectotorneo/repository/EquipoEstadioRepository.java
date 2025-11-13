@@ -1,7 +1,10 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.EquipoEstadio;
+import torneo.proyectotorneo.model.Estadio;
+import torneo.proyectotorneo.model.enums.TipoSede;
 import torneo.proyectotorneo.utils.Conexion;
 
 import java.sql.Connection;
@@ -33,28 +36,49 @@ public class EquipoEstadioRepository {
         return equiposEstadios;
     }
 
-    public ArrayList<EquipoEstadio> buscarPorEquipo(int idEquipo) throws RepositoryException {
-        String sql = "SELECT * FROM EQUIPO_ESTADIO WHERE ID_EQUIPO = ?";
-        ArrayList<EquipoEstadio> equiposEstadios = new ArrayList<>();
+
+    public EquipoEstadio buscarPorId(int id) throws RepositoryException {
+        String sql = """
+        SELECT ee.*, 
+               e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO,
+               est.ID_ESTADIO, est.NOMBRE AS NOMBRE_ESTADIO, est.CAPACIDAD
+        FROM EQUIPO_ESTADIO ee
+        JOIN EQUIPO e ON ee.ID_EQUIPO = e.ID_EQUIPO
+        JOIN ESTADIO est ON ee.ID_ESTADIO = est.ID_ESTADIO
+        WHERE ee.ID_EQUIPO_ESTADIO = ?
+    """;
+        EquipoEstadio equipoEstadio = null;
 
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, idEquipo);
+            ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    EquipoEstadio ee = new EquipoEstadio();
-                    // Cargar datos según necesidad
-                    equiposEstadios.add(ee);
+                if (rs.next()) {
+                    equipoEstadio = new EquipoEstadio();
+                    equipoEstadio.setSede(TipoSede.valueOf(rs.getString("SEDE")));
+
+                    // Cargar Equipo
+                    Equipo equipo = new Equipo();
+                    equipo.setId(rs.getInt("ID_EQUIPO"));
+                    equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                    equipoEstadio.setEquipo(equipo);
+
+                    // Cargar Estadio
+                    Estadio estadio = new Estadio();
+                    estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                    estadio.setNombre(rs.getString("NOMBRE_ESTADIO"));
+                    estadio.setCapacidad(rs.getInt("CAPACIDAD"));
+                    equipoEstadio.setEstadio(estadio);
                 }
             }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar estadios del equipo: " + e.getMessage());
+            throw new RepositoryException("Error al buscar equipo-estadio por ID: " + e.getMessage());
         }
 
-        return equiposEstadios;
+        return equipoEstadio;
     }
 
     public void guardar(EquipoEstadio equipoEstadio) throws RepositoryException {

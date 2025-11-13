@@ -2,6 +2,9 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Contrato;
+import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.enums.PosicionJugador;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -37,7 +40,15 @@ public class ContratoRepository implements Repository<Contrato> {
 
     @Override
     public Contrato buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM CONTRATO WHERE ID_CONTRATO = ?";
+        String sql = """
+        SELECT c.*, 
+               j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, j.NUMERO_CAMISETA,
+               e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM CONTRATO c
+        JOIN JUGADOR j ON c.ID_JUGADOR = j.ID_JUGADOR
+        LEFT JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
+        WHERE c.ID_CONTRATO = ?
+    """;
         Contrato contrato = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -52,6 +63,24 @@ public class ContratoRepository implements Repository<Contrato> {
                     contrato.setFechaInicio(rs.getDate("FECHA_INICIO").toLocalDate());
                     contrato.setFechaFin(rs.getDate("FECHA_FIN").toLocalDate());
                     contrato.setSalario(rs.getDouble("SALARIO"));
+
+                    // Cargar Jugador con información básica
+                    Jugador jugador = new Jugador();
+                    jugador.setId(rs.getInt("ID_JUGADOR"));
+                    jugador.setNombre(rs.getString("NOMBRE"));
+                    jugador.setApellido(rs.getString("APELLIDO"));
+                    jugador.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+                    jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                    // Equipo si existe
+                    if (rs.getObject("ID_EQUIPO") != null) {
+                        Equipo equipo = new Equipo();
+                        equipo.setId(rs.getInt("ID_EQUIPO"));
+                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                        jugador.setEquipo(equipo);
+                    }
+
+                    contrato.setJugador(jugador);
                 }
             }
 

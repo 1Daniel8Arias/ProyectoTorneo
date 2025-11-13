@@ -1,6 +1,7 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.Gol;
 import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.model.Partido;
@@ -40,7 +41,19 @@ public class GolRepository implements Repository<Gol> {
 
     @Override
     public Gol buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM GOL WHERE ID_GOL = ?";
+        String sql = """
+        SELECT g.*,
+               j.ID_JUGADOR, j.NOMBRE, j.APELLIDO,
+               p.ID_PARTIDO, p.FECHA, p.HORA,
+               el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS NOMBRE_LOCAL,
+               ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS NOMBRE_VISITANTE
+        FROM GOL g
+        JOIN JUGADOR j ON g.ID_JUGADOR = j.ID_JUGADOR
+        JOIN PARTIDO p ON g.ID_PARTIDO = p.ID_PARTIDO
+        JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO
+        JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO
+        WHERE g.ID_GOL = ?
+    """;
         Gol gol = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -53,6 +66,31 @@ public class GolRepository implements Repository<Gol> {
                     gol = new Gol();
                     gol.setIdGol(rs.getInt("ID_GOL"));
                     gol.setNumeroGoles(rs.getInt("NUMERO_GOLES"));
+
+                    // Cargar Jugador
+                    Jugador jugador = new Jugador();
+                    jugador.setId(rs.getInt("ID_JUGADOR"));
+                    jugador.setNombre(rs.getString("NOMBRE"));
+                    jugador.setApellido(rs.getString("APELLIDO"));
+                    gol.setJugador(jugador);
+
+                    // Cargar Partido con información básica
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+
+                    Equipo local = new Equipo();
+                    local.setId(rs.getInt("ID_LOCAL"));
+                    local.setNombre(rs.getString("NOMBRE_LOCAL"));
+                    partido.setEquipoLocal(local);
+
+                    Equipo visitante = new Equipo();
+                    visitante.setId(rs.getInt("ID_VISITANTE"));
+                    visitante.setNombre(rs.getString("NOMBRE_VISITANTE"));
+                    partido.setEquipoVisitante(visitante);
+
+                    gol.setPartido(partido);
                 }
             }
 

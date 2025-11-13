@@ -56,7 +56,12 @@ public class TablaPosicionRepository implements Repository<TablaPosicion> {
 
     @Override
     public TablaPosicion buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM TABLA_POSICION WHERE ID_TABLA = ?";
+        String sql = """
+        SELECT tp.*, e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM TABLA_POSICION tp
+        JOIN EQUIPO e ON tp.ID_EQUIPO = e.ID_EQUIPO
+        WHERE tp.ID_TABLA = ?
+    """;
         TablaPosicion posicion = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -75,6 +80,12 @@ public class TablaPosicionRepository implements Repository<TablaPosicion> {
                     posicion.setGolesEnContra(rs.getInt("GOLES_EN_CONTRA"));
                     posicion.setDiferenciaGoles(rs.getInt("DIFERENCIA_GOLES"));
                     posicion.setPuntos(rs.getInt("PUNTOS"));
+
+                    // Cargar Equipo
+                    Equipo equipo = new Equipo();
+                    equipo.setId(rs.getInt("ID_EQUIPO"));
+                    equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                    posicion.setEquipo(equipo);
                 }
             }
 

@@ -50,7 +50,10 @@ public class UsuarioRepository implements Repository<Usuario> {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     usuario = new Usuario();
-                    // Asignar valores cuando la clase Usuario tenga getters/setters
+                    usuario.setIdUsuario(rs.getInt("ID_USUARIO"));
+                    usuario.setNombreUsuario(rs.getString("NOMBRE_USUARIO"));
+                    usuario.setContrasena(rs.getString("CONTRASENIA"));
+                    usuario.setRol(TipoUsuario.valueOf(rs.getString("TIPO")));
                 }
             }
 
@@ -60,7 +63,6 @@ public class UsuarioRepository implements Repository<Usuario> {
 
         return usuario;
     }
-
     @Override
     public void guardar(Usuario usuario) throws RepositoryException {
         String sql = "INSERT INTO USUARIO (NOMBRE_USUARIO, CONTRASENIA, TIPO) VALUES (?, ?, ?)";

@@ -2,6 +2,7 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.CuerpoTecnico;
+import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -40,7 +41,12 @@ public class CuerpoTecnicoRepository implements Repository<CuerpoTecnico> {
 
     @Override
     public CuerpoTecnico buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM CUERPO_TECNICO WHERE ID_CUERPO_TECNICO = ?";
+        String sql = """
+        SELECT ct.*, e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM CUERPO_TECNICO ct
+        LEFT JOIN EQUIPO e ON ct.ID_EQUIPO = e.ID_EQUIPO
+        WHERE ct.ID_CUERPO_TECNICO = ?
+    """;
         CuerpoTecnico ct = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -55,6 +61,14 @@ public class CuerpoTecnicoRepository implements Repository<CuerpoTecnico> {
                     ct.setNombre(rs.getString("NOMBRE"));
                     ct.setApellido(rs.getString("APELLIDO"));
                     ct.setEspecialidad(rs.getString("ESPECIALIDAD"));
+
+                    // Cargar Equipo
+                    if (rs.getObject("ID_EQUIPO") != null) {
+                        Equipo equipo = new Equipo();
+                        equipo.setId(rs.getInt("ID_EQUIPO"));
+                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                        ct.setEquipo(equipo);
+                    }
                 }
             }
 

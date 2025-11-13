@@ -1,6 +1,8 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.model.ResultadoFinal;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
@@ -39,7 +41,17 @@ public class ResultadoFinalRepository implements Repository<ResultadoFinal> {
 
     @Override
     public ResultadoFinal buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM RESULTADO_FINAL WHERE ID_RESULTADO_FINAL = ?";
+        String sql = """
+        SELECT rf.*,
+               p.ID_PARTIDO, p.FECHA, p.HORA,
+               el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS NOMBRE_LOCAL,
+               ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS NOMBRE_VISITANTE
+        FROM RESULTADO_FINAL rf
+        JOIN PARTIDO p ON rf.ID_PARTIDO = p.ID_PARTIDO
+        JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO
+        JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO
+        WHERE rf.ID_RESULTADO_FINAL = ?
+    """;
         ResultadoFinal resultado = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -53,6 +65,24 @@ public class ResultadoFinalRepository implements Repository<ResultadoFinal> {
                     resultado.setIdResultadoFinal(rs.getInt("ID_RESULTADO_FINAL"));
                     resultado.setGolesLocal(rs.getInt("GOLES_LOCAL"));
                     resultado.setGolesVisitante(rs.getInt("GOLES_VISITANTE"));
+
+                    // Cargar Partido
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+
+                    Equipo local = new Equipo();
+                    local.setId(rs.getInt("ID_LOCAL"));
+                    local.setNombre(rs.getString("NOMBRE_LOCAL"));
+                    partido.setEquipoLocal(local);
+
+                    Equipo visitante = new Equipo();
+                    visitante.setId(rs.getInt("ID_VISITANTE"));
+                    visitante.setNombre(rs.getString("NOMBRE_VISITANTE"));
+                    partido.setEquipoVisitante(visitante);
+
+                    resultado.setPartido(partido);
                 }
             }
 

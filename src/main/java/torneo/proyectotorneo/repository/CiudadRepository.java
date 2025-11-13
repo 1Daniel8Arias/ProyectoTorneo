@@ -2,6 +2,8 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Ciudad;
+import torneo.proyectotorneo.model.Departamento;
+import torneo.proyectotorneo.model.Municipio;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -38,7 +40,14 @@ public class CiudadRepository implements Repository<Ciudad> {
 
     @Override
     public Ciudad buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM CIUDAD WHERE ID_CIUDAD = ?";
+        String sql = """
+        SELECT c.*, m.ID_MUNICIPIO, m.NOMBRE AS NOMBRE_MUNICIPIO,
+               d.ID_DEPARTAMENTO, d.NOMBRE AS NOMBRE_DEPARTAMENTO
+        FROM CIUDAD c
+        JOIN MUNICIPIO m ON c.ID_MUNICIPIO = m.ID_MUNICIPIO
+        JOIN DEPARTAMENTO d ON m.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
+        WHERE c.ID_CIUDAD = ?
+    """;
         Ciudad ciudad = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -51,6 +60,18 @@ public class CiudadRepository implements Repository<Ciudad> {
                     ciudad = new Ciudad();
                     ciudad.setIdCiudad(rs.getInt("ID_CIUDAD"));
                     ciudad.setNombre(rs.getString("NOMBRE"));
+
+                    // Cargar Municipio con su Departamento
+                    Municipio municipio = new Municipio();
+                    municipio.setIdMunicipio(rs.getInt("ID_MUNICIPIO"));
+                    municipio.setNombre(rs.getString("NOMBRE_MUNICIPIO"));
+
+                    Departamento departamento = new Departamento();
+                    departamento.setIdDepartamento(rs.getInt("ID_DEPARTAMENTO"));
+                    departamento.setNombre(rs.getString("NOMBRE_DEPARTAMENTO"));
+
+                    municipio.setDepartamento(departamento);
+                    ciudad.setMunicipio(municipio);
                 }
             }
 

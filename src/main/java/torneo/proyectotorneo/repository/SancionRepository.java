@@ -1,7 +1,10 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Jugador;
 import torneo.proyectotorneo.model.Sancion;
+import torneo.proyectotorneo.model.enums.PosicionJugador;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -38,7 +41,15 @@ public class SancionRepository implements Repository<Sancion> {
 
     @Override
     public Sancion buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM SANCION WHERE ID_SANCION = ?";
+        String sql = """
+        SELECT s.*,
+               j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, j.NUMERO_CAMISETA,
+               e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM SANCION s
+        JOIN JUGADOR j ON s.ID_JUGADOR = j.ID_JUGADOR
+        LEFT JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
+        WHERE s.ID_SANCION = ?
+    """;
         Sancion sancion = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -54,6 +65,24 @@ public class SancionRepository implements Repository<Sancion> {
                     sancion.setMotivo(rs.getString("MOTIVO"));
                     sancion.setDuracion(rs.getInt("DURACION"));
                     sancion.setTipo(rs.getString("TIPO"));
+
+                    // Cargar Jugador
+                    Jugador jugador = new Jugador();
+                    jugador.setId(rs.getInt("ID_JUGADOR"));
+                    jugador.setNombre(rs.getString("NOMBRE"));
+                    jugador.setApellido(rs.getString("APELLIDO"));
+                    jugador.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+                    jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                    // Equipo si existe
+                    if (rs.getObject("ID_EQUIPO") != null) {
+                        Equipo equipo = new Equipo();
+                        equipo.setId(rs.getInt("ID_EQUIPO"));
+                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                        jugador.setEquipo(equipo);
+                    }
+
+                    sancion.setJugador(jugador);
                 }
             }
 

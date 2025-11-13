@@ -43,7 +43,12 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
     @Override
     public Tecnico buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM TECNICO WHERE ID_TECNICO = ?";
+        String sql = """
+        SELECT t.*, e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM TECNICO t
+        LEFT JOIN EQUIPO e ON t.ID_EQUIPO = e.ID_EQUIPO
+        WHERE t.ID_TECNICO = ?
+    """;
         Tecnico tecnico = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -58,9 +63,13 @@ public class TecnicoRepository implements Repository<Tecnico> {
                     tecnico.setNombre(rs.getString("NOMBRE"));
                     tecnico.setApellido(rs.getString("APELLIDO"));
 
-                    Equipo equipo = new Equipo();
-                    equipo.setId(rs.getInt("ID_EQUIPO"));
-                    tecnico.setEquipo(equipo);
+                    // Cargar Equipo si existe
+                    if (rs.getObject("ID_EQUIPO") != null) {
+                        Equipo equipo = new Equipo();
+                        equipo.setId(rs.getInt("ID_EQUIPO"));
+                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                        tecnico.setEquipo(equipo);
+                    }
                 }
             }
 
