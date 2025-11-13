@@ -8,6 +8,7 @@ import torneo.proyectotorneo.modelFactoryController.ModelFactoryController;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -172,7 +173,9 @@ public class PartidoController {
                     }
 
                     // Filtro por jornada
-                    if (idJornada != null && (p.getJornada() == null || !p.getJornada().getIdJornada().equals(idJornada))) {
+
+
+                    if (!Objects.equals(p.getJornada().getIdJornada(), idJornada)) {
                         return false;
                     }
 

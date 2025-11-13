@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -21,6 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador de la vista de gestión de partidos.
+ * Diseño compacto y moderno.
+ */
 public class PartidoViewController {
 
     private PartidoController partidoController;
@@ -39,9 +44,13 @@ public class PartidoViewController {
     @FXML private ToggleButton programadosToggle;
     @FXML private ToggleButton todosToggle;
     @FXML private Label resultadosLabel;
+    @FXML private Label limpiarFiltrosLink;
     @FXML private ScrollPane partidosScrollPane;
     @FXML private VBox partidosContainer;
 
+    /**
+     * Inicializa el controlador después de cargar el FXML
+     */
     @FXML
     void initialize() {
         partidoController = new PartidoController();
@@ -63,45 +72,77 @@ public class PartidoViewController {
     }
 
     /**
-     * Carga los datos de los filtros
+     * Carga los datos de los ComboBox de filtros
      */
     private void cargarFiltros() {
-        // Cargar equipos
-        List<String> equipos = partidoController.obtenerNombresEquipos();
-        equipos.add(0, "Todos los equipos");
-        equipoComboBox.setItems(FXCollections.observableArrayList(equipos));
-        equipoComboBox.getSelectionModel().selectFirst();
+        try {
+            // Cargar equipos
+            List<String> equipos = new ArrayList<>();
+            equipos.add("Todos los equipos");
+            equipos.addAll(partidoController.obtenerNombresEquipos());
+            equipoComboBox.setItems(FXCollections.observableArrayList(equipos));
+            equipoComboBox.getSelectionModel().selectFirst();
 
-        // Cargar tipo de equipo
-        tipoEquipoComboBox.setItems(FXCollections.observableArrayList(
-                "Ambos", "Local", "Visitante"
-        ));
-        tipoEquipoComboBox.getSelectionModel().selectFirst();
+            // Cargar tipos de equipo
+            tipoEquipoComboBox.setItems(FXCollections.observableArrayList(
+                    "Ambos", "Local", "Visitante"
+            ));
+            tipoEquipoComboBox.getSelectionModel().selectFirst();
 
-        // Cargar jornadas
-        List<String> jornadas = partidoController.obtenerJornadas();
-        jornadas.add(0, "Todas las jornadas");
-        jornadaComboBox.setItems(FXCollections.observableArrayList(jornadas));
-        jornadaComboBox.getSelectionModel().selectFirst();
+            // Cargar jornadas
+            List<String> jornadas = new ArrayList<>();
+            jornadas.add("Todas las jornadas");
+            jornadas.addAll(partidoController.obtenerJornadas());
+            jornadaComboBox.setItems(FXCollections.observableArrayList(jornadas));
+            jornadaComboBox.getSelectionModel().selectFirst();
 
-        // Cargar estadios
-        List<String> estadios = partidoController.obtenerEstadios();
-        estadios.add(0, "Todos los estadios");
-        estadioComboBox.setItems(FXCollections.observableArrayList(estadios));
-        estadioComboBox.getSelectionModel().selectFirst();
+            // Cargar estadios
+            List<String> estadios = new ArrayList<>();
+            estadios.add("Todos los estadios");
+            estadios.addAll(partidoController.obtenerEstadios());
+            estadioComboBox.setItems(FXCollections.observableArrayList(estadios));
+            estadioComboBox.getSelectionModel().selectFirst();
+
+        } catch (Exception e) {
+            MensajeUtil.mostrarError("Error al cargar filtros: " + e.getMessage());
+        }
     }
 
     /**
-     * Carga todos los partidos
+     * Carga todos los partidos desde la base de datos
      */
     private void cargarPartidos() {
         try {
-            ArrayList<Partido> partidos = partidoController.listarPartidosConEquiposYEstadio();
+            List<Partido> partidos = partidoController.listarPartidosConEquiposYEstadio();
             partidosFiltrados = new ArrayList<>(partidos);
             mostrarPartidos(partidosFiltrados);
+            actualizarContadoresEstado(partidos);
         } catch (RepositoryException e) {
             MensajeUtil.mostrarError("Error al cargar partidos: " + e.getMessage());
+            partidosFiltrados = new ArrayList<>();
+            mostrarPartidos(partidosFiltrados);
         }
+    }
+
+    /**
+     * Actualiza los contadores en los botones de estado
+     */
+    private void actualizarContadoresEstado(List<Partido> partidos) {
+        int todos = partidos.size();
+        int programados = (int) partidos.stream()
+                .filter(p -> "programados".equals(partidoController.obtenerEstadoPartido(p).toLowerCase()))
+                .count();
+        int enCurso = (int) partidos.stream()
+                .filter(p -> "en curso".equals(partidoController.obtenerEstadoPartido(p).toLowerCase()))
+                .count();
+        int finalizados = (int) partidos.stream()
+                .filter(p -> "finalizado".equals(partidoController.obtenerEstadoPartido(p).toLowerCase()))
+                .count();
+
+        todosToggle.setText("Todos (" + todos + ")");
+        programadosToggle.setText("Programados (" + programados + ")");
+        enCursoToggle.setText("En Curso (" + enCurso + ")");
+        finalizadosToggle.setText("Finalizados (" + finalizados + ")");
     }
 
     /**
@@ -111,26 +152,36 @@ public class PartidoViewController {
         partidosContainer.getChildren().clear();
 
         if (partidos.isEmpty()) {
-            Label sinPartidos = new Label("No hay partidos para mostrar");
-            sinPartidos.setStyle("-fx-font-size: 16px; -fx-text-fill: #6b7280; -fx-padding: 50px;");
-            partidosContainer.getChildren().add(sinPartidos);
+            // Mensaje cuando no hay partidos
+            VBox emptyState = new VBox(10);
+            emptyState.setAlignment(javafx.geometry.Pos.CENTER);
+            emptyState.setStyle("-fx-padding: 50px;");
+
+            Label emptyIcon = new Label("📅");
+            emptyIcon.setStyle("-fx-font-size: 48px;");
+
+            Label emptyMessage = new Label("No hay partidos para mostrar");
+            emptyMessage.setStyle("-fx-font-size: 16px; -fx-text-fill: #6b7280; -fx-font-weight: bold;");
+
+            Label emptySubMessage = new Label("Ajusta los filtros o crea un nuevo partido");
+            emptySubMessage.setStyle("-fx-font-size: 13px; -fx-text-fill: #9ca3af;");
+
+            emptyState.getChildren().addAll(emptyIcon, emptyMessage, emptySubMessage);
+            partidosContainer.getChildren().add(emptyState);
         } else {
             for (Partido partido : partidos) {
                 try {
                     VBox card = cargarCardPartido(partido);
                     partidosContainer.getChildren().add(card);
-                    VBox.setMargin(card, new Insets(0, 0, 15, 0));
                 } catch (IOException e) {
                     System.err.println("Error al cargar card de partido: " + e.getMessage());
                 }
             }
         }
-
-        resultadosLabel.setText("Mostrando " + partidos.size() + " partido(s)");
     }
 
     /**
-     * Carga una tarjeta de partido
+     * Carga una tarjeta de partido desde cardPartido.fxml
      */
     private VBox cargarCardPartido(Partido partido) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/cardPartido.fxml"));
@@ -144,7 +195,7 @@ public class PartidoViewController {
     }
 
     /**
-     * Aplica los filtros seleccionados
+     * Maneja cambios en los filtros
      */
     @FXML
     void handleFiltroChanged(ActionEvent event) {
@@ -152,7 +203,7 @@ public class PartidoViewController {
     }
 
     /**
-     * Cambia el estado del filtro
+     * Maneja cambios en el estado seleccionado
      */
     @FXML
     void handleEstadoChanged(ActionEvent event) {
@@ -181,13 +232,13 @@ public class PartidoViewController {
             String jornadaSeleccionada = jornadaComboBox.getValue();
             Integer idJornada = null;
             if (jornadaSeleccionada != null && !jornadaSeleccionada.equals("Todas las jornadas")) {
-                idJornada = Integer.parseInt(jornadaSeleccionada.replace("Jornada ", ""));
+                String numeroStr = jornadaSeleccionada.replace("Jornada ", "");
+                idJornada = Integer.parseInt(numeroStr);
             }
 
             // Filtro por estadio
             String estadioSeleccionado = estadioComboBox.getValue();
             Integer idEstadio = null;
-            // TODO: implementar obtenerIdEstadioPorNombre si es necesario
 
             // Aplicar filtros
             resultado = partidoController.filtrarPartidos(
@@ -217,10 +268,22 @@ public class PartidoViewController {
     }
 
     /**
-     * Limpia todos los filtros
+     * Limpia todos los filtros (para ActionEvent y MouseEvent)
      */
     @FXML
     void handleLimpiarFiltros(ActionEvent event) {
+        limpiarFiltros();
+    }
+
+    @FXML
+    void handleLimpiarFiltros(MouseEvent event) {
+        limpiarFiltros();
+    }
+
+    /**
+     * Método interno para limpiar filtros
+     */
+    private void limpiarFiltros() {
         equipoComboBox.getSelectionModel().selectFirst();
         tipoEquipoComboBox.getSelectionModel().selectFirst();
         jornadaComboBox.getSelectionModel().selectFirst();
@@ -248,7 +311,6 @@ public class PartidoViewController {
             stage.setScene(scene);
             stage.showAndWait();
 
-            // Recargar partidos después de crear uno nuevo
             cargarPartidos();
         } catch (IOException e) {
             MensajeUtil.mostrarError("Error al abrir formulario: " + e.getMessage());
@@ -271,7 +333,7 @@ public class PartidoViewController {
     }
 
     /**
-     * Elimina un partido
+     * Elimina un partido después de confirmación
      */
     public void eliminarPartido(Partido partido) {
         if (MensajeUtil.mostrarConfirmacion(
@@ -289,7 +351,7 @@ public class PartidoViewController {
     }
 
     /**
-     * Edita un partido
+     * Abre ventana para editar un partido
      */
     public void editarPartido(Partido partido) {
         try {

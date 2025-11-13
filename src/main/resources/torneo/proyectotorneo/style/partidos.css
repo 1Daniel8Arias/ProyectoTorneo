@@ -283,3 +283,283 @@
     -fx-text-fill: #374151;
     -fx-font-weight: 600;
 }
+
+/* ========================================
+   ESTILOS ADICIONALES PARA PARTIDO.FXML
+   ======================================== */
+
+/* Agregar estos estilos al final de tu archivo estilo1.css */
+
+/* Header Section */
+.header-section {
+    -fx-background-color: white;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Filters Container */
+.filters-container {
+    -fx-background-color: #f9fafb;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+}
+
+.filters-title {
+    -fx-text-fill: #1f2937;
+}
+
+.filter-label {
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: bold;
+}
+
+.filter-combo {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-font-size: 13px;
+}
+
+.filter-combo:hover {
+    -fx-border-color: #9ca3af;
+}
+
+.filter-combo:focused {
+    -fx-border-color: #4a90e2;
+    -fx-border-width: 2;
+}
+
+/* Status Tabs */
+.status-tabs {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 8;
+    -fx-padding: 4;
+    -fx-spacing: 4;
+    -fx-border-color: #e5e7eb;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+}
+
+.status-tab {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6b7280;
+    -fx-padding: 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-font-size: 13px;
+}
+
+.status-tab:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.status-tab:selected {
+    -fx-background-color: #4a90e2;
+    -fx-text-fill: white;
+}
+
+/* Results Label */
+.results-label {
+    -fx-text-fill: #4b5563;
+    -fx-font-weight: bold;
+}
+
+/* Cards Scroll */
+.cards-scroll {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.cards-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.cards-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.cards-scroll .scroll-bar:vertical .track {
+    -fx-background-color: #f3f4f6;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.cards-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: #d1d5db;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.cards-scroll .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9ca3af;
+}
+
+/* Cards Container */
+.cards-container {
+    -fx-background-color: transparent;
+}
+
+/* Button Outline */
+.btn-outline {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #374151;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+}
+
+.btn-outline:hover {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #9ca3af;
+}
+
+/* Main Content */
+.main-content {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Empty State */
+.empty-message {
+    -fx-text-fill: #9ca3af;
+    -fx-font-size: 16px;
+    -fx-padding: 50px;
+}
+
+/* =========================================================
+   ESTILOS PARA SISTEMA DE PARTIDOS - DISEÑO COMPACTO
+   ========================================================= */
+
+/* ========== TOGGLES SELECCIONADOS ========== */
+.toggle-button:selected {
+    -fx-background-color: white !important;
+    -fx-text-fill: #1f2937 !important;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 4, 0, 0, 1);
+}
+
+.toggle-button:hover {
+    -fx-background-color: #f3f4f6;
+}
+
+.toggle-button:selected:hover {
+    -fx-background-color: white !important;
+}
+
+/* ========== COMBOBOX MEJORADO ========== */
+.combo-box {
+    -fx-font-size: 13px;
+}
+
+.combo-box:hover {
+    -fx-border-color: #9ca3af;
+}
+
+.combo-box:focused {
+    -fx-border-color: #2563eb;
+    -fx-border-width: 2;
+}
+
+.combo-box .list-cell {
+    -fx-padding: 8 12;
+}
+
+/* ========== BOTONES ========== */
+.button:hover {
+    -fx-opacity: 0.85;
+}
+
+/* Botón Editar hover */
+.button:hover {
+    -fx-background-color: #f3f4f6 !important;
+}
+
+/* ========== SCROLLPANE ========== */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 8px;
+}
+
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 4;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #9ca3af;
+}
+
+.scroll-pane .scroll-bar:vertical .increment-button,
+.scroll-pane .scroll-bar:vertical .decrement-button {
+    -fx-padding: 0;
+    -fx-pref-height: 0;
+}
+
+/* ========== ESTADOS DE PARTIDO ========== */
+.estado-programado {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1e40af;
+}
+
+.estado-en-curso {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #065f46;
+}
+
+.estado-finalizado {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+}
+
+.estado-hoy {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #92400e;
+}
+
+/* ========== CARD HOVER EFFECT ========== */
+.card-partido:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.12), 8, 0, 0, 2);
+    -fx-cursor: hand;
+}
+
+/* ========== LABELS ========== */
+.filter-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: bold;
+}
+
+/* ========== LINK STYLE ========== */
+.link-label {
+    -fx-text-fill: #2563eb;
+    -fx-cursor: hand;
+}
+
+.link-label:hover {
+    -fx-underline: true;
+    -fx-text-fill: #1e40af;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 1200px) {
+    .card-partido {
+        -fx-max-width: 100%;
+    }
+}
