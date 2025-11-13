@@ -1,8 +1,9 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
-import torneo.proyectotorneo.model.Equipo;
-import torneo.proyectotorneo.model.Tecnico;
+import torneo.proyectotorneo.model.*;
+import torneo.proyectotorneo.model.enums.PosicionJugador;
+import torneo.proyectotorneo.model.enums.TipoSede;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -36,12 +37,13 @@ public class EquipoRepository implements Repository<Equipo> {
 
     @Override
     public Equipo buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM EQUIPO WHERE ID_EQUIPO =?";
         Equipo equipo = null;
 
+        String sql = "SELECT * FROM EQUIPO WHERE ID_EQUIPO = ?";
+
         try (Connection conn = Conexion.getInstance();
-             PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -49,17 +51,29 @@ public class EquipoRepository implements Repository<Equipo> {
                     equipo = new Equipo();
                     equipo.setId(rs.getInt("ID_EQUIPO"));
                     equipo.setNombre(rs.getString("NOMBRE"));
-
-
                 }
             }
 
+            if (equipo != null) {
+                equipo.setCapitan(buscarCapitan(equipo.getId()));
+                equipo.setTecnico(buscarTecnicoPorEquipo(equipo.getId()));
+                equipo.setListaJugadoresJugadores(listarJugadoresPorEquipo(equipo.getId()));
+                equipo.setListaCuerpoTecnicos(listarCuerpoTecnicoPorEquipo(equipo.getId()));
+                equipo.setEstadios(listarEstadiosPorEquipo(equipo.getId()));
+                equipo.setListaPartidosLocal(listarPartidosPorEquipo(equipo.getId(), true));
+                equipo.setListaPartidosVisitante(listarPartidosPorEquipo(equipo.getId(), false));
+                equipo.setTablaPosicion(buscarTablaPosicionPorEquipo(equipo.getId()));
+                equipo.setCantidadJugadores(equipo.getListaJugadoresJugadores().size());
+            }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar el equipo por ID " + e.getMessage());
+            throw new RepositoryException("Error al obtener equipo completo: " + e.getMessage());
         }
+
         return equipo;
     }
+
+
 
     public int buscarPorNombre(String nombreEquipo) throws RepositoryException {
         String sql = """
@@ -223,6 +237,145 @@ public class EquipoRepository implements Repository<Equipo> {
         return lista;
     }
 
+    private Jugador buscarCapitan(int idEquipo) throws SQLException {
+        Jugador capitan = null;
+        String sql = """
+        SELECT j.* FROM EQUIPO e
+        JOIN JUGADOR j ON e.ID_JUGADOR_CAPITAN = j.ID_JUGADOR
+        WHERE e.ID_EQUIPO = ?
+    """;
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                capitan = new Jugador();
+                capitan.setId(rs.getInt("ID_JUGADOR"));
+                capitan.setNombre(rs.getString("NOMBRE"));
+                capitan.setApellido(rs.getString("APELLIDO"));
+            }
+        }
+        return capitan;
+    }
 
+    private Tecnico buscarTecnicoPorEquipo(int idEquipo) throws SQLException {
+        Tecnico tecnico = null;
+        String sql = "SELECT * FROM TECNICO WHERE ID_EQUIPO = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                tecnico = new Tecnico();
+                tecnico.setId(rs.getInt("ID_TECNICO"));
+                tecnico.setNombre(rs.getString("NOMBRE"));
+                tecnico.setApellido(rs.getString("APELLIDO"));
+            }
+        }
+        return tecnico;
+    }
+
+    private ArrayList<Jugador> listarJugadoresPorEquipo(int idEquipo) throws SQLException {
+        ArrayList<Jugador> jugadores = new ArrayList<>();
+        String sql = "SELECT * FROM JUGADOR WHERE ID_EQUIPO = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Jugador j = new Jugador();
+                j.setId(rs.getInt("ID_JUGADOR"));
+                j.setNombre(rs.getString("NOMBRE"));
+                j.setApellido(rs.getString("APELLIDO"));
+                j.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
+                j.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+                jugadores.add(j);
+            }
+        }
+        return jugadores;
+    }
+
+    private ArrayList<CuerpoTecnico> listarCuerpoTecnicoPorEquipo(int idEquipo) throws SQLException {
+        ArrayList<CuerpoTecnico> lista = new ArrayList<>();
+        String sql = "SELECT * FROM CUERPO_TECNICO WHERE ID_EQUIPO = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CuerpoTecnico ct = new CuerpoTecnico();
+                ct.setId(rs.getInt("ID_CUERPO_TECNICO"));
+                ct.setNombre(rs.getString("NOMBRE"));
+                ct.setApellido(rs.getString("APELLIDO"));
+                ct.setEspecialidad(rs.getString("ESPECIALIDAD"));
+                lista.add(ct);
+            }
+        }
+        return lista;
+    }
+
+    private ArrayList<EquipoEstadio> listarEstadiosPorEquipo(int idEquipo) throws SQLException {
+        ArrayList<EquipoEstadio> lista = new ArrayList<>();
+        String sql = """
+        SELECT ee.*, es.ID_ESTADIO, es.NOMBRE, es.CAPACIDAD
+        FROM EQUIPO_ESTADIO ee
+        JOIN ESTADIO es ON ee.ID_ESTADIO = es.ID_ESTADIO
+        WHERE ee.ID_EQUIPO = ?
+    """;
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Estadio estadio = new Estadio();
+                estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                estadio.setNombre(rs.getString("NOMBRE"));
+                estadio.setCapacidad(rs.getInt("CAPACIDAD"));
+
+                EquipoEstadio ee = new EquipoEstadio();
+                ee.setEstadio(estadio);
+                ee.setSede(TipoSede.valueOf(rs.getString("SEDE").toUpperCase()));
+                lista.add(ee);
+            }
+        }
+        return lista;
+    }
+
+    private ArrayList<Partido> listarPartidosPorEquipo(int idEquipo, boolean local) throws SQLException {
+        ArrayList<Partido> lista = new ArrayList<>();
+        String columna = local ? "ID_EQUIPO_LOCAL" : "ID_EQUIPO_VISITANTE";
+        String sql = "SELECT * FROM PARTIDO WHERE " + columna + " = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Partido p = new Partido();
+                p.setIdPartido(rs.getInt("ID_PARTIDO"));
+                p.setFecha(rs.getDate("FECHA").toLocalDate());
+                p.setHora(rs.getString("HORA"));
+                lista.add(p);
+            }
+        }
+        return lista;
+    }
+
+    private TablaPosicion buscarTablaPosicionPorEquipo(int idEquipo) throws SQLException {
+        TablaPosicion tp = null;
+        String sql = "SELECT * FROM TABLA_POSICION WHERE ID_EQUIPO = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idEquipo);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                tp = new TablaPosicion();
+                tp.setGanados(rs.getInt("GANADOS"));
+                tp.setEmpates(rs.getInt("EMPATES"));
+                tp.setPerdidos(rs.getInt("PERDIDOS"));
+                tp.setPuntos(rs.getInt("PUNTOS"));
+            }
+        }
+        return tp;
+    }
 
 }

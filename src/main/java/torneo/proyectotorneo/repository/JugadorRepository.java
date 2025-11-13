@@ -1,10 +1,9 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
-import torneo.proyectotorneo.model.Contrato;
-import torneo.proyectotorneo.model.Equipo;
-import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.*;
 import torneo.proyectotorneo.model.enums.PosicionJugador;
+import torneo.proyectotorneo.model.enums.TipoTarjeta;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -49,14 +48,20 @@ public class JugadorRepository implements Repository<Jugador> {
 
     @Override
     public Jugador buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM JUGADOR WHERE ID_JUGADOR = ?";
+
         Jugador jugador = null;
+
+        String sql = """
+        SELECT j.*, e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM JUGADOR j
+        LEFT JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
+        WHERE j.ID_JUGADOR = ?
+    """;
 
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
-
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     jugador = new Jugador();
@@ -68,12 +73,22 @@ public class JugadorRepository implements Repository<Jugador> {
 
                     Equipo equipo = new Equipo();
                     equipo.setId(rs.getInt("ID_EQUIPO"));
+                    equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
                     jugador.setEquipo(equipo);
                 }
             }
 
+            if (jugador != null) {
+                jugador.setListaContratos(listarContratosPorJugador(id));
+                jugador.setListaGoles(listarGolesPorJugador(id));
+                jugador.setListaTarjetas(listarTarjetasPorJugador(id));
+                jugador.setListaSanciones(listarSancionesPorJugador(id));
+                jugador.setListaSustitucionesEntradas(listarSustitucionesPorJugador(id, true));
+                jugador.setListaSustitucionesSalidas(listarSustitucionesPorJugador(id, false));
+            }
+
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar el jugador por ID: " + e.getMessage());
+            throw new RepositoryException("Error al obtener jugador completo: " + e.getMessage());
         }
 
         return jugador;
@@ -552,6 +567,142 @@ public class JugadorRepository implements Repository<Jugador> {
 
         return lista;
     }
+
+    //auxiliares de buscar por id
+
+    private ArrayList<Contrato> listarContratosPorJugador(int idJugador) throws SQLException {
+        ArrayList<Contrato> lista = new ArrayList<>();
+        String sql = "SELECT * FROM CONTRATO WHERE ID_JUGADOR = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJugador);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Contrato contrato = new Contrato();
+                    contrato.setIdContrato(rs.getInt("ID_CONTRATO"));
+                    contrato.setFechaInicio(rs.getDate("FECHA_INICIO").toLocalDate());
+                    contrato.setFechaFin(rs.getDate("FECHA_FIN").toLocalDate());
+                    contrato.setSalario(rs.getDouble("SALARIO"));
+                    lista.add(contrato);
+                }
+            }
+        }
+        return lista;
+    }
+
+
+    private ArrayList<Gol> listarGolesPorJugador(int idJugador) throws SQLException {
+        ArrayList<Gol> lista = new ArrayList<>();
+        String sql = """
+        SELECT g.ID_GOL, g.NUMERO_GOLES, p.ID_PARTIDO, p.FECHA, p.HORA
+        FROM GOL g
+        JOIN PARTIDO p ON g.ID_PARTIDO = p.ID_PARTIDO
+        WHERE g.ID_JUGADOR = ?
+    """;
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJugador);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+
+                    Gol gol = new Gol();
+                    gol.setIdGol(rs.getInt("ID_GOL"));
+                    gol.setNumeroGoles(rs.getInt("NUMERO_GOLES"));
+                    gol.setPartido(partido);
+                    lista.add(gol);
+                }
+            }
+        }
+        return lista;
+    }
+
+
+    private ArrayList<Tarjeta> listarTarjetasPorJugador(int idJugador) throws SQLException {
+        ArrayList<Tarjeta> lista = new ArrayList<>();
+        String sql = """
+        SELECT t.ID_TARJETA, t.TIPO, p.ID_PARTIDO, p.FECHA, p.HORA
+        FROM TARJETA t
+        JOIN PARTIDO p ON t.ID_PARTIDO = p.ID_PARTIDO
+        WHERE t.ID_JUGADOR = ?
+    """;
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJugador);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+
+                    Tarjeta tarjeta = new Tarjeta();
+                    tarjeta.setIdTarjeta(rs.getInt("ID_TARJETA"));
+                    tarjeta.setTipo(TipoTarjeta.valueOf(rs.getString("TIPO")));
+                    tarjeta.setPartido(partido);
+                    lista.add(tarjeta);
+                }
+            }
+        }
+        return lista;
+    }
+
+    private ArrayList<Sancion> listarSancionesPorJugador(int idJugador) throws SQLException {
+        ArrayList<Sancion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM SANCION WHERE ID_JUGADOR = ?";
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJugador);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Sancion sancion = new Sancion();
+                    sancion.setIdSancion(rs.getInt("ID_SANCION"));
+                    sancion.setFecha(rs.getDate("FECHA").toLocalDate());
+                    sancion.setMotivo(rs.getString("MOTIVO"));
+                    sancion.setDuracion(rs.getInt("DURACION"));
+                    sancion.setTipo(rs.getString("TIPO"));
+                    lista.add(sancion);
+                }
+            }
+        }
+        return lista;
+    }
+
+    private ArrayList<Sustitucion> listarSustitucionesPorJugador(int idJugador, boolean entra) throws SQLException {
+        ArrayList<Sustitucion> lista = new ArrayList<>();
+        String columna = entra ? "ID_JUGADOR_ENTRA" : "ID_JUGADOR_SALE";
+        String sql = """
+        SELECT s.ID_SUSTITUCION, s.ID_PARTIDO, s.ID_JUGADOR_ENTRA, s.ID_JUGADOR_SALE,
+               p.FECHA, p.HORA
+        FROM SUSTITUCION s
+        JOIN PARTIDO p ON s.ID_PARTIDO = p.ID_PARTIDO
+        WHERE s.%s = ?
+    """.formatted(columna);
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idJugador);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Partido partido = new Partido();
+                    partido.setIdPartido(rs.getInt("ID_PARTIDO"));
+                    partido.setFecha(rs.getDate("FECHA").toLocalDate());
+                    partido.setHora(rs.getString("HORA"));
+
+                    Sustitucion sust = new Sustitucion();
+                    sust.setIdSustitucion(rs.getInt("ID_SUSTITUCION"));
+                    sust.setPartido(partido);
+                    lista.add(sust);
+                }
+            }
+        }
+        return lista;
+    }
+
+
 
 
 }
