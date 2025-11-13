@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 4, 0, 0, 2);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.CardPartidoViewController">
+<VBox spacing="0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e5e7eb; -fx-border-radius: 8; -fx-border-width: 1; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 4, 0, 0, 2);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.CardPartidoViewController">
 
     <!-- Header: Jornada y Estado -->
     <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 12 16 8 16;">
@@ -56,7 +56,7 @@
                     <Font name="System Bold" size="15" />
                 </font>
             </Label>
-            <Label text="Local" style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;">
+            <Label fx:id="lblPosicionLocal" text="Local" style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;">
                 <font>
                     <Font size="11" />
                 </font>
@@ -94,7 +94,7 @@
                     <Font name="System Bold" size="15" />
                 </font>
             </Label>
-            <Label text="Visitante" style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;">
+            <Label fx:id="lblPosicionVisitante" text="Visitante" style="-fx-font-size: 11px; -fx-text-fill: #9ca3af;">
                 <font>
                     <Font size="11" />
                 </font>
@@ -102,57 +102,65 @@
         </VBox>
     </HBox>
 
+    <!-- Resultado (oculto, usado solo para control interno) -->
+    <HBox visible="false" managed="false">
+        <Label fx:id="lblResultadoLocal" text="-" />
+        <Label fx:id="lblResultadoVisitante" text="-" />
+    </HBox>
+
     <!-- Footer: Información adicional -->
     <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 8 16 12 16; -fx-border-color: #f3f4f6; -fx-border-width: 1 0 0 0;">
 
         <!-- Fecha -->
         <HBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Fecha:" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;">
+            <Label text="📅" style="-fx-font-size: 12px;">
                 <font>
                     <Font size="12" />
                 </font>
             </Label>
-            <Label fx:id="lblFecha" text="2024-01-27" style="-fx-font-size: 12px; -fx-text-fill: #374151; -fx-font-weight: bold;">
+            <Label fx:id="lblFecha" text="15/04/2024 - 19:00" style="-fx-font-size: 12px; -fx-text-fill: #374151;">
                 <font>
-                    <Font name="System Bold" size="12" />
-                </font>
-            </Label>
-            <Label fx:id="lblHora" text="18:00" style="-fx-font-size: 12px; -fx-text-fill: #374151; -fx-font-weight: bold;">
-                <font>
-                    <Font name="System Bold" size="12" />
+                    <Font size="12" />
                 </font>
             </Label>
         </HBox>
+
+        <!-- Separador -->
+        <Label text="|" style="-fx-text-fill: #d1d5db; -fx-font-size: 12px;" />
 
         <!-- Estadio -->
         <HBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Estadio:" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;">
+            <Label text="🏟️" style="-fx-font-size: 12px;">
                 <font>
                     <Font size="12" />
                 </font>
             </Label>
-            <Label fx:id="lblEstadio" text="El Campín" style="-fx-font-size: 12px; -fx-text-fill: #374151; -fx-font-weight: bold;">
+            <Label fx:id="lblEstadio" text="Estadio El Campín" style="-fx-font-size: 12px; -fx-text-fill: #374151;">
                 <font>
-                    <Font name="System Bold" size="12" />
+                    <Font size="12" />
                 </font>
             </Label>
         </HBox>
 
-        <Region HBox.hgrow="ALWAYS" />
+        <!-- Separador -->
+        <Label text="|" style="-fx-text-fill: #d1d5db; -fx-font-size: 12px;" />
 
         <!-- Árbitro -->
         <HBox spacing="5" alignment="CENTER_LEFT">
-            <Label text="Árbitro:" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;">
+            <Label text="👨‍⚖️" style="-fx-font-size: 12px;">
                 <font>
                     <Font size="12" />
                 </font>
             </Label>
-            <Label fx:id="lblArbitro" text="Nicolas Gallo" style="-fx-font-size: 12px; -fx-text-fill: #374151; -fx-font-weight: bold;">
+            <Label fx:id="lblArbitro" text="Carlos Ortega" style="-fx-font-size: 12px; -fx-text-fill: #374151;">
                 <font>
-                    <Font name="System Bold" size="12" />
+                    <Font size="12" />
                 </font>
             </Label>
         </HBox>
     </HBox>
+
+    <!-- Botón Detalles (oculto por defecto) -->
+    <Button fx:id="btnDetalles" onAction="#handleVerDetalles" text="Ver Detalles" visible="false" managed="false" />
 
 </VBox>
