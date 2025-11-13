@@ -368,4 +368,18 @@ public class TorneoService {
             throw new RepositoryException(e.getMessage());
         }
     }
+
+    // En TorneoService.java
+    /**
+     * Obtiene el ID de un estadio por su nombre
+     */
+    public Integer obtenerIdEstadioPorNombre(String nombreEstadio) throws RepositoryException {
+        ArrayList<Estadio> estadios = estadioService.listarTodosLosEstadios();
+        for (Estadio estadio : estadios) {
+            if (estadio.getNombre().equals(nombreEstadio)) {
+                return estadio.getIdEstadio();
+            }
+        }
+        throw new RepositoryException("No se encontró el estadio: " + nombreEstadio);
+    }
 }

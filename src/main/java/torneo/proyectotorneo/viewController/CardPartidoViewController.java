@@ -81,6 +81,7 @@ public class CardPartidoViewController {
         aplicarEstiloEstado(estado);
 
         // Marcador o VS
+        // Marcador o VS
         if (partido.getResultadoFinal() != null) {
             // Mostrar marcador
             hboxMarcador.setVisible(true);
@@ -93,12 +94,24 @@ public class CardPartidoViewController {
 
             lblResultadoLocal.setText(String.valueOf(partido.getResultadoFinal().getGolesLocal()));
             lblResultadoVisitante.setText(String.valueOf(partido.getResultadoFinal().getGolesVisitante()));
+
+            // Hacer visibles los goles en el HBox
+            lblGolesLocal.setVisible(true);
+            lblGolesLocal.setManaged(true);
+            lblGolesVisitante.setVisible(true);
+            lblGolesVisitante.setManaged(true);
         } else {
             // Mostrar VS
-            hboxMarcador.setVisible(false);
-            hboxMarcador.setManaged(false);
+            hboxMarcador.setVisible(true);
+            hboxMarcador.setManaged(true);
             lblVS.setVisible(true);
             lblVS.setManaged(true);
+
+            // Ocultar los labels de goles
+            lblGolesLocal.setVisible(false);
+            lblGolesLocal.setManaged(false);
+            lblGolesVisitante.setVisible(false);
+            lblGolesVisitante.setManaged(false);
 
             lblResultadoLocal.setText("-");
             lblResultadoVisitante.setText("-");

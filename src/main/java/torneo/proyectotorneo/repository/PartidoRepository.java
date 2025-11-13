@@ -343,14 +343,21 @@ public class PartidoRepository implements Repository<Partido> {
     //consulta intermedia 5
 
     public ArrayList<Partido> listarPartidosConEquiposYEstadio() throws RepositoryException {
-        String sql = "SELECT p.ID_PARTIDO, p.FECHA, p.HORA, " +
-                "el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS LOCAL_NOMBRE, " +
-                "ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS VISITANTE_NOMBRE, " +
-                "s.ID_ESTADIO, s.NOMBRE AS ESTADIO_NOMBRE " +
-                "FROM PARTIDO p " +
-                "JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO " +
-                "JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO " +
-                "JOIN ESTADIO s ON p.ID_ESTADIO = s.ID_ESTADIO";
+        String sql = """
+                SELECT p.ID_PARTIDO, p.FECHA, p.HORA, p.ID_JORNADA, 
+                el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS LOCAL_NOMBRE, 
+                ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS VISITANTE_NOMBRE, 
+                s.ID_ESTADIO, s.NOMBRE AS ESTADIO_NOMBRE,  
+                j.JORNADA AS NUMERO_JORNADA,  
+                rf.ID_RESULTADO_FINAL, rf.GOLES_LOCAL, rf.GOLES_VISITANTE 
+                FROM PARTIDO p 
+                JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO 
+                JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO 
+                JOIN ESTADIO s ON p.ID_ESTADIO = s.ID_ESTADIO 
+                JOIN JORNADA j ON p.ID_JORNADA = j.ID_JORNADA  
+                LEFT JOIN RESULTADO_FINAL rf ON p.ID_PARTIDO = rf.ID_PARTIDO  
+                """;
+
         ArrayList<Partido> lista = new ArrayList<>();
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -375,6 +382,22 @@ public class PartidoRepository implements Repository<Partido> {
                 s.setIdEstadio(rs.getInt("ID_ESTADIO"));
                 s.setNombre(rs.getString("ESTADIO_NOMBRE"));
                 p.setEstadio(s);
+
+                //  AGREGAR: Cargar jornada
+                Jornada jornada = new Jornada();
+                jornada.setIdJornada(rs.getInt("ID_JORNADA"));
+                jornada.setNumeroJornada(rs.getInt("NUMERO_JORNADA"));
+                p.setJornada(jornada);
+
+                //  AGREGAR: Cargar resultado final si existe
+                int idResultado = rs.getInt("ID_RESULTADO_FINAL");
+                if (!rs.wasNull()) {  // Si existe un resultado final
+                    ResultadoFinal rf = new ResultadoFinal();
+                    rf.setIdResultadoFinal(idResultado);
+                    rf.setGolesLocal(rs.getInt("GOLES_LOCAL"));
+                    rf.setGolesVisitante(rs.getInt("GOLES_VISITANTE"));
+                    p.setResultadoFinal(rf);
+                }
 
                 lista.add(p);
             }

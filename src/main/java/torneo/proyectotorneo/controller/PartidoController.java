@@ -285,4 +285,33 @@ public class PartidoController {
         }
         return "No asignado";
     }
+
+    // En PartidoController.java
+    /**
+     * Obtiene ID de estadio por nombre
+     */
+    public Integer obtenerIdEstadioPorNombre(String nombreEstadio) throws RepositoryException {
+        try {
+            return modelFactoryController.getTorneoService().obtenerIdEstadioPorNombre(nombreEstadio);
+        } catch (Exception e) {
+            throw new RepositoryException("Error obteniendo ID del estadio: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Obtiene ID de jornada por número
+     */
+    public Integer obtenerIdJornadaPorNumero(int numeroJornada) throws RepositoryException {
+        try {
+            ArrayList<Jornada> jornadas = modelFactoryController.getTorneoService().listarJornadas();
+            for (Jornada j : jornadas) {
+                if (j.getNumeroJornada() == numeroJornada) {
+                    return j.getIdJornada();
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RepositoryException("Error obteniendo ID de jornada: " + e.getMessage());
+        }
+    }
 }

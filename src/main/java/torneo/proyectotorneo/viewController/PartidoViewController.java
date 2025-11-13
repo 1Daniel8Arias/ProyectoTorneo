@@ -232,13 +232,25 @@ public class PartidoViewController {
             String jornadaSeleccionada = jornadaComboBox.getValue();
             Integer idJornada = null;
             if (jornadaSeleccionada != null && !jornadaSeleccionada.equals("Todas las jornadas")) {
-                String numeroStr = jornadaSeleccionada.replace("Jornada ", "");
-                idJornada = Integer.parseInt(numeroStr);
+                try {
+                    String numeroStr = jornadaSeleccionada.replace("Jornada ", "").trim();
+                    int numeroJornada = Integer.parseInt(numeroStr);
+
+                    // Buscar el ID de jornada por número
+                    // ✅ AGREGAR este método en PartidoController
+                    idJornada = partidoController.obtenerIdJornadaPorNumero(numeroJornada);
+                } catch (NumberFormatException e) {
+                    System.err.println("Error al parsear número de jornada: " + e.getMessage());
+                }
             }
 
             // Filtro por estadio
             String estadioSeleccionado = estadioComboBox.getValue();
             Integer idEstadio = null;
+            if (estadioSeleccionado != null && !estadioSeleccionado.equals("Todos los estadios")) {
+                // AGREGAR: Obtener el ID del estadio
+                idEstadio = partidoController.obtenerIdEstadioPorNombre(estadioSeleccionado);
+            }
 
             // Aplicar filtros
             resultado = partidoController.filtrarPartidos(
@@ -281,12 +293,16 @@ public class PartidoViewController {
      * Método interno para limpiar filtros
      */
     private void limpiarFiltros() {
-        equipoComboBox.getSelectionModel().selectFirst();
-        tipoEquipoComboBox.getSelectionModel().selectFirst();
-        jornadaComboBox.getSelectionModel().selectFirst();
-        estadioComboBox.getSelectionModel().selectFirst();
-        todosToggle.setSelected(true);
-        cargarPartidos();
+        try {
+            equipoComboBox.getSelectionModel().selectFirst();
+            tipoEquipoComboBox.getSelectionModel().selectFirst();
+            jornadaComboBox.getSelectionModel().selectFirst();
+            estadioComboBox.getSelectionModel().selectFirst();
+            todosToggle.setSelected(true);
+            cargarPartidos();
+        } catch (Exception e) {
+            MensajeUtil.mostrarError("Error al limpiar filtros: " + e.getMessage());
+        }
     }
 
     /**
