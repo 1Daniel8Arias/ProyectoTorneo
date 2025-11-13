@@ -175,7 +175,8 @@ public class PartidoController {
                     // Filtro por jornada
 
 
-                    if (!Objects.equals(p.getJornada().getIdJornada(), idJornada)) {
+                    // Filtro por jornada
+                    if (idJornada != null && (p.getJornada() == null || !Objects.equals(p.getJornada().getIdJornada(), idJornada))) {
                         return false;
                     }
 
