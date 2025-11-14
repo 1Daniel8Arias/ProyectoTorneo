@@ -15,4 +15,5 @@ public class CuerpoTecnico {
     private Equipo equipo;
 
 
+
 }

@@ -36,9 +36,9 @@ public class CardEquipoController {
 
     public Jugador obtenerCapitanDelEquipo(int idEquipo) throws RepositoryException {
         Equipo equipo = obtenerEquipoCompleto(idEquipo);
-        if (equipo.getIdJugadorCapitan() != null) {
+        if (equipo.getCapitan().getId() != null) {
             return modelFactoryController.getTorneoService().getJugadorService()
-                    .buscarJugadorPorId(equipo.getIdJugadorCapitan());
+                    .buscarJugadorPorId(equipo.getCapitan().getId());
         }
         return null;
     }

@@ -188,7 +188,8 @@ public class CuerpoTecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-                nuevoCuerpoTecnico.setIdEquipo(idEquipo);
+               nuevoCuerpoTecnico.settIdEquipo(idEquipo);
+
             }
 
             cuerpoTecnicoController.guardarCuerpoTecnico(nuevoCuerpoTecnico);
@@ -220,7 +221,7 @@ public class CuerpoTecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-                cuerpoTecnicoSeleccionado.setIdEquipo(idEquipo);
+                cuerpoTecnicoSeleccionado.settIdEquipo(idEquipo);
             }
 
             cuerpoTecnicoController.actualizarCuerpoTecnico(cuerpoTecnicoSeleccionado);
@@ -248,7 +249,7 @@ public class CuerpoTecnicoViewController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                cuerpoTecnicoController.eliminarCuerpoTecnico(cuerpoTecnicoSeleccionado.getIdCuerpoTecnico());
+                cuerpoTecnicoController.eliminarCuerpoTecnico(cuerpoTecnicoSeleccionado.getId());
 
                 AlertHelper.mostrarInformacion("Éxito", "Miembro del cuerpo técnico eliminado correctamente");
                 cargarCuerpoTecnico();

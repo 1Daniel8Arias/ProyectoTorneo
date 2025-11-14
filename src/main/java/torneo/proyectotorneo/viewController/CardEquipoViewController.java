@@ -135,7 +135,7 @@ public class CardEquipoViewController {
         Label lblTecnicoNombre = new Label();
 
         try {
-            Tecnico tecnico = cardEquipoController.obtenerTecnicoDelEquipo(equipo.getIdEquipo());
+            Tecnico tecnico = cardEquipoController.obtenerTecnicoDelEquipo(equipo.getId());
             if (tecnico != null) {
                 lblTecnicoNombre.setText(tecnico.getNombre() + " " + tecnico.getApellido());
             } else {
@@ -156,7 +156,7 @@ public class CardEquipoViewController {
         Label lblCapitanNombre = new Label();
 
         try {
-            Jugador capitan = cardEquipoController.obtenerCapitanDelEquipo(equipo.getIdEquipo());
+            Jugador capitan = cardEquipoController.obtenerCapitanDelEquipo(equipo.getId());
             if (capitan != null) {
                 lblCapitanNombre.setText(capitan.getNombre() + " " + capitan.getApellido() +
                         " (#" + capitan.getNumeroCamiseta() + ")");
@@ -182,7 +182,7 @@ public class CardEquipoViewController {
         VBox vboxJugadores = new VBox(5);
 
         try {
-            ArrayList<Jugador> jugadores = cardEquipoController.obtenerJugadoresDelEquipo(equipo.getIdEquipo());
+            ArrayList<Jugador> jugadores = cardEquipoController.obtenerJugadoresDelEquipo(equipo.getId());
 
             // Conteo por posición
             Map<PosicionJugador, Integer> conteo = new HashMap<>();
@@ -265,9 +265,9 @@ public class CardEquipoViewController {
 
     private void mostrarDetalleCompleto(Equipo equipo) {
         try {
-            ArrayList<Jugador> jugadores = cardEquipoController.obtenerJugadoresDelEquipo(equipo.getIdEquipo());
-            Tecnico tecnico = cardEquipoController.obtenerTecnicoDelEquipo(equipo.getIdEquipo());
-            Jugador capitan = cardEquipoController.obtenerCapitanDelEquipo(equipo.getIdEquipo());
+            ArrayList<Jugador> jugadores = cardEquipoController.obtenerJugadoresDelEquipo(equipo.getId());
+            Tecnico tecnico = cardEquipoController.obtenerTecnicoDelEquipo(equipo.getId());
+            Jugador capitan = cardEquipoController.obtenerCapitanDelEquipo(equipo.getId());
 
             // Crear diálogo con la información completa
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -300,7 +300,7 @@ public class CardEquipoViewController {
             ObservableList<String> jugadoresInfo = FXCollections.observableArrayList();
 
             for (Jugador j : jugadores) {
-                String esCapitan = (capitan != null && j.getIdJugador() == capitan.getIdJugador()) ? " (C)" : "";
+                String esCapitan = (capitan != null && j.getId() == capitan.getId()) ? " (C)" : "";
                 jugadoresInfo.add(String.format("#%s - %s %s - %s%s",
                         j.getNumeroCamiseta(),
                         j.getNombre(),
