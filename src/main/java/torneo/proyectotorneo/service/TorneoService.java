@@ -169,7 +169,8 @@ public class TorneoService {
 
     public void actualizarTablaDespuesDePartido(int idPartido) throws RepositoryException {
         try {
-            tablaPosicionService.actualizarTablaDespuesDePartido(idPartido);
+            Partido partido = partidoService.buscarPartidoPorId(idPartido);
+            tablaPosicionService.actualizarTablaDespuesDePartido(partido);
         } catch (TablaPosicionNoEncontradaException e) {
             throw new RepositoryException(e.getMessage());
         }

@@ -62,9 +62,9 @@ public class EquipoViewController {
         // Mostrar nombre del capitán si existe
         colCapitan.setCellValueFactory(cellData -> {
             Equipo equipo = cellData.getValue();
-            if (equipo.getIdJugadorCapitan() != null) {
+            if (equipo.getCapitan().getId() != null) {
                 try {
-                    Jugador capitan = jugadorController.buscarPorId(equipo.getIdJugadorCapitan());
+                    Jugador capitan = jugadorController.buscarPorId(equipo.getCapitan().getId());
                     return new javafx.beans.property.SimpleStringProperty(
                             capitan.getNombre() + " " + capitan.getApellido()
                     );
@@ -112,7 +112,7 @@ public class EquipoViewController {
         cargarInformacionAdicional(equipo);
 
         // Cargar jugadores disponibles para capitán
-        cargarJugadoresParaCapitan(equipo.getIdEquipo());
+        cargarJugadoresParaCapitan(equipo.getId());
 
         btnActualizar.setDisable(false);
         btnEliminar.setDisable(false);
@@ -122,7 +122,7 @@ public class EquipoViewController {
     private void cargarInformacionAdicional(Equipo equipo) {
         try {
             // Cantidad de jugadores
-            ArrayList<Jugador> jugadores = equipoController.listarJugadoresPorEquipo(equipo.getIdEquipo());
+            ArrayList<Jugador> jugadores = equipoController.listarJugadoresPorEquipo(equipo.getId());
             if (lblCantidadJugadores != null) {
                 lblCantidadJugadores.setText("Jugadores: " + jugadores.size());
             }
@@ -222,7 +222,7 @@ public class EquipoViewController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                equipoController.eliminarEquipo(equipoSeleccionado.getIdEquipo());
+                equipoController.eliminarEquipo(equipoSeleccionado.getId());
 
                 AlertHelper.mostrarInformacion("Éxito", "Equipo eliminado correctamente");
                 cargarEquipos();
@@ -250,7 +250,7 @@ public class EquipoViewController {
             String numeroCamiseta = seleccion.substring(seleccion.indexOf("#") + 1, seleccion.indexOf(")"));
 
             // Buscar el jugador por número de camiseta y equipo
-            ArrayList<Jugador> jugadores = equipoController.listarJugadoresPorEquipo(equipoSeleccionado.getIdEquipo());
+            ArrayList<Jugador> jugadores = equipoController.listarJugadoresPorEquipo(equipoSeleccionado.getId());
             Jugador capitanSeleccionado = null;
 
             for (Jugador j : jugadores) {
@@ -261,7 +261,7 @@ public class EquipoViewController {
             }
 
             if (capitanSeleccionado != null) {
-                equipoController.asignarCapitan(equipoSeleccionado.getIdEquipo(), capitanSeleccionado.getIdJugador());
+                equipoController.asignarCapitan(equipoSeleccionado.getId(), capitanSeleccionado.getId());
                 AlertHelper.mostrarInformacion("Éxito", "Capitán asignado correctamente");
                 cargarEquipos();
             }

@@ -246,7 +246,7 @@ public class SancionViewController {
                 ArrayList<Jugador> jugadores = jugadorController.listarTodos();
                 for (Jugador j : jugadores) {
                     if (j.getNumeroCamiseta().equals(numeroCamiseta)) {
-                        nuevaSancion.setIdJugador(j.getIdJugador());
+                        nuevaSancion.setIdSancion(j.getId());
                         break;
                     }
                 }
@@ -290,7 +290,7 @@ public class SancionViewController {
                 ArrayList<Jugador> jugadores = jugadorController.listarTodos();
                 for (Jugador j : jugadores) {
                     if (j.getNumeroCamiseta().equals(numeroCamiseta)) {
-                        sancionSeleccionada.setIdJugador(j.getIdJugador());
+                        sancionSeleccionada.setIdSancion(j.getId());
                         break;
                     }
                 }

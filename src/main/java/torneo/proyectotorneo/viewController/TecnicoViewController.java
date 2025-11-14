@@ -161,7 +161,9 @@ public class TecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-                nuevoTecnico.setIdEquipo(idEquipo);
+                Equipo equipo = new Equipo();
+                equipo.setId(idEquipo);
+                nuevoTecnico.setEquipo(equipo);
             }
 
             tecnicoController.guardarTecnico(nuevoTecnico);
@@ -193,7 +195,9 @@ public class TecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-                tecnicoSeleccionado.setIdEquipo(idEquipo);
+                Equipo equipo = new Equipo();
+                equipo.setId(idEquipo);
+                tecnicoSeleccionado.setEquipo(equipo);
             }
 
             tecnicoController.actualizarTecnico(tecnicoSeleccionado);
@@ -221,7 +225,7 @@ public class TecnicoViewController {
 
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
             try {
-                tecnicoController.eliminarTecnico(tecnicoSeleccionado.getIdTecnico());
+                tecnicoController.eliminarTecnico(tecnicoSeleccionado.getId());
 
                 AlertHelper.mostrarInformacion("Éxito", "Técnico eliminado correctamente");
                 cargarTecnicos();

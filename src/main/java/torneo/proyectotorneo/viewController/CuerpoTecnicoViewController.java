@@ -188,7 +188,9 @@ public class CuerpoTecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-               nuevoCuerpoTecnico.settIdEquipo(idEquipo);
+                Equipo equipo = new Equipo();
+                equipo.setId(idEquipo);
+                nuevoCuerpoTecnico.setEquipo(equipo);
 
             }
 
@@ -221,7 +223,9 @@ public class CuerpoTecnicoViewController {
             String nombreEquipo = cbEquipo.getValue();
             if (nombreEquipo != null && !nombreEquipo.equals("Seleccione equipo")) {
                 int idEquipo = equipoController.obtenerIdEquipoPorNombre(nombreEquipo);
-                cuerpoTecnicoSeleccionado.settIdEquipo(idEquipo);
+                Equipo equipo = new Equipo();
+                equipo.setId(idEquipo);
+                cuerpoTecnicoSeleccionado.setEquipo(equipo);
             }
 
             cuerpoTecnicoController.actualizarCuerpoTecnico(cuerpoTecnicoSeleccionado);
