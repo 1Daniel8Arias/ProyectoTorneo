@@ -176,7 +176,7 @@ public class EstadioViewController {
                 ArrayList<Departamento> departamentos = estadioController.listarDepartamentos();
                 for (Departamento depto : departamentos) {
                     if (depto.getNombre().equals(nombreDepartamento)) {
-                        nuevoEstadio.setDepartamento(departamentoSeleccionado);
+                        nuevoEstadio.setDepartamento(depto);
                         break;
                     }
                 }
@@ -215,7 +215,7 @@ public class EstadioViewController {
                 ArrayList<Departamento> departamentos = estadioController.listarDepartamentos();
                 for (Departamento depto : departamentos) {
                     if (depto.getNombre().equals(nombreDepartamento)) {
-                        estadioSeleccionado.setDepartamento(departamentoSeleccionado);
+                        estadioSeleccionado.setDepartamento(depto);  // ✅ USAR 'depto' en lugar de 'departamentoSeleccionado'
                         break;
                     }
                 }

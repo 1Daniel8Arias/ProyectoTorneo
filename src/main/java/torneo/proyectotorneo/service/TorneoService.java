@@ -485,7 +485,7 @@ public class TorneoService {
 
     public ArrayList<Estadio> listarEstadiosPorDepartamento(int idDepartamento) throws RepositoryException {
         try {
-            return estadioService.listarEstadiosPorDepartamento(idDepartamento);
+            return estadioService.listarEstadiosPorDepartamento(String.valueOf(idDepartamento));
         } catch (EstadioNoEncontradoException e) {
             throw new RepositoryException(e.getMessage());
         }
