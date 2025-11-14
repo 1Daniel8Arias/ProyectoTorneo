@@ -412,6 +412,7 @@
 
              <Button fx:id="btnInicio" maxWidth="Infinity" styleClass="menu-item, menu-item-active" text="🏠 Inicio" />
              <Button fx:id="btnEquipos" maxWidth="Infinity" styleClass="menu-item" text="👕 Equipos" />
+         <Button fx:id="btnTecnico" maxWidth="Infinity" styleClass="menu-item" text="📋 Tecnico" />
              <Button fx:id="btnJugadores" maxWidth="Infinity" styleClass="menu-item" text="👤 Jugadores" />
          <Button fx:id="btnCuerpoTecnico" maxWidth="Infinity" styleClass="menu-item" text="📋 Cuerpo Tecnico" />
              <Button fx:id="btnPartidos" maxWidth="Infinity" styleClass="menu-item" text="⚽ Partidos" />

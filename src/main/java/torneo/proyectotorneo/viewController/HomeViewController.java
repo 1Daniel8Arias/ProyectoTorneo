@@ -69,6 +69,9 @@ public class HomeViewController {
     private Button btnCuerpoTecnico;
 
     @FXML
+    private Button btnTecnico;
+
+    @FXML
     private Button btnInicio;
 
     @FXML
@@ -119,28 +122,31 @@ public class HomeViewController {
                 cambiarContenido("/torneo/proyectotorneo/Partido.fxml"));
 
         btnInicio.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/HOME.fxml"));
+
+        btnTecnico.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Tecnico.fxml"));
 
         btnEquipos.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Equipo.fxml"));
 
         btnCuerpoTecnico.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/CuerpoTecnico.fxml"));
 
         btnArbitros.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Arbitro.fxml"));
 
         btnEstadios.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Estadio.fxml"));
 
         btnSanciones.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Sancion.fxml"));
 
         btnTabla.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Tabla.fxml"));
 
         btnReportes.setOnAction(event ->
-                cambiarContenido(""));
+                cambiarContenido("/torneo/proyectotorneo/Reporte.fxml"));
 
 
     }

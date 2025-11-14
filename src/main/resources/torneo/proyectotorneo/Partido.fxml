@@ -21,12 +21,12 @@
             <!-- Title Bar -->
             <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-padding: 20 30;">
                 <VBox spacing="3">
-                    <Label text="Partidos" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f2937;">
+                    <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1f2937;" text="Partidos">
                         <font>
                             <Font name="System Bold" size="24" />
                         </font>
                     </Label>
-                    <Label text="Gestión de partidos del campeonato" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;">
+                    <Label style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" text="Gestión de partidos del campeonato">
                         <font>
                             <Font size="13" />
                         </font>
@@ -47,20 +47,20 @@
 
                 <!-- Filter Title and Clear Button -->
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label text="Filtros Avanzados" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;">
+                    <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #374151;" text="Filtros Avanzados">
                         <font>
                             <Font name="System Bold" size="14" />
                         </font>
                     </Label>
                     <Region HBox.hgrow="ALWAYS" />
-                    <Label fx:id="limpiarFiltrosLink" onMouseClicked="#handleLimpiarFiltros" text="Limpiar Filtros" style="-fx-text-fill: #2563eb; -fx-cursor: hand; -fx-font-size: 13px; -fx-underline: true;" />
+                    <Label fx:id="limpiarFiltrosLink" onMouseClicked="#handleLimpiarFiltros" style="-fx-text-fill: #2563eb; -fx-cursor: hand; -fx-font-size: 13px; -fx-underline: true;" text="Limpiar Filtros" />
                 </HBox>
 
                 <!-- Filter Dropdowns -->
                 <HBox spacing="15">
                     <!-- Equipo -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label text="Equipo" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;">
+                        <Label style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;" text="Equipo">
                             <font>
                                 <Font size="12" />
                             </font>
@@ -70,7 +70,7 @@
 
                     <!-- Posición (Tipo) -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label text="Posición" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;">
+                        <Label style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;" text="Posición">
                             <font>
                                 <Font size="12" />
                             </font>
@@ -80,7 +80,7 @@
 
                     <!-- Jornada -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label text="Jornada" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;">
+                        <Label style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;" text="Jornada">
                             <font>
                                 <Font size="12" />
                             </font>
@@ -90,7 +90,7 @@
 
                     <!-- Estadio -->
                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                        <Label text="Estadio" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;">
+                        <Label style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: bold;" text="Estadio">
                             <font>
                                 <Font size="12" />
                             </font>
@@ -121,10 +121,10 @@
             </padding>
 
             <!-- Results Counter (optional, can be removed if not needed) -->
-            <Label fx:id="resultadosLabel" text="Mostrando 0 partido(s)" visible="false" managed="false" />
+            <Label fx:id="resultadosLabel" managed="false" text="Mostrando 0 partido(s)" visible="false" />
 
             <!-- Scrollable Cards Container -->
-            <ScrollPane fx:id="partidosScrollPane" fitToWidth="true" style="-fx-background-color: transparent; -fx-border-width: 0;">
+            <ScrollPane fx:id="partidosScrollPane" fitToWidth="true" prefHeight="471.0" prefWidth="1140.0" style="-fx-background-color: transparent; -fx-border-width: 0;">
                 <VBox fx:id="partidosContainer" spacing="12" style="-fx-background-color: transparent;">
                     <!-- Los cards de partidos se cargan aquí dinámicamente -->
                 </VBox>
