@@ -31,12 +31,6 @@
         <Label fx:id="lblCiudad" styleClass="app-subtitle" text="Medellín" />
     </HBox>
 
-    <!-- Fundado -->
-    <HBox spacing="5">
-        <Label styleClass="app-subtitle" text="Fundado:" />
-        <Label fx:id="lblFundado" styleClass="app-subtitle" text="1947" />
-    </HBox>
-
     <!-- Estadio -->
     <HBox spacing="5">
         <Label styleClass="app-subtitle" text="Estadio:" />
