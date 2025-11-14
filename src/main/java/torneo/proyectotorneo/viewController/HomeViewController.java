@@ -57,13 +57,16 @@ public class HomeViewController {
     private VBox VBoxMenu;
 
     @FXML
-    private Button arbitros;
+    private Button btnArbitros;
 
     @FXML
     private Button btnEquipos;
 
     @FXML
-    private Button btnEstadisticas;
+    private Button btnEstadios;
+
+    @FXML
+    private Button btnCuerpoTecnico;
 
     @FXML
     private Button btnInicio;
@@ -114,6 +117,32 @@ public class HomeViewController {
 
         btnPartidos.setOnAction(event ->
                 cambiarContenido("/torneo/proyectotorneo/Partido.fxml"));
+
+        btnInicio.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnEquipos.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnCuerpoTecnico.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnArbitros.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnEstadios.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnSanciones.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnTabla.setOnAction(event ->
+                cambiarContenido(""));
+
+        btnReportes.setOnAction(event ->
+                cambiarContenido(""));
+
+
     }
 
 

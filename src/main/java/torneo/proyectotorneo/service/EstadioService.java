@@ -125,14 +125,7 @@ public class EstadioService {
     /**
      * Obtiene todos los estadios de un equipo
      */
-    public ArrayList<EquipoEstadio> obtenerEstadiosDeEquipo(int idEquipo)
-            throws EstadioNoEncontradoException {
-        try {
-            return equipoEstadioRepository.buscarPorEquipo(idEquipo);
-        } catch (RepositoryException e) {
-            throw new EstadioNoEncontradoException("Error al obtener los estadios: " + e.getMessage());
-        }
-    }
+
 
     /**
      * Obtiene el historial de partidos jugados en un estadio

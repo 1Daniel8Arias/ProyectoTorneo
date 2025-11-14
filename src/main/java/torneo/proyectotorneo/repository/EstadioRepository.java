@@ -1,10 +1,8 @@
 package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
-import torneo.proyectotorneo.model.Departamento;
-import torneo.proyectotorneo.model.Equipo;
-import torneo.proyectotorneo.model.Estadio;
-import torneo.proyectotorneo.model.Partido;
+import torneo.proyectotorneo.model.*;
+import torneo.proyectotorneo.model.enums.TipoSede;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
