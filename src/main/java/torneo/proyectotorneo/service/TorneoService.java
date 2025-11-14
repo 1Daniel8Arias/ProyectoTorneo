@@ -21,6 +21,7 @@ public class TorneoService {
     private final UsuarioService usuarioService;
     private final SancionService sancionService;
     private final TablaPosicionService tablaPosicionService;
+    private final CuerpoTecnicoService cuerpoTecnicoService;
 
 
     public TorneoService() {
@@ -35,6 +36,7 @@ public class TorneoService {
         this.usuarioService = new UsuarioService();
         this.sancionService = new SancionService();
         this.tablaPosicionService = new TablaPosicionService();
+        this.cuerpoTecnicoService = new CuerpoTecnicoService();
     }
 
     // ================== EQUIPOS ==================

@@ -307,4 +307,38 @@ public class TecnicoService {
             throw new TecnicoNoEncontradoException("Error al listar técnicos sin equipo: " + e.getMessage());
         }
     }
+
+
+    /**
+     * Guarda un nuevo técnico
+     */
+    public void guardarTecnico(Tecnico tecnico) throws TecnicoNoEncontradoException {
+        validarTecnico(tecnico);
+
+        try {
+            tecnicoRepository.guardar(tecnico);
+        } catch (RepositoryException e) {
+            throw new TecnicoNoEncontradoException("Error al guardar el técnico: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista técnicos que tienen equipo asignado
+     */
+    public ArrayList<Tecnico> listarTecnicosConEquipo() throws TecnicoNoEncontradoException {
+        try {
+            ArrayList<Tecnico> todosLosTecnicos = tecnicoRepository.listarTodos();
+            ArrayList<Tecnico> tecnicosConEquipo = new ArrayList<>();
+
+            for (Tecnico tecnico : todosLosTecnicos) {
+                if (tecnico.getEquipo() != null) {
+                    tecnicosConEquipo.add(tecnico);
+                }
+            }
+
+            return tecnicosConEquipo;
+        } catch (RepositoryException e) {
+            throw new TecnicoNoEncontradoException("Error al listar técnicos con equipo: " + e.getMessage());
+        }
+    }
 }
