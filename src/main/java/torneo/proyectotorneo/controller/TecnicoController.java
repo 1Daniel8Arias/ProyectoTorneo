@@ -41,9 +41,7 @@ public class TecnicoController {
 
     // ──────────────── CONSULTAS ESPECÍFICAS ────────────────
 
-    public Tecnico buscarTecnicoPorEquipo(int idEquipo) throws RepositoryException {
-        return modelFactoryController.getTorneoService().buscarTecnicoPorEquipo(idEquipo);
-    }
+
 
     public ArrayList<Tecnico> listarTecnicosConEquipo() throws RepositoryException {
         return modelFactoryController.getTorneoService().listarTecnicosConEquipo();

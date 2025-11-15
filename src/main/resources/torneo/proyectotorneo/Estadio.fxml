@@ -104,6 +104,21 @@
                               <PropertyValueFactory property="posicion" />
                            </cellValueFactory>
                         </TableColumn>
+                        <TableColumn fx:id="colDepartamento" prefWidth="140" text="Departamento">
+                           <cellValueFactory>
+                              <PropertyValueFactory property="posicion" />
+                           </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="colMunicipio" prefWidth="140" text="Municipio">
+                           <cellValueFactory>
+                              <PropertyValueFactory property="posicion" />
+                           </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn fx:id="colCiudad" prefWidth="140" text="Ciudad">
+                           <cellValueFactory>
+                              <PropertyValueFactory property="posicion" />
+                           </cellValueFactory>
+                        </TableColumn>
                                 <TableColumn fx:id="colAcciones" prefWidth="200" styleClass="col-center" text="Acciones" />
                             </columns>
                             <placeholder>

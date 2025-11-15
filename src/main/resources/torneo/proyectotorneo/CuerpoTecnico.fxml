@@ -57,7 +57,7 @@
                         <Font size="13" />
                      </font>
                   </TextField>
-                  <ComboBox fx:id="cmbTipo" prefWidth="200" promptText="Tipo" styleClass="filter-combo" />
+                  <ComboBox fx:id="cmbTipo" prefWidth="200" promptText="Equipo" styleClass="filter-combo" />
                   <Region HBox.hgrow="ALWAYS" />
                   <Button fx:id="btnBuscar" onAction="#handleBuscar" styleClass="btn-secondary" text="Buscar">
                      <font>

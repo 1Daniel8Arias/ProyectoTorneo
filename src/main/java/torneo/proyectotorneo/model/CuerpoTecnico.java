@@ -14,6 +14,14 @@ public class CuerpoTecnico {
     private String especialidad;
     private Equipo equipo;
 
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
+    public String getNombreEquipo() {
+        return equipo != null ? equipo.getNombre() : "Sin equipo";
+    }
+
 
 
 }
