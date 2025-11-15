@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class SancionRepository implements Repository<Sancion> {
 
+
+
     @Override
     public ArrayList<Sancion> listarTodos() throws RepositoryException {
         String sql = "SELECT * FROM SANCION";
@@ -29,6 +31,12 @@ public class SancionRepository implements Repository<Sancion> {
                 sancion.setMotivo(rs.getString("MOTIVO"));
                 sancion.setDuracion(rs.getInt("DURACION"));
                 sancion.setTipo(rs.getString("TIPO"));
+
+                Jugador jugador = new Jugador();
+                jugador.setId(rs.getInt("ID_JUGADOR"));
+
+                sancion.setJugador(jugador);
+
                 sanciones.add(sancion);
             }
 

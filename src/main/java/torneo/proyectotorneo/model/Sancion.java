@@ -16,4 +16,9 @@ public class Sancion {
     private int duracion;
     private String tipo;
     private Jugador jugador;
+
+    public String getNombreJugador() {
+        return jugador != null ? jugador.getNombreCompleto() : "Sin Jugador";
+    }
+
 }
