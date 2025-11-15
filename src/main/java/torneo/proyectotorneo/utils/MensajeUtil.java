@@ -53,6 +53,10 @@ public class MensajeUtil {
         return resultado.isPresent() && resultado.get() == ButtonType.OK;
     }
 
+    public static void mostrarInfo(String titulo, String mensaje) {
+        mostrarMensaje(titulo, mensaje, Alert.AlertType.INFORMATION);
+    }
+
     /** Cargar icono en las alertas */
     private static void configurarIcono(Alert alert) {
         try {

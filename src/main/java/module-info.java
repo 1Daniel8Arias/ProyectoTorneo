@@ -5,8 +5,7 @@ module torneo.proyectotorneo {
     requires org.controlsfx.controls;
     requires static lombok;
     requires java.sql;
-    requires torneo.proyectotorneo;
-    requires javafx.base;
+ 
 
     opens torneo.proyectotorneo to javafx.fxml;
     exports torneo.proyectotorneo;
