@@ -8,6 +8,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import torneo.proyectotorneo.controller.ArbitroController;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Arbitro;
+import torneo.proyectotorneo.model.Jugador;
+import torneo.proyectotorneo.model.TablaPosicion;
 import torneo.proyectotorneo.utils.AlertHelper;
 
 import java.util.ArrayList;
@@ -20,10 +22,10 @@ import java.util.Optional;
 public class ArbitroViewController {
 
     @FXML private TableView<Arbitro> tablaArbitros;
-    @FXML private TableColumn<Arbitro, Integer> colId;
+    @FXML private TableColumn<Arbitro, Integer> colNumero;
     @FXML private TableColumn<Arbitro, String> colNombre;
-    @FXML private TableColumn<Arbitro, String> colApellido;
-
+    @FXML private TableColumn<Arbitro, String> colTipo;
+    @FXML private TableColumn <Arbitro, String> colCantidad;
     @FXML private TextField txtNombre;
     @FXML private TextField txtApellido;
     @FXML private TextField txtBuscar;
@@ -52,11 +54,20 @@ public class ArbitroViewController {
         cargarArbitros();
         configurarEventos();
     }
+    @FXML
+    private void handleNuevoArbitro() {
+
+    }
 
     private void configurarTabla() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("idArbitro"));
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
+        colNumero.setCellValueFactory(cellData -> {
+            Arbitro arbitro = cellData.getValue();
+            int index = tablaArbitros.getItems().indexOf(arbitro) + 1;
+            return new javafx.beans.property.SimpleIntegerProperty(index).asObject();
+        });
+        colNombre.setCellValueFactory(new PropertyValueFactory<>("NombreCompleto"));
+        colTipo.setVisible(false);
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("apellido"));
 
         tablaArbitros.setItems(listaArbitros);
 

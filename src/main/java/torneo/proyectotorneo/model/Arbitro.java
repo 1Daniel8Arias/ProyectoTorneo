@@ -15,4 +15,9 @@ public class Arbitro {
     private String apellido;
     private ArrayList<ArbitroPartido> arbitrosPartidos;
     private int partidosArbitrados;
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
 }

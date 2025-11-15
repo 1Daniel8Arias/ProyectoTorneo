@@ -27,27 +27,11 @@ public class TablaController {
         return modelFactoryController.obtenerTablaPosiciones();
     }
 
-    public void guardarTablaPosicion(TablaPosicion tablaPosicion) throws RepositoryException {
-        modelFactoryController.getTorneoService().guardarTablaPosicion(tablaPosicion);
-    }
-
-    public void actualizarTablaPosicion(TablaPosicion tablaPosicion) throws RepositoryException {
-        modelFactoryController.getTorneoService().actualizarTablaPosicion(tablaPosicion);
-    }
-
-    public void eliminarTablaPosicion(int id) throws RepositoryException {
-        modelFactoryController.getTorneoService().eliminarTablaPosicion(id);
-    }
-
     // ──────────────── CONSULTAS ESPECÍFICAS ────────────────
 
-    public TablaPosicion buscarPorEquipo(int idEquipo) throws RepositoryException {
-        return modelFactoryController.getTorneoService().buscarTablaPosicionPorEquipo(idEquipo);
-    }
 
-    public ArrayList<TablaPosicion> obtenerTablaPosicionesTop5() throws RepositoryException {
-        return modelFactoryController.obtenerTablaPosicionesTop5();
-    }
+
+
 
     public ArrayList<TablaPosicion> ordenarPorPuntos() throws RepositoryException {
         return modelFactoryController.getTorneoService().ordenarTablaPorPuntos();
@@ -57,7 +41,5 @@ public class TablaController {
         return modelFactoryController.getTorneoService().ordenarTablaPorDiferenciaGoles();
     }
 
-    public void actualizarTablaDespuesDePartido(int idPartido) throws RepositoryException {
-        modelFactoryController.getTorneoService().actualizarTablaDespuesDePartido(idPartido);
-    }
+
 }

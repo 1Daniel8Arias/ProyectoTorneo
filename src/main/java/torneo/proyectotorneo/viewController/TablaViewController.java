@@ -1,5 +1,6 @@
 package torneo.proyectotorneo.viewController;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -21,12 +22,13 @@ public class TablaViewController {
     @FXML private TableColumn<TablaPosicion, Integer> colPosicion;
     @FXML private TableColumn<TablaPosicion, String> colEquipo;
     @FXML private TableColumn<TablaPosicion, Integer> colPuntos;
-    @FXML private TableColumn<TablaPosicion, Integer> colGanados;
+    @FXML private TableColumn<TablaPosicion, Integer> colPartidosGanados;
     @FXML private TableColumn<TablaPosicion, Integer> colEmpates;
     @FXML private TableColumn<TablaPosicion, Integer> colPerdidos;
-    @FXML private TableColumn<TablaPosicion, Integer> colGolesFavor;
-    @FXML private TableColumn<TablaPosicion, Integer> colGolesContra;
-    @FXML private TableColumn<TablaPosicion, Integer> colDiferenciaGoles;
+    @FXML private TableColumn<TablaPosicion, Integer> colGolesAFavor;
+    @FXML private TableColumn<TablaPosicion, Integer> colEncontra;
+    @FXML private TableColumn<TablaPosicion, Integer> colDiderencia;
+    @FXML private TableColumn<TablaPosicion, Integer> colPartidosJugados;
 
     @FXML private ComboBox<String> cbOrdenamiento;
     @FXML private TextField txtBuscarEquipo;
@@ -69,12 +71,18 @@ public class TablaViewController {
         });
 
         colPuntos.setCellValueFactory(new PropertyValueFactory<>("puntos"));
-        colGanados.setCellValueFactory(new PropertyValueFactory<>("ganados"));
+        colPartidosGanados.setCellValueFactory(new PropertyValueFactory<>("ganados"));
         colEmpates.setCellValueFactory(new PropertyValueFactory<>("empates"));
         colPerdidos.setCellValueFactory(new PropertyValueFactory<>("perdidos"));
-        colGolesFavor.setCellValueFactory(new PropertyValueFactory<>("golesAFavor"));
-        colGolesContra.setCellValueFactory(new PropertyValueFactory<>("golesEnContra"));
-        colDiferenciaGoles.setCellValueFactory(new PropertyValueFactory<>("diferenciaGoles"));
+        colGolesAFavor.setCellValueFactory(new PropertyValueFactory<>("golesAFavor"));
+        colEncontra.setCellValueFactory(new PropertyValueFactory<>("golesEnContra"));
+        colDiderencia.setCellValueFactory(new PropertyValueFactory<>("diferenciaGoles"));
+        colPartidosJugados.setCellValueFactory(cellData -> {
+            TablaPosicion t = cellData.getValue();
+            int total = t.getGanados() + t.getEmpates() + t.getPerdidos();
+            return new javafx.beans.property.SimpleIntegerProperty(total).asObject();
+        });
+
 
         // Estilo para resaltar posiciones importantes
         tablaPosiciones.setRowFactory(tv -> new TableRow<TablaPosicion>() {
