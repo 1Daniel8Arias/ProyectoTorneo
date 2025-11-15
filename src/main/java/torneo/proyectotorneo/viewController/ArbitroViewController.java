@@ -1,283 +1,285 @@
 package torneo.proyectotorneo.viewController;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import torneo.proyectotorneo.controller.ArbitroController;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Arbitro;
-import torneo.proyectotorneo.model.Jugador;
-import torneo.proyectotorneo.model.TablaPosicion;
-import torneo.proyectotorneo.utils.AlertHelper;
+import torneo.proyectotorneo.model.ArbitroPartido;
+import torneo.proyectotorneo.model.enums.TipoArbitro;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.net.URL;
+import java.util.*;
 
 /**
- * ViewController para la gestión de Árbitros
- * Maneja la interfaz de usuario y delega la lógica al ArbitroController
+ * Controlador de vista para la gestión de árbitros
  */
-public class ArbitroViewController {
+public class ArbitroViewController implements Initializable {
 
-    @FXML private TableView<Arbitro> tablaArbitros;
-    @FXML private TableColumn<Arbitro, Integer> colNumero;
-    @FXML private TableColumn<Arbitro, String> colNombre;
-    @FXML private TableColumn<Arbitro, String> colTipo;
-    @FXML private TableColumn <Arbitro, String> colCantidad;
-    @FXML private TextField txtNombre;
-    @FXML private TextField txtApellido;
-    @FXML private TextField txtBuscar;
+    // ========== COMPONENTES DEL FXML ==========
+    @FXML
+    private TableView<ArbitroDTO> tableArbitro;
 
-    @FXML private Button btnGuardar;
-    @FXML private Button btnActualizar;
-    @FXML private Button btnEliminar;
-    @FXML private Button btnLimpiar;
-    @FXML private Button btnBuscar;
+    @FXML
+    private TableColumn<ArbitroDTO, String> colNombre;
 
-    @FXML private ComboBox<String> cbTipoFiltro;
+    @FXML
+    private TableColumn<ArbitroDTO, Integer>colCantidad;
 
+    @FXML
+    private TableColumn<ArbitroDTO, String> colTipo;  // Esta columna se mostrará/ocultará
+
+    @FXML
+    private ComboBox<String> cmbTipo;
+
+    @FXML
+    private Button btnBuscar;
+
+    @FXML
+    private Button btnNuevoArbitro;
+
+    // ========== VARIABLES DE INSTANCIA ==========
     private final ArbitroController arbitroController;
-    private final ObservableList<Arbitro> listaArbitros;
-    private Arbitro arbitroSeleccionado;
+    private ObservableList<ArbitroDTO> listaArbitros;
 
     public ArbitroViewController() {
         this.arbitroController = new ArbitroController();
         this.listaArbitros = FXCollections.observableArrayList();
     }
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         configurarTabla();
         configurarComboBox();
         cargarArbitros();
-        configurarEventos();
-    }
-    @FXML
-    private void handleNuevoArbitro() {
-
     }
 
+    /**
+     * Configura las columnas de la tabla
+     */
     private void configurarTabla() {
-        colNumero.setCellValueFactory(cellData -> {
-            Arbitro arbitro = cellData.getValue();
-            int index = tablaArbitros.getItems().indexOf(arbitro) + 1;
-            return new javafx.beans.property.SimpleIntegerProperty(index).asObject();
-        });
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("NombreCompleto"));
-        colTipo.setVisible(false);
-        colTipo.setCellValueFactory(new PropertyValueFactory<>("apellido"));
-
-        tablaArbitros.setItems(listaArbitros);
-
-        // Evento de selección
-        tablaArbitros.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        arbitroSeleccionado = newValue;
-                        cargarDatosEnFormulario(newValue);
-                    }
-                }
+        // Columna de nombre completo
+        colNombre.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getNombreCompleto())
         );
+
+        // Columna de partidos arbitrados
+       colCantidad.setCellValueFactory(cellData ->
+                new SimpleIntegerProperty(cellData.getValue().getPartidosArbitrados()).asObject()
+        );
+
+        // Columna de tipo (inicialmente oculta)
+        if (colTipo != null) {
+            colTipo.setCellValueFactory(cellData ->
+                    new SimpleStringProperty(cellData.getValue().getTipo())
+            );
+            colTipo.setVisible(false);  // Oculta por defecto
+        }
+
+        // Establecer la lista observable en la tabla
+        tableArbitro.setItems(listaArbitros);
     }
 
+    /**
+     * Configura el ComboBox con los tipos de árbitro
+     */
     private void configurarComboBox() {
-        if (cbTipoFiltro != null) {
-            cbTipoFiltro.setItems(FXCollections.observableArrayList(
-                    "Todos",
-                    "Principal",
-                    "Asistente 1",
-                    "Asistente 2",
-                    "Cuarto Árbitro"
-            ));
-            cbTipoFiltro.setValue("Todos");
-        }
+        ObservableList<String> tipos = FXCollections.observableArrayList(
+                TipoArbitro.Principal.name(),
+                TipoArbitro.Asistente.name(),
+                TipoArbitro.Cuarto.name()
+        );
+        cmbTipo.setItems(tipos);
+
+        // Listener para filtrar cuando se selecciona un tipo
+        cmbTipo.setOnAction(event -> {
+            String tipoSeleccionado = cmbTipo.getValue();
+            if (tipoSeleccionado != null && !tipoSeleccionado.isEmpty()) {
+                filtrarPorTipo();
+                // Mostrar la columna de tipo cuando se filtra
+                if (colTipo != null) {
+                    colTipo.setVisible(true);
+                }
+            } else {
+                // Si no hay selección, ocultar la columna
+                if (colTipo != null) {
+                    colTipo.setVisible(false);
+                }
+            }
+        });
     }
 
-    private void configurarEventos() {
-        // Búsqueda en tiempo real
-        if (txtBuscar != null) {
-            txtBuscar.textProperty().addListener((observable, oldValue, newValue) -> {
-                filtrarArbitros(newValue);
-            });
-        }
-    }
-
+    /**
+     * Carga todos los árbitros desde la base de datos
+     */
     private void cargarArbitros() {
         try {
             ArrayList<Arbitro> arbitros = arbitroController.listarTodos();
-            listaArbitros.clear();
-            listaArbitros.addAll(arbitros);
-        } catch (RepositoryException e) {
-            AlertHelper.mostrarError("Error al cargar árbitros", e.getMessage());
-        }
-    }
+            actualizarTabla(arbitros, null);
 
-    private void cargarDatosEnFormulario(Arbitro arbitro) {
-        txtNombre.setText(arbitro.getNombre());
-        txtApellido.setText(arbitro.getApellido());
-
-        btnActualizar.setDisable(false);
-        btnEliminar.setDisable(false);
-        btnGuardar.setDisable(true);
-    }
-
-    @FXML
-    private void handleGuardar() {
-        if (!validarCampos()) {
-            return;
-        }
-
-        try {
-            Arbitro nuevoArbitro = new Arbitro();
-            nuevoArbitro.setNombre(txtNombre.getText().trim());
-            nuevoArbitro.setApellido(txtApellido.getText().trim());
-
-            arbitroController.guardarArbitro(nuevoArbitro);
-
-            AlertHelper.mostrarInformacion("Éxito", "Árbitro registrado correctamente");
-            cargarArbitros();
-            limpiarFormulario();
-        } catch (RepositoryException e) {
-            AlertHelper.mostrarError("Error al guardar", e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleActualizar() {
-        if (arbitroSeleccionado == null) {
-            AlertHelper.mostrarAdvertencia("Selección requerida", "Debe seleccionar un árbitro de la tabla");
-            return;
-        }
-
-        if (!validarCampos()) {
-            return;
-        }
-
-        try {
-            arbitroSeleccionado.setNombre(txtNombre.getText().trim());
-            arbitroSeleccionado.setApellido(txtApellido.getText().trim());
-
-            arbitroController.actualizarArbitro(arbitroSeleccionado);
-
-            AlertHelper.mostrarInformacion("Éxito", "Árbitro actualizado correctamente");
-            cargarArbitros();
-            limpiarFormulario();
-        } catch (RepositoryException e) {
-            AlertHelper.mostrarError("Error al actualizar", e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleEliminar() {
-        if (arbitroSeleccionado == null) {
-            AlertHelper.mostrarAdvertencia("Selección requerida", "Debe seleccionar un árbitro de la tabla");
-            return;
-        }
-
-        Optional<ButtonType> resultado = AlertHelper.mostrarConfirmacion(
-                "Confirmar eliminación",
-                "¿Está seguro de eliminar al árbitro: " + arbitroSeleccionado.getNombre() + " " +
-                        arbitroSeleccionado.getApellido() + "?"
-        );
-
-        if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            try {
-                arbitroController.eliminarArbitro(arbitroSeleccionado.getIdArbitro());
-
-                AlertHelper.mostrarInformacion("Éxito", "Árbitro eliminado correctamente");
-                cargarArbitros();
-                limpiarFormulario();
-            } catch (RepositoryException e) {
-                AlertHelper.mostrarError("Error al eliminar", e.getMessage());
-            }
-        }
-    }
-
-    @FXML
-    private void handleLimpiar() {
-        limpiarFormulario();
-    }
-
-    @FXML
-    private void handleBuscar() {
-        String termino = txtBuscar.getText().trim();
-        filtrarArbitros(termino);
-    }
-
-    @FXML
-    private void handleFiltrarPorTipo() {
-        if (cbTipoFiltro == null) return;
-
-        String tipoSeleccionado = cbTipoFiltro.getValue();
-
-        try {
-            if (tipoSeleccionado.equals("Todos")) {
-                cargarArbitros();
-            } else {
-                ArrayList<Arbitro> arbitrosFiltrados = arbitroController.listarArbitrosPorTipo(tipoSeleccionado);
-                listaArbitros.clear();
-                listaArbitros.addAll(arbitrosFiltrados);
+            // Ocultar columna de tipo cuando se muestran todos
+            if (colTipo != null) {
+                colTipo.setVisible(false);
             }
         } catch (RepositoryException e) {
-            AlertHelper.mostrarError("Error al filtrar", e.getMessage());
+            mostrarError("Error al cargar árbitros", e.getMessage());
         }
     }
 
-    private void filtrarArbitros(String termino) {
-        if (termino == null || termino.isEmpty()) {
-            cargarArbitros();
+    /**
+     * Filtra los árbitros por el tipo seleccionado en el ComboBox
+     */
+    @FXML
+    private void filtrarPorTipo() {
+        String tipoSeleccionado = cmbTipo.getValue();
+        if (tipoSeleccionado == null || tipoSeleccionado.isEmpty()) {
             return;
         }
 
         try {
-            ArrayList<Arbitro> todosLosArbitros = arbitroController.listarTodos();
-            ArrayList<Arbitro> arbitrosFiltrados = new ArrayList<>();
+            ArrayList<Arbitro> arbitrosFiltrados = arbitroController.listarArbitrosPorTipo(tipoSeleccionado);
+            actualizarTabla(arbitrosFiltrados, tipoSeleccionado);
 
-            String terminoLower = termino.toLowerCase();
+            // Mostrar la columna de tipo
+            if (colTipo != null) {
+                colTipo.setVisible(true);
+            }
+        } catch (RepositoryException e) {
+            mostrarError("Error al filtrar árbitros", e.getMessage());
+        }
+    }
 
-            for (Arbitro arbitro : todosLosArbitros) {
-                if (arbitro.getNombre().toLowerCase().contains(terminoLower) ||
-                        arbitro.getApellido().toLowerCase().contains(terminoLower)) {
-                    arbitrosFiltrados.add(arbitro);
+    /**
+     * Muestra todos los árbitros (sin filtro)
+     */
+    @FXML
+    private void mostrarTodos() {
+        cmbTipo.setValue(null);
+        cargarArbitros();
+    }
+
+    /**
+     * Actualiza la tabla con la lista de árbitros
+     */
+    @FXML
+    private void actualizarTabla() {
+        String tipoSeleccionado = cmbTipo.getValue();
+        if (tipoSeleccionado != null && !tipoSeleccionado.isEmpty()) {
+            filtrarPorTipo();
+        } else {
+            cargarArbitros();
+        }
+    }
+
+    /**
+     * Actualiza la tabla con una lista específica de árbitros
+     * @param arbitros Lista de árbitros a mostrar
+     * @param tipoFiltrado Tipo de árbitro seleccionado (null si no hay filtro)
+     */
+    private void actualizarTabla(ArrayList<Arbitro> arbitros, String tipoFiltrado) {
+        listaArbitros.clear();
+        for (Arbitro arbitro : arbitros) {
+            int partidosArbitrados = calcularPartidosArbitrados(arbitro, tipoFiltrado);
+            ArbitroDTO dto = new ArbitroDTO(
+                    arbitro.getIdArbitro(),
+                    arbitro.getNombreCompleto(),
+                    partidosArbitrados,
+                    tipoFiltrado != null ? tipoFiltrado : ""
+            );
+            listaArbitros.add(dto);
+        }
+    }
+
+    /**
+     * Calcula el número de partidos arbitrados por un árbitro
+     * @param arbitro El árbitro
+     * @param tipoFiltrado Tipo de árbitro (null para contar todos)
+     * @return Número de partidos
+     */
+    private int calcularPartidosArbitrados(Arbitro arbitro, String tipoFiltrado) {
+        if (arbitro.getArbitrosPartidos() == null || arbitro.getArbitrosPartidos().isEmpty()) {
+            return 0;
+        }
+
+        // Usar Set para evitar contar el mismo partido varias veces
+        Set<Integer> partidosUnicos = new HashSet<>();
+
+        for (ArbitroPartido ap : arbitro.getArbitrosPartidos()) {
+            if (ap.getPartido() != null) {
+                // Si hay filtro, solo contar partidos donde arbitró con ese tipo
+                if (tipoFiltrado == null || tipoFiltrado.equalsIgnoreCase(ap.getTipo())) {
+                    partidosUnicos.add(ap.getPartido().getIdPartido());
                 }
             }
-
-            listaArbitros.clear();
-            listaArbitros.addAll(arbitrosFiltrados);
-        } catch (RepositoryException e) {
-            AlertHelper.mostrarError("Error al filtrar", e.getMessage());
         }
+
+        return partidosUnicos.size();
     }
 
-    private boolean validarCampos() {
-        if (txtNombre.getText().trim().isEmpty()) {
-            AlertHelper.mostrarAdvertencia("Validación", "El nombre es obligatorio");
-            txtNombre.requestFocus();
-            return false;
-        }
-
-        if (txtApellido.getText().trim().isEmpty()) {
-            AlertHelper.mostrarAdvertencia("Validación", "El apellido es obligatorio");
-            txtApellido.requestFocus();
-            return false;
-        }
-
-        return true;
+    /**
+     * Muestra un mensaje de error
+     */
+    private void mostrarError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
-    private void limpiarFormulario() {
-        txtNombre.clear();
-        txtApellido.clear();
+    /**
+     * Muestra un mensaje de información
+     */
+    private void mostrarInformacion(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 
-        arbitroSeleccionado = null;
-        tablaArbitros.getSelectionModel().clearSelection();
+    public void handleBuscar(ActionEvent actionEvent) {
+    }
 
-        btnGuardar.setDisable(false);
-        btnActualizar.setDisable(true);
-        btnEliminar.setDisable(true);
+    public void handleNuevoArbitro(ActionEvent actionEvent) {
+    }
 
-        txtNombre.requestFocus();
+    /**
+     * Clase DTO para mostrar árbitros en la tabla
+     */
+    public static class ArbitroDTO {
+        private final Integer idArbitro;
+        private final String nombreCompleto;
+        private final Integer partidosArbitrados;
+        private final String tipo;
+
+        public ArbitroDTO(Integer idArbitro, String nombreCompleto, Integer partidosArbitrados, String tipo) {
+            this.idArbitro = idArbitro;
+            this.nombreCompleto = nombreCompleto;
+            this.partidosArbitrados = partidosArbitrados;
+            this.tipo = tipo;
+        }
+
+        public Integer getIdArbitro() {
+            return idArbitro;
+        }
+
+        public String getNombreCompleto() {
+            return nombreCompleto;
+        }
+
+        public Integer getPartidosArbitrados() {
+            return partidosArbitrados;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
     }
 }
