@@ -17,7 +17,17 @@ public class SancionRepository implements Repository<Sancion> {
 
     @Override
     public ArrayList<Sancion> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM SANCION";
+        // CORREGIDO: Agregado JOIN con JUGADOR y EQUIPO para traer toda la información
+        String sql = """
+        SELECT s.*,
+               j.ID_JUGADOR, j.NOMBRE, j.APELLIDO, j.POSICION, j.NUMERO_CAMISETA,
+               e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+        FROM SANCION s
+        JOIN JUGADOR j ON s.ID_JUGADOR = j.ID_JUGADOR
+        LEFT JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
+        ORDER BY s.FECHA DESC
+        """;
+
         ArrayList<Sancion> sanciones = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -32,11 +42,28 @@ public class SancionRepository implements Repository<Sancion> {
                 sancion.setDuracion(rs.getInt("DURACION"));
                 sancion.setTipo(rs.getString("TIPO"));
 
+                // Crear y asignar el jugador con su información
                 Jugador jugador = new Jugador();
                 jugador.setId(rs.getInt("ID_JUGADOR"));
+                jugador.setNombre(rs.getString("NOMBRE"));
+                jugador.setApellido(rs.getString("APELLIDO"));
+                jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+
+                String posicionStr = rs.getString("POSICION");
+                if (posicionStr != null) {
+                    jugador.setPosicion(PosicionJugador.valueOf(posicionStr));
+                }
+
+                // Asignar equipo al jugador si existe
+                int idEquipo = rs.getInt("ID_EQUIPO");
+                if (!rs.wasNull()) {
+                    Equipo equipo = new Equipo();
+                    equipo.setId(idEquipo);
+                    equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                    jugador.setEquipo(equipo);
+                }
 
                 sancion.setJugador(jugador);
-
                 sanciones.add(sancion);
             }
 
@@ -57,48 +84,52 @@ public class SancionRepository implements Repository<Sancion> {
         JOIN JUGADOR j ON s.ID_JUGADOR = j.ID_JUGADOR
         LEFT JOIN EQUIPO e ON j.ID_EQUIPO = e.ID_EQUIPO
         WHERE s.ID_SANCION = ?
-    """;
-        Sancion sancion = null;
+        """;
 
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    sancion = new Sancion();
-                    sancion.setIdSancion(rs.getInt("ID_SANCION"));
-                    sancion.setFecha(rs.getDate("FECHA").toLocalDate());
-                    sancion.setMotivo(rs.getString("MOTIVO"));
-                    sancion.setDuracion(rs.getInt("DURACION"));
-                    sancion.setTipo(rs.getString("TIPO"));
+            if (rs.next()) {
+                Sancion sancion = new Sancion();
+                sancion.setIdSancion(rs.getInt("ID_SANCION"));
+                sancion.setFecha(rs.getDate("FECHA").toLocalDate());
+                sancion.setMotivo(rs.getString("MOTIVO"));
+                sancion.setDuracion(rs.getInt("DURACION"));
+                sancion.setTipo(rs.getString("TIPO"));
 
-                    // Cargar Jugador
-                    Jugador jugador = new Jugador();
-                    jugador.setId(rs.getInt("ID_JUGADOR"));
-                    jugador.setNombre(rs.getString("NOMBRE"));
-                    jugador.setApellido(rs.getString("APELLIDO"));
-                    jugador.setPosicion(PosicionJugador.valueOf(rs.getString("POSICION")));
-                    jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
+                // Crear y asignar el jugador
+                Jugador jugador = new Jugador();
+                jugador.setId(rs.getInt("ID_JUGADOR"));
+                jugador.setNombre(rs.getString("NOMBRE"));
+                jugador.setApellido(rs.getString("APELLIDO"));
+                jugador.setNumeroCamiseta(rs.getString("NUMERO_CAMISETA"));
 
-                    // Equipo si existe
-                    if (rs.getObject("ID_EQUIPO") != null) {
-                        Equipo equipo = new Equipo();
-                        equipo.setId(rs.getInt("ID_EQUIPO"));
-                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
-                        jugador.setEquipo(equipo);
-                    }
-
-                    sancion.setJugador(jugador);
+                String posicionStr = rs.getString("POSICION");
+                if (posicionStr != null) {
+                    jugador.setPosicion(PosicionJugador.valueOf(posicionStr));
                 }
+
+                // Asignar equipo al jugador si existe
+                int idEquipo = rs.getInt("ID_EQUIPO");
+                if (!rs.wasNull()) {
+                    Equipo equipo = new Equipo();
+                    equipo.setId(idEquipo);
+                    equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                    jugador.setEquipo(equipo);
+                }
+
+                sancion.setJugador(jugador);
+                return sancion;
             }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al buscar la sanción por ID: " + e.getMessage());
+            throw new RepositoryException("Error al buscar la sanción: " + e.getMessage());
         }
 
-        return sancion;
+        return null;
     }
 
     @Override
