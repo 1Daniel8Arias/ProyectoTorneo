@@ -72,7 +72,7 @@
                                 <Insets bottom="10" top="10" />
                             </padding>
                         </Label>
-                  <FlowPane fx:id="flowContainer" hgap="2.0" prefHeight="200.0" prefWidth="200.0" vgap="2.0">
+                  <FlowPane fx:id="flowContainer" hgap="20.0" prefHeight="200.0" prefWidth="200.0" vgap="20.0">
                      <opaqueInsets>
                         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                      </opaqueInsets>

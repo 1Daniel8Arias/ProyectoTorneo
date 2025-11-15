@@ -46,4 +46,8 @@ public class TecnicoController {
     public ArrayList<Tecnico> listarTecnicosConEquipo() throws RepositoryException {
         return modelFactoryController.getTorneoService().listarTecnicosConEquipo();
     }
+    public ArrayList<Tecnico> listarTecniSinContrato() throws RepositoryException {
+        return modelFactoryController.getTorneoService().getTecnicoService().listarTecnicosSinEquipo();
+    }
+
 }

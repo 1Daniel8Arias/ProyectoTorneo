@@ -7,6 +7,7 @@ module torneo.proyectotorneo {
     requires java.sql;
 
 
+
     opens torneo.proyectotorneo to javafx.fxml;
     exports torneo.proyectotorneo;
     exports torneo.proyectotorneo.viewController;

@@ -49,6 +49,9 @@ private TecnicoController tecnicoController;
     @FXML
     private TextField txtBuscar;
 
+    @FXML
+    private MenuItem menuTecnicosSinEquipo;
+
     private ObservableList<Tecnico> tecnicosObservable;
 
     @FXML
@@ -99,6 +102,32 @@ private TecnicoController tecnicoController;
         mostrarColumnas("numero", "nombre", "equipo");
 
 
+    }
+
+    @FXML
+    void handleTecnicosSinEquipo(ActionEvent event) {
+        ejecutarConsulta(()->tecnicoController.listarTecniSinContrato());
+        mostrarColumnas("numero", "nombre");
+
+
+
+    }
+
+    private void ejecutarConsulta(ConsultaJugador consulta) {
+        try {
+            ArrayList<Tecnico> resultado = consulta.ejecutar();
+            tecnicosObservable = FXCollections.observableArrayList(resultado);
+            tableCuerpoTecnico.setItems(tecnicosObservable);
+            actualizarContador();
+        } catch (RepositoryException e) {
+            MensajeUtil.mostrarError("Error"+ e.getMessage());
+        }
+    }
+
+    // Interfaz funcional para consultas
+    @FunctionalInterface
+    private interface ConsultaJugador {
+        ArrayList<Tecnico> ejecutar() throws RepositoryException;
     }
 
 

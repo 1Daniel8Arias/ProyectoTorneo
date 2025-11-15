@@ -383,6 +383,10 @@ public class TorneoService {
         return jugadorService;
     }
 
+    public TecnicoService getTecnicoService() {
+        return tecnicoService;
+    }
+
     public Partido buscarPartidoPorId(int id) {
         try {
             return partidoService.buscarPartidoPorId(id);
