@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
@@ -92,18 +93,19 @@
                                 <Insets bottom="10" top="10" />
                             </padding>
                         </Label>
-                  <FlowPane fx:id="flowContainer" hgap="20.0" prefHeight="200.0" prefWidth="200.0" vgap="20.0">
+                    </children>
+                </VBox>
+            <ScrollPane fx:id="partidosScrollPane" fitToWidth="true" prefHeight="480.0" prefWidth="1140.0" style="-fx-background-color: transparent; -fx-border-width: 0;">
+               <content>
+                  <FlowPane fx:id="flowContainer" hgap="20.0" prefHeight="488.0" prefWidth="1150.0" vgap="20.0">
                      <opaqueInsets>
                         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                      </opaqueInsets>
-                     <VBox.margin>
-                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                     </VBox.margin>
                      <padding>
                         <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                      </padding></FlowPane>
-                    </children>
-                </VBox>
+               </content>
+            </ScrollPane>
             </children>
         </VBox>
     </center>

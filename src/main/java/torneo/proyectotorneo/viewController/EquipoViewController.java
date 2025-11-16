@@ -69,10 +69,28 @@ public class EquipoViewController {
     @FXML
     void handleEquiposConSanciones(ActionEvent event) {
 
+        List<Equipo> equipos = equipoController.listarEquiposConSancion();
+        cargarCards(
+                equipos,
+                false,   // mostrar DT
+                true,  // ocultar ciudad
+                true,  // ocultar n° jugadores
+                true   // ocultar estadio
+        );
     }
 
     @FXML
     void handleEquiposConTecnico(ActionEvent event) {
+
+        List<Equipo> equipos = equipoController.listarEquiposConTecnico();
+        cargarCards(
+                equipos,
+                false,   // mostrar DT
+                true,  // ocultar ciudad
+                true,  // ocultar n° jugadores
+                true   // ocultar estadio
+        );
+
 
     }
 

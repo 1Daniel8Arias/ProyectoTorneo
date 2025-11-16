@@ -46,6 +46,10 @@ public class EquipoController {
         return modelFactoryController.getTorneoService().listarEquiposConTecnico();
     }
 
+    public ArrayList<Equipo> listarEquiposConSancion() throws RepositoryException {
+        return modelFactoryController.getTorneoService().getEquipoService().listarEquiposConSanciones();
+    }
+
     public ArrayList<Equipo> listarEquiposConCantidadDeJugadores() throws RepositoryException {
         return modelFactoryController.getTorneoService().getEquipoService().listarEquiposConCantidadDeJugadores();
     }
