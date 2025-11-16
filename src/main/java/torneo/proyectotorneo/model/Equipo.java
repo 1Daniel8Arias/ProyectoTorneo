@@ -23,6 +23,11 @@ public class Equipo {
     private int cantidadJugadores;
 
     public int getCantidadJugadores() {
-        return this.listaJugadoresJugadores.size();
+
+        if (this.listaJugadoresJugadores != null && !this.listaJugadoresJugadores.isEmpty()) {
+            return this.listaJugadoresJugadores.size();
+        }
+
+        return this.cantidadJugadores;
     }
 }

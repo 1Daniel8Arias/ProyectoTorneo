@@ -45,92 +45,167 @@ public class EquipoViewController {
 
     @FXML
     void handleBuscar(ActionEvent event) {
-
+        // Implementar búsqueda según necesites
     }
 
     @FXML
     void handleNuevoEquipo(ActionEvent event) {
-
+        // Implementar creación de nuevo equipo según necesites
     }
 
+    /**
+     * Muestra los equipos con la cantidad de jugadores que tiene cada uno
+     */
     @FXML
     void handleEquiposConCantidadDeJugadores(ActionEvent event) {
-        List<Equipo> equipos = equipoController.listarEquiposConCantidadDeJugadores();
-        cargarCards(
-                equipos,
-                false,   // mostrar DT
-                true,  // ocultar ciudad
-                true,  // ocultar n° jugadores
-                true   // ocultar estadio
-        );
-
+        try {
+            List<Equipo> equipos = equipoController.listarEquiposConCantidadDeJugadores();
+            cargarCards(
+                    equipos,
+                    false,   // ocultar técnico
+                    false,   // mostrar ciudad
+                    true,    // MOSTRAR cantidad de jugadores
+                    false    // mostrar estadio
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar equipos con cantidad de jugadores: " + e.getMessage());
+        }
     }
 
+    /**
+     * Muestra los equipos que tienen jugadores sancionados
+     */
     @FXML
     void handleEquiposConSanciones(ActionEvent event) {
-
-        List<Equipo> equipos = equipoController.listarEquiposConSancion();
-        cargarCards(
-                equipos,
-                false,   // mostrar DT
-                true,  // ocultar ciudad
-                true,  // ocultar n° jugadores
-                true   // ocultar estadio
-        );
+        try {
+            List<Equipo> equipos = equipoController.listarEquiposConSancion();
+            cargarCards(
+                    equipos,
+                    false,   // ocultar técnico
+                    false,   // mostrar ciudad
+                    false,   // ocultar cantidad de jugadores
+                    false    // mostrar estadio
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar equipos con sanciones: " + e.getMessage());
+        }
     }
 
+    /**
+     * Muestra los equipos con el nombre de su técnico
+     */
     @FXML
     void handleEquiposConTecnico(ActionEvent event) {
-
-        List<Equipo> equipos = equipoController.listarEquiposConTecnico();
-        cargarCards(
-                equipos,
-                false,   // mostrar DT
-                true,  // ocultar ciudad
-                true,  // ocultar n° jugadores
-                true   // ocultar estadio
-        );
-
-
+        try {
+            List<Equipo> equipos = equipoController.listarEquiposConTecnico();
+            cargarCards(
+                    equipos,
+                    true,    // MOSTRAR técnico
+                    false,   // mostrar ciudad
+                    false,   // ocultar cantidad de jugadores
+                    false    // mostrar estadio
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar equipos con técnico: " + e.getMessage());
+        }
     }
 
-
+    /**
+     * Inicialización del controlador
+     * Por defecto muestra: nombre, imagen, estadio y ciudad
+     * Oculta: técnico y cantidad de jugadores (solo se muestran en consultas específicas)
+     */
     @FXML
     private void initialize() {
         this.equipoController = new EquipoController();
-        // ejemplo: obtener lista de equipos (reemplaza por tu repositorio)
-        List<Equipo> equipos = equipoController.listarTodos();
-        int con = equipos.size();
-        lblContador.setText(String.valueOf(con));
+        try {
+            // Obtener lista de todos los equipos
+            List<Equipo> equipos = equipoController.listarTodos();
+            lblContador.setText("Equipos (" + equipos.size() + ")");
 
-        // cargar cada tarjeta
+            // Cargar cards mostrando solo: nombre, imagen, estadio y ciudad
+            // Ocultar: técnico y cantidad de jugadores (aparecerán solo en consultas)
+            cargarCards(
+                    equipos,
+                    false,   // ocultar técnico
+                    false,   // mostrar ciudad
+                    false,   // ocultar cantidad de jugadores
+                    false    // mostrar estadio
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Error al inicializar equipos: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Método auxiliar para cargar las tarjetas de equipos con visibilidad personalizada
+     *
+     * @param equipos Lista de equipos a mostrar
+     * @param mostrarDT Si debe mostrar el director técnico
+     * @param mostrarCiudad Si debe mostrar la ciudad
+     * @param mostrarJugadores Si debe mostrar la cantidad de jugadores
+     * @param mostrarEstadio Si debe mostrar el estadio
+     */
+    private void cargarCards(List<Equipo> equipos,
+                             boolean mostrarDT,
+                             boolean mostrarCiudad,
+                             boolean mostrarJugadores,
+                             boolean mostrarEstadio) {
+
+        // Limpiar el contenedor
+        flowContainer.getChildren().clear();
+
+        // Cargar cada tarjeta
         for (Equipo eq : equipos) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/CardEquipo.fxml"));
                 Node card = loader.load();
-                CardEquipoViewController controller = loader.getController();
-                controller.setEquipo(eq); // pasar datos al controlador de la tarjeta
 
-                // opcional: fijar tamaño de la tarjeta (o usar css)
-                card.setUserData(eq);
+                CardEquipoViewController controller = loader.getController();
+                controller.setEquipo(eq);
+
+                // Aplicar visibilidad de campos según los parámetros
+                controller.mostrarCampos(mostrarDT, mostrarCiudad, mostrarJugadores, mostrarEstadio);
+
                 flowContainer.getChildren().add(card);
+
             } catch (IOException e) {
                 e.printStackTrace();
+                System.err.println("Error al cargar la tarjeta del equipo " + eq.getNombre() + ": " + e.getMessage());
             }
         }
+
+        // Actualizar el contador
+        lblContador.setText("Equipos (" + equipos.size() + ")");
     }
 
+    /**
+     * Interfaz funcional para ejecutar consultas de equipos
+     */
+    @FunctionalInterface
+    private interface ConsultaEquipo {
+        List<Equipo> ejecutar() throws Exception;
+    }
+
+    /**
+     * Método auxiliar alternativo para ejecutar consultas
+     * (Si prefieres usarlo en lugar de llamar directamente a cargarCards)
+     */
     private void ejecutarConsultaEquipos(ConsultaEquipo consulta) {
         try {
             List<Equipo> resultado = consulta.ejecutar();
 
-            // limpiar el contenedor
+            // Limpiar el contenedor
             flowContainer.getChildren().clear();
 
-            // actualizar el contador
+            // Actualizar el contador
             lblContador.setText("Equipos (" + resultado.size() + ")");
 
-            // volver a cargar tarjetas
+            // Volver a cargar tarjetas
             for (Equipo eq : resultado) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/CardEquipo.fxml"));
                 Node card = loader.load();
@@ -143,44 +218,7 @@ public class EquipoViewController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.err.println("Error al ejecutar consulta de equipos: " + e.getMessage());
         }
     }
-
-    @FunctionalInterface
-    private interface ConsultaEquipo {
-        List<Equipo> ejecutar() throws Exception;
-    }
-
-
-    private void cargarCards(List<Equipo> equipos,
-                             boolean mostrarDT,
-                             boolean mostrarCiudad,
-                             boolean mostrarJugadores,
-                             boolean mostrarEstadio) {
-
-        flowContainer.getChildren().clear();
-
-        for (Equipo eq : equipos) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/CardEquipo.fxml"));
-                Node card = loader.load();
-
-                CardEquipoViewController controller = loader.getController();
-                controller.setEquipo(eq);
-
-                // 👇 Aquí aplicas visibilidad
-                controller.mostrarCampos(mostrarDT, mostrarCiudad, mostrarJugadores, mostrarEstadio);
-
-                flowContainer.getChildren().add(card);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        lblContador.setText("Equipos (" + equipos.size() + ")");
-    }
-
-
-
 }
