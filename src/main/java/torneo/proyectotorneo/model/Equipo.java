@@ -22,5 +22,7 @@ public class Equipo {
     private TablaPosicion tablaPosicion;
     private int cantidadJugadores;
 
-
+    public int getCantidadJugadores() {
+        return this.listaJugadoresJugadores.size();
+    }
 }

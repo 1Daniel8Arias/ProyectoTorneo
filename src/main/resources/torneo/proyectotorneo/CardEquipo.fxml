@@ -42,6 +42,12 @@
         <Label styleClass="app-subtitle" text="DT:" />
         <Label fx:id="lblDT" styleClass="app-subtitle" text="Paulo Autuori" />
     </HBox>
+   <HBox spacing="5">
+      <children>
+         <Label styleClass="app-subtitle" text=" jugadores:" />
+         <Label fx:id="lblNJugadores" styleClass="app-subtitle" text="50" />
+      </children>
+   </HBox>
 
     <Separator prefWidth="200" />
 

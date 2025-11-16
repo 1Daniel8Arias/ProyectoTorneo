@@ -39,6 +39,10 @@ public class TorneoService {
         this.cuerpoTecnicoService = new CuerpoTecnicoService();
     }
 
+    public EquipoService getEquipoService() {
+        return equipoService;
+    }
+
     // ================== EQUIPOS ==================
 
     public Equipo buscarEquipoPorId(int id) throws RepositoryException {

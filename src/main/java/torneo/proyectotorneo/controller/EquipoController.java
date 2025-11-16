@@ -46,8 +46,8 @@ public class EquipoController {
         return modelFactoryController.getTorneoService().listarEquiposConTecnico();
     }
 
-    public ArrayList<Jugador> listarJugadoresPorEquipo(int idEquipo) throws RepositoryException {
-        return modelFactoryController.getTorneoService().listarJugadoresPorEquipo(idEquipo);
+    public ArrayList<Equipo> listarEquiposConCantidadDeJugadores() throws RepositoryException {
+        return modelFactoryController.getTorneoService().getEquipoService().listarEquiposConCantidadDeJugadores();
     }
 
     public void asignarCapitan(int idEquipo, int idJugador) throws RepositoryException {
