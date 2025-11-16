@@ -14,9 +14,31 @@ import java.util.ArrayList;
 
 public class EstadioRepository implements Repository<Estadio> {
 
+    private final EquipoEstadioRepository equipoEstadioRepository;
+    private final PartidoRepository partidoRepository;
+
+    public EstadioRepository() {
+        this.equipoEstadioRepository = new EquipoEstadioRepository();
+        this.partidoRepository = new PartidoRepository();
+    }
+
     @Override
     public ArrayList<Estadio> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM ESTADIO";
+        // ✅ JOIN con MUNICIPIO y DEPARTAMENTO
+        String sql = """
+            SELECT 
+                e.ID_ESTADIO, 
+                e.NOMBRE, 
+                e.CAPACIDAD,
+                m.ID_MUNICIPIO,
+                m.NOMBRE AS NOMBRE_MUNICIPIO,
+                d.ID_DEPARTAMENTO, 
+                d.NOMBRE AS NOMBRE_DEPARTAMENTO
+            FROM ESTADIO e
+            JOIN MUNICIPIO m ON e.ID_MUNICIPIO = m.ID_MUNICIPIO
+            JOIN DEPARTAMENTO d ON m.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
+        """;
+
         ArrayList<Estadio> estadios = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -28,6 +50,19 @@ public class EstadioRepository implements Repository<Estadio> {
                 estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
                 estadio.setNombre(rs.getString("NOMBRE"));
                 estadio.setCapacidad(rs.getInt("CAPACIDAD"));
+
+                // ✅ Cargar la jerarquía: Municipio → Departamento
+                Municipio municipio = new Municipio();
+                municipio.setIdMunicipio(rs.getInt("ID_MUNICIPIO"));
+                municipio.setNombre(rs.getString("NOMBRE_MUNICIPIO"));
+
+                Departamento departamento = new Departamento();
+                departamento.setIdDepartamento(rs.getInt("ID_DEPARTAMENTO"));
+                departamento.setNombre(rs.getString("NOMBRE_DEPARTAMENTO"));
+
+                municipio.setDepartamento(departamento);
+                estadio.setMunicipio(municipio);
+
                 estadios.add(estadio);
             }
 
@@ -40,12 +75,22 @@ public class EstadioRepository implements Repository<Estadio> {
 
     @Override
     public Estadio buscarPorId(int id) throws RepositoryException {
+        // ✅ JOIN con MUNICIPIO y DEPARTAMENTO
         String sql = """
-        SELECT est.*, d.ID_DEPARTAMENTO, d.NOMBRE AS NOMBRE_DEPARTAMENTO
-        FROM ESTADIO est
-        JOIN DEPARTAMENTO d ON est.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
-        WHERE est.ID_ESTADIO = ?
-    """;
+            SELECT 
+                e.ID_ESTADIO, 
+                e.NOMBRE, 
+                e.CAPACIDAD,
+                m.ID_MUNICIPIO,
+                m.NOMBRE AS NOMBRE_MUNICIPIO,
+                d.ID_DEPARTAMENTO, 
+                d.NOMBRE AS NOMBRE_DEPARTAMENTO
+            FROM ESTADIO e
+            JOIN MUNICIPIO m ON e.ID_MUNICIPIO = m.ID_MUNICIPIO
+            JOIN DEPARTAMENTO d ON m.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
+            WHERE e.ID_ESTADIO = ?
+        """;
+
         Estadio estadio = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -60,11 +105,17 @@ public class EstadioRepository implements Repository<Estadio> {
                     estadio.setNombre(rs.getString("NOMBRE"));
                     estadio.setCapacidad(rs.getInt("CAPACIDAD"));
 
-                    // Cargar Departamento
+                    // ✅ Cargar la jerarquía: Municipio → Departamento
+                    Municipio municipio = new Municipio();
+                    municipio.setIdMunicipio(rs.getInt("ID_MUNICIPIO"));
+                    municipio.setNombre(rs.getString("NOMBRE_MUNICIPIO"));
+
                     Departamento departamento = new Departamento();
                     departamento.setIdDepartamento(rs.getInt("ID_DEPARTAMENTO"));
                     departamento.setNombre(rs.getString("NOMBRE_DEPARTAMENTO"));
-                    estadio.setDepartamento(departamento);
+
+                    municipio.setDepartamento(departamento);
+                    estadio.setMunicipio(municipio);
 
                     // Cargar relaciones con equipos
                     estadio.setEquipoEstadios(listarEquiposEstadio(id));
@@ -83,14 +134,15 @@ public class EstadioRepository implements Repository<Estadio> {
 
     @Override
     public void guardar(Estadio estadio) throws RepositoryException {
-        String sql = "INSERT INTO ESTADIO (NOMBRE, CAPACIDAD, ID_DEPARTAMENTO) VALUES (?, ?, ?)";
+        // ✅ Inserta ID_MUNICIPIO
+        String sql = "INSERT INTO ESTADIO (NOMBRE, CAPACIDAD, ID_MUNICIPIO) VALUES (?, ?, ?)";
 
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, estadio.getNombre());
             ps.setInt(2, estadio.getCapacidad());
-            ps.setInt(3, estadio.getDepartamento().getIdDepartamento());
+            ps.setInt(3, estadio.getMunicipio().getIdMunicipio());
             ps.executeUpdate();
 
         } catch (SQLException e) {
@@ -100,14 +152,15 @@ public class EstadioRepository implements Repository<Estadio> {
 
     @Override
     public void actualizar(Estadio estadio) throws RepositoryException {
-        String sql = "UPDATE ESTADIO SET NOMBRE = ?, CAPACIDAD = ?, ID_DEPARTAMENTO = ? WHERE ID_ESTADIO = ?";
+        // ✅ Actualiza ID_MUNICIPIO
+        String sql = "UPDATE ESTADIO SET NOMBRE = ?, CAPACIDAD = ?, ID_MUNICIPIO = ? WHERE ID_ESTADIO = ?";
 
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, estadio.getNombre());
             ps.setInt(2, estadio.getCapacidad());
-            ps.setInt(3, estadio.getDepartamento().getIdDepartamento());
+            ps.setInt(3, estadio.getMunicipio().getIdMunicipio());
             ps.setInt(4, estadio.getIdEstadio());
             ps.executeUpdate();
 

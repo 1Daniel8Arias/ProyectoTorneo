@@ -135,8 +135,8 @@ public class EstadioViewController implements Initializable {
         // Columna de departamento
         colDepartamento.setCellValueFactory(cellData -> {
             Estadio estadio = cellData.getValue().getEstadio();
-            String dept = (estadio != null && estadio.getDepartamento() != null)
-                    ? estadio.getDepartamento().getNombre()
+            String dept = (estadio != null && estadio.getMunicipio() != null)
+                    ? estadio.getMunicipio().getNombre()
                     : "N/A";
             return new SimpleStringProperty(dept);
         });

@@ -14,7 +14,7 @@ public class Estadio {
     private Integer idEstadio;
     private String nombre;
     private int capacidad;
-    private Departamento departamento;
+    private Municipio municipio;
     private ArrayList<EquipoEstadio> equipoEstadios;
     private ArrayList<Partido> listaPartidos;
 

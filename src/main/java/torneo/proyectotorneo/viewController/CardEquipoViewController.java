@@ -7,6 +7,10 @@ import torneo.proyectotorneo.model.Equipo;
 import torneo.proyectotorneo.model.EquipoEstadio;
 import javafx.scene.image.ImageView;
 
+/**
+ * Controlador para la tarjeta de equipo
+ * Versión FINAL - Muestra Ciudad (Municipio) del estadio
+ */
 public class CardEquipoViewController {
 
     @FXML
@@ -38,6 +42,7 @@ public class CardEquipoViewController {
 
     @FXML
     private Label lblEstadioT;
+
     @FXML
     private Label lblNJugadoresT;
 
@@ -62,48 +67,47 @@ public class CardEquipoViewController {
 
         // Director Técnico
         if (equipo.getTecnico() != null) {
-            lblDT.setText( equipo.getTecnico().getNombre() + " " + equipo.getTecnico().getApellido());
+            lblDT.setText(equipo.getTecnico().getNombre() + " " + equipo.getTecnico().getApellido());
         } else {
-            lblDT.setText("Técnico: Sin asignar");
+            lblDT.setText("Sin asignar");
         }
 
-        // Estadio - Mostrar el estadio principal (sede PRINCIPAL)
-        if (equipo.getEstadios() != null && !equipo.getEstadios().isEmpty()) {
-            // Buscar el estadio principal
-            EquipoEstadio estadioPrincipal = equipo.getEstadios().stream()
-                    .filter(ee -> ee.getSede().toString().equals("PRINCIPAL"))
-                    .findFirst()
-                    .orElse(equipo.getEstadios().get(0)); // Si no hay principal, tomar el primero
-
-            lblEstadio.setText("Estadio: " + estadioPrincipal.getEstadio().getNombre());
-        } else {
-            lblEstadio.setText("Estadio: No asignado");
-        }
-
-        // Ciudad - Puedes obtenerla del estadio o de otra fuente
-        // Por ahora la dejamos pendiente ya que no veo un campo ciudad directamente en Equipo
-        // Si tienes la ciudad en el estadio, podrías hacer:
+        // ✅ ESTADIO - Buscar sede "Local", si no existe tomar el primero
         if (equipo.getEstadios() != null && !equipo.getEstadios().isEmpty()) {
             EquipoEstadio estadioPrincipal = equipo.getEstadios().stream()
-                    .filter(ee -> ee.getSede().toString().equals("PRINCIPAL"))
+                    .filter(ee -> ee.getSede().toString().equalsIgnoreCase("Local"))
                     .findFirst()
                     .orElse(equipo.getEstadios().get(0));
 
-            // Si el estadio tiene ciudad asociada:
-            // lblCiudad.setText("Ciudad: " + estadioPrincipal.getEstadio().getCiudad().getNombre());
-
-            // Si no tienes ciudad en el modelo, puedes dejarlo así temporalmente:
-            lblCiudad.setText("Ciudad: Por definir");
+            lblEstadio.setText(estadioPrincipal.getEstadio().getNombre());
         } else {
-            lblCiudad.setText("Ciudad: No disponible");
+            lblEstadio.setText("No asignado");
+        }
+
+        // ✅ CIUDAD (MUNICIPIO) - Obtener del estadio
+        if (equipo.getEstadios() != null && !equipo.getEstadios().isEmpty()) {
+            EquipoEstadio estadioPrincipal = equipo.getEstadios().stream()
+                    .filter(ee -> ee.getSede().toString().equalsIgnoreCase("Local"))
+                    .findFirst()
+                    .orElse(equipo.getEstadios().get(0));
+
+            // Obtener el municipio (ciudad) del estadio
+            if (estadioPrincipal.getEstadio() != null &&
+                    estadioPrincipal.getEstadio().getMunicipio() != null) {
+                lblCiudad.setText(estadioPrincipal.getEstadio().getMunicipio().getNombre());
+            } else {
+                lblCiudad.setText("No disponible");
+            }
+        } else {
+            lblCiudad.setText("No disponible");
         }
 
         // Cantidad de jugadores - Manejo seguro de la lista
         int cantidadJugadores = equipo.getCantidadJugadores();
         if (cantidadJugadores > 0 || equipo.getListaJugadoresJugadores() != null) {
-            lblNJugadores.setText("Jugadores: " + cantidadJugadores);
+            lblNJugadores.setText(String.valueOf(cantidadJugadores));
         } else {
-            lblNJugadores.setText("Jugadores: 0");
+            lblNJugadores.setText("0");
         }
     }
 
@@ -117,7 +121,6 @@ public class CardEquipoViewController {
             if (equipo != null) {
                 System.out.println("Clic en equipo: " + equipo.getNombre());
                 // Aquí puedes agregar lógica para abrir detalles del equipo
-                // Por ejemplo: abrirDetallesEquipo(equipo);
             }
         });
     }
@@ -126,25 +129,29 @@ public class CardEquipoViewController {
      * Controla la visibilidad de los campos de la tarjeta
      *
      * @param dt Si debe mostrar el director técnico
-     * @param ciudad Si debe mostrar la ciudad
+     * @param ciudad Si debe mostrar la ciudad (municipio)
      * @param jugadores Si debe mostrar la cantidad de jugadores
      * @param estadio Si debe mostrar el estadio
      */
     public void mostrarCampos(boolean dt, boolean ciudad, boolean jugadores, boolean estadio) {
         lblDT.setVisible(dt);
-       lblDT.setManaged(dt);// setManaged hace que el espacio se colapse cuando está oculto
+        lblDT.setManaged(dt);
         lblDTT.setVisible(dt);
+        lblDTT.setManaged(dt);
 
         lblCiudad.setVisible(ciudad);
         lblCiudad.setManaged(ciudad);
         lblCiudadT.setVisible(ciudad);
+        lblCiudadT.setManaged(ciudad);
 
         lblNJugadores.setVisible(jugadores);
         lblNJugadores.setManaged(jugadores);
         lblNJugadoresT.setVisible(jugadores);
+        lblNJugadoresT.setManaged(jugadores);
 
         lblEstadio.setVisible(estadio);
         lblEstadio.setManaged(estadio);
-        lblEstadio.setVisible(jugadores);
+        lblEstadioT.setVisible(estadio);
+        lblEstadioT.setManaged(estadio);
     }
 }

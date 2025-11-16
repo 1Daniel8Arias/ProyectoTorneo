@@ -173,7 +173,7 @@ public class EstadioService {
                             "Equipos que lo usan como sede neutral: %d\n",
                     estadio.getNombre(),
                     estadio.getCapacidad(),
-                    estadio.getDepartamento() != null ? estadio.getDepartamento().getNombre() : "N/A",
+                    estadio.getMunicipio() != null ? estadio.getMunicipio().getNombre() : "N/A",
                     totalPartidos,
                     equiposLocales,
                     equiposNeutrales
@@ -257,7 +257,7 @@ public class EstadioService {
             throw new EstadioNoEncontradoException("La capacidad debe ser mayor a cero");
         }
 
-        if (estadio.getDepartamento() == null) {
+        if (estadio.getMunicipio() == null) {
             throw new EstadioNoEncontradoException("El departamento del estadio es obligatorio");
         }
     }
@@ -292,9 +292,9 @@ public class EstadioService {
             ArrayList<Estadio> estadiosPorDepartamento = new ArrayList<>();
 
             for (Estadio estadio : todosLosEstadios) {
-                if (estadio.getDepartamento() != null &&
-                        estadio.getDepartamento() != null &&
-                        estadio.getDepartamento().getNombre().equalsIgnoreCase(nombreDepartamento)) {
+                if (estadio.getMunicipio() != null &&
+                        estadio.getMunicipio() != null &&
+                        estadio.getMunicipio().getNombre().equalsIgnoreCase(nombreDepartamento)) {
                     estadiosPorDepartamento.add(estadio);
                 }
             }
