@@ -30,6 +30,17 @@ public class CardEquipoViewController {
     @FXML
     private Label lblNombre;
 
+    @FXML
+    private Label lblCiudadT;
+
+    @FXML
+    private Label lblDTT;
+
+    @FXML
+    private Label lblEstadioT;
+    @FXML
+    private Label lblNJugadoresT;
+
     private Equipo equipo;
 
     /**
@@ -51,7 +62,7 @@ public class CardEquipoViewController {
 
         // Director Técnico
         if (equipo.getTecnico() != null) {
-            lblDT.setText("Técnico: " + equipo.getTecnico().getNombre() + " " + equipo.getTecnico().getApellido());
+            lblDT.setText( equipo.getTecnico().getNombre() + " " + equipo.getTecnico().getApellido());
         } else {
             lblDT.setText("Técnico: Sin asignar");
         }
@@ -121,15 +132,19 @@ public class CardEquipoViewController {
      */
     public void mostrarCampos(boolean dt, boolean ciudad, boolean jugadores, boolean estadio) {
         lblDT.setVisible(dt);
-        lblDT.setManaged(dt); // setManaged hace que el espacio se colapse cuando está oculto
+       lblDT.setManaged(dt);// setManaged hace que el espacio se colapse cuando está oculto
+        lblDTT.setVisible(dt);
 
         lblCiudad.setVisible(ciudad);
         lblCiudad.setManaged(ciudad);
+        lblCiudadT.setVisible(ciudad);
 
         lblNJugadores.setVisible(jugadores);
         lblNJugadores.setManaged(jugadores);
+        lblNJugadoresT.setVisible(jugadores);
 
         lblEstadio.setVisible(estadio);
         lblEstadio.setManaged(estadio);
+        lblEstadio.setVisible(jugadores);
     }
 }

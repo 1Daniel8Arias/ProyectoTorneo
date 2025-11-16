@@ -27,24 +27,24 @@
 
     <!-- Ciudad -->
     <HBox spacing="5">
-        <Label styleClass="app-subtitle" text="Ciudad:" />
+        <Label fx:id="lblCiudadT" styleClass="app-subtitle" text="Ciudad:" />
         <Label fx:id="lblCiudad" styleClass="app-subtitle" text="Medellín" />
     </HBox>
 
     <!-- Estadio -->
     <HBox spacing="5">
-        <Label styleClass="app-subtitle" text="Estadio:" />
+        <Label fx:id="lblEstadioT" styleClass="app-subtitle" text="Estadio:" />
         <Label fx:id="lblEstadio" styleClass="app-subtitle" text="Atanasio Girardot" />
     </HBox>
 
     <!-- DT -->
     <HBox spacing="5">
-        <Label styleClass="app-subtitle" text="DT:" />
+        <Label fx:id="lblDTT" styleClass="app-subtitle" text="DT:" />
         <Label fx:id="lblDT" styleClass="app-subtitle" text="Paulo Autuori" />
     </HBox>
    <HBox spacing="5">
       <children>
-         <Label styleClass="app-subtitle" text=" jugadores:" />
+         <Label fx:id="lblNJugadoresT" styleClass="app-subtitle" text=" jugadores:" />
          <Label fx:id="lblNJugadores" styleClass="app-subtitle" text="50" />
       </children>
    </HBox>

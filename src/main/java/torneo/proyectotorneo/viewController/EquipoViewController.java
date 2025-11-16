@@ -131,9 +131,9 @@ public class EquipoViewController {
             cargarCards(
                     equipos,
                     false,   // ocultar técnico
-                    false,   // mostrar ciudad
+                    true,   // mostrar ciudad
                     false,   // ocultar cantidad de jugadores
-                    false    // mostrar estadio
+                    true    // mostrar estadio
             );
         } catch (Exception e) {
             e.printStackTrace();
