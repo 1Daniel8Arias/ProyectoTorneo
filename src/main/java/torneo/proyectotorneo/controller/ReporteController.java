@@ -142,7 +142,11 @@ public class ReporteController {
                 "06_CuerpoTecnicoPorEquipo",
                 "07_EstadiosPorDepartamento",
                 "08_TablaPosiciones",
-                "09_GoleadoresTorneo"
+                "09_GoleadoresTorneo",
+                "10_RendimientoDeEquipos",
+                "11_ReporteDeGolesporFecha",
+                "12_ReporteDePosicionesDeJugadores"
+
         };
     }
 
@@ -160,8 +164,12 @@ public class ReporteController {
         nombres.put("07_EstadiosPorDepartamento", "Estadios por Departamento");
         nombres.put("08_TablaPosiciones", "Tabla de Posiciones");
         nombres.put("09_GoleadoresTorneo", "Goleadores del Torneo");
+        nombres.put("10_RendimientoDeEquipos", "Rendimiento de Equipos");
+        nombres.put("11_ReporteDeGolesporFecha", "Reporte De Goles por Fecha");
+        nombres.put("12_ReporteDePosicionesDeJugadores", "Reporte De Posiciones DeJugadores");
 
 
         return nombres.getOrDefault(nombreReporte, nombreReporte);
     }
 }
+

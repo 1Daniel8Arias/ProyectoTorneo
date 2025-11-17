@@ -1,0 +1,47 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="ReporteDePosicionesDeJugadores" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0f9e5abc-e287-4674-a4a4-e13af9ce4005">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <query language="sql"><![CDATA[SELECT
+    posicion,
+    COUNT(*) AS cantidad
+FROM jugador
+GROUP BY posicion
+ORDER BY posicion
+]]></query>
+    <field name="POSICION" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="POSICION"/>
+        <property name="com.jaspersoft.studio.field.label" value="POSICION"/>
+    </field>
+    <field name="CANTIDAD" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="CANTIDAD"/>
+        <property name="com.jaspersoft.studio.field.label" value="CANTIDAD"/>
+    </field>
+    <background splitType="Stretch"/>
+    <title height="60" splitType="Stretch">
+        <element kind="staticText" uuid="a5882ddc-57bd-4fc9-98b2-79842ccf4ce0" x="0" y="0" width="549" height="60" fontSize="29.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+            <text><![CDATA[Reporte de Posicion de Jugadores]]></text>
+        </element>
+    </title>
+    <pageHeader height="35" splitType="Stretch"/>
+    <columnHeader height="18" splitType="Stretch"/>
+    <detail>
+        <band height="12" splitType="Stretch"/>
+    </detail>
+    <columnFooter height="13" splitType="Stretch"/>
+    <pageFooter height="8" splitType="Stretch"/>
+    <summary height="301" splitType="Stretch">
+        <element kind="chart" chartType="pie3D" uuid="bf9b83c4-34d6-4a4b-a0a1-e17980627925" x="0" y="-40" width="549" height="330" evaluationTime="Column" legendPosition="Bottom">
+            <dataset kind="pie">
+                <series>
+                    <keyExpression><![CDATA[$F{POSICION}]]></keyExpression>
+                    <valueExpression><![CDATA[$F{CANTIDAD}]]></valueExpression>
+                    <labelExpression><![CDATA[$F{POSICION} + " (" + $F{CANTIDAD} + ")"]]></labelExpression>
+                </series>
+            </dataset>
+            <plot>
+                <itemLabel/>
+            </plot>
+        </element>
+    </summary>
+</jasperReport>
