@@ -6,24 +6,26 @@
               name="tabla_posiciones" pageWidth="595" pageHeight="842"
               columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 
+    <style name="Title" fontSize="26" isBold="true"/>
+    <style name="Column header" fontSize="10" isBold="true"/>
+    <style name="Detail" fontSize="9"/>
+
     <queryString>
         <![CDATA[SELECT
-            ROWNUM AS POSICION,
             e.NOMBRE AS EQUIPO,
             tp.GANADOS,
             tp.EMPATES,
             tp.PERDIDOS,
-            (tp.GANADOS + tp.EMPATES + tp.PERDIDOS) AS PARTIDOS_JUGADOS,
+            tp.PARTIDOS_JUGADOS,
             tp.GOLES_A_FAVOR,
             tp.GOLES_EN_CONTRA,
             tp.DIFERENCIA_GOLES,
             tp.PUNTOS
         FROM TABLA_POSICION tp
         INNER JOIN EQUIPO e ON tp.ID_EQUIPO = e.ID_EQUIPO
-        ORDER BY tp.PUNTOS DESC, tp.DIFERENCIA_GOLES DESC, tp.GOLES_A_FAVOR DESC]]>
+        ORDER BY tp.PUNTOS DESC, tp.DIFERENCIA_GOLES DESC, tp.GOLES_A_FAVOR DESC, e.NOMBRE ASC]]>
     </queryString>
 
-    <field name="POSICION" class="java.math.BigDecimal"/>
     <field name="EQUIPO" class="java.lang.String"/>
     <field name="GANADOS" class="java.math.BigDecimal"/>
     <field name="EMPATES" class="java.math.BigDecimal"/>
@@ -34,51 +36,63 @@
     <field name="DIFERENCIA_GOLES" class="java.math.BigDecimal"/>
     <field name="PUNTOS" class="java.math.BigDecimal"/>
 
+    <!-- Variable para calcular la posición correctamente -->
+    <variable name="POSICION" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{EQUIPO}]]></variableExpression>
+        <initialValueExpression><![CDATA[0]]></initialValueExpression>
+    </variable>
+
     <title>
-        <band height="90">
+        <band height="100">
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="95" backcolor="#E6F2FF"/>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="10" width="555" height="40"/>
+                <reportElement style="Title" x="0" y="15" width="555" height="40"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="26" isBold="true"/>
+                    <font size="28" isBold="true"/>
                 </textElement>
                 <text><![CDATA[TABLA DE POSICIONES]]></text>
             </staticText>
             <staticText>
-                <reportElement x="0" y="55" width="555" height="25"/>
+                <reportElement x="0" y="60" width="555" height="25" forecolor="#666666"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="14" isBold="false"/>
                 </textElement>
-                <text><![CDATA[Temporada 2025]]></text>
+                <text><![CDATA[Campeonato Colombiano - Temporada 2025]]></text>
             </staticText>
         </band>
     </title>
 
     <columnHeader>
-        <band height="35">
+        <band height="40">
+            <rectangle>
+                <reportElement x="0" y="5" width="555" height="30" backcolor="#4A90E2"/>
+            </rectangle>
             <staticText>
-                <reportElement x="0" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="5" y="10" width="35" height="25" forecolor="#FFFFFF"/>
                 <box leftPadding="3">
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[POS]]></text>
             </staticText>
             <staticText>
-                <reportElement x="35" y="10" width="150" height="20" backcolor="#4A90E2"/>
-                <box leftPadding="3">
-                    <pen lineWidth="0.5"/>
+                <reportElement x="40" y="10" width="160" height="25" forecolor="#FFFFFF"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
+                    <font size="10" isBold="true"/>
                 </textElement>
                 <text><![CDATA[EQUIPO]]></text>
             </staticText>
             <staticText>
-                <reportElement x="185" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="200" y="10" width="40" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -86,9 +100,9 @@
                 <text><![CDATA[PJ]]></text>
             </staticText>
             <staticText>
-                <reportElement x="220" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="240" y="10" width="40" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -96,9 +110,9 @@
                 <text><![CDATA[G]]></text>
             </staticText>
             <staticText>
-                <reportElement x="255" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="280" y="10" width="40" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -106,9 +120,9 @@
                 <text><![CDATA[E]]></text>
             </staticText>
             <staticText>
-                <reportElement x="290" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="320" y="10" width="40" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -116,9 +130,9 @@
                 <text><![CDATA[P]]></text>
             </staticText>
             <staticText>
-                <reportElement x="325" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="360" y="10" width="45" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -126,9 +140,9 @@
                 <text><![CDATA[GF]]></text>
             </staticText>
             <staticText>
-                <reportElement x="360" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="405" y="10" width="45" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -136,9 +150,9 @@
                 <text><![CDATA[GC]]></text>
             </staticText>
             <staticText>
-                <reportElement x="395" y="10" width="35" height="20" backcolor="#4A90E2"/>
+                <reportElement x="450" y="10" width="45" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
@@ -146,9 +160,9 @@
                 <text><![CDATA[DIF]]></text>
             </staticText>
             <staticText>
-                <reportElement x="430" y="10" width="40" height="20" backcolor="#4A90E2"/>
+                <reportElement x="495" y="10" width="55" height="25" forecolor="#FFFFFF"/>
                 <box>
-                    <pen lineWidth="0.5"/>
+                    <pen lineWidth="0.5" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="10" isBold="true"/>
@@ -159,39 +173,55 @@
     </columnHeader>
 
     <detail>
-        <band height="25">
-            <!-- Destacar las primeras 3 posiciones -->
+        <band height="28">
+            <!-- Fondo verde para los primeros 3 lugares -->
             <rectangle>
-                <reportElement x="0" y="0" width="470" height="20" backcolor="#D4EDDA">
-                    <printWhenExpression><![CDATA[$F{POSICION}.intValue() <= 3]]></printWhenExpression>
+                <reportElement x="0" y="0" width="555" height="28" backcolor="#D4EDDA">
+                    <printWhenExpression><![CDATA[$V{POSICION} <= 3]]></printWhenExpression>
                 </reportElement>
-                <graphicElement>
-                    <pen lineWidth="0.0"/>
-                </graphicElement>
             </rectangle>
 
+            <!-- Fondo amarillo para lugares 4-6 -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="28" backcolor="#FFF3CD">
+                    <printWhenExpression><![CDATA[$V{POSICION} >= 4 && $V{POSICION} <= 6]]></printWhenExpression>
+                </reportElement>
+            </rectangle>
+
+            <!-- Fondo rojo claro para los últimos 3 lugares -->
+            <rectangle>
+                <reportElement x="0" y="0" width="555" height="28" backcolor="#F8D7DA">
+                    <printWhenExpression><![CDATA[$V{POSICION} >= 8]]></printWhenExpression>
+                </reportElement>
+            </rectangle>
+
+            <!-- POSICIÓN - Destacada para top 3 -->
             <textField>
-                <reportElement x="0" y="0" width="35" height="20"/>
+                <reportElement x="5" y="2" width="35" height="26"/>
                 <box leftPadding="3">
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="10" isBold="true"/>
+                    <font size="12" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{POSICION}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$V{POSICION}]]></textFieldExpression>
             </textField>
+
+            <!-- EQUIPO -->
             <textField>
-                <reportElement x="35" y="0" width="150" height="20"/>
+                <reportElement x="40" y="2" width="160" height="26"/>
                 <box leftPadding="5">
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement verticalAlignment="Middle">
-                    <font size="10" isBold="true"/>
+                    <font size="9" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{EQUIPO}]]></textFieldExpression>
             </textField>
+
+            <!-- PARTIDOS JUGADOS -->
             <textField>
-                <reportElement x="185" y="0" width="35" height="20"/>
+                <reportElement x="200" y="2" width="40" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -200,8 +230,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{PARTIDOS_JUGADOS}]]></textFieldExpression>
             </textField>
+
+            <!-- GANADOS -->
             <textField>
-                <reportElement x="220" y="0" width="35" height="20"/>
+                <reportElement x="240" y="2" width="40" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -210,8 +242,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{GANADOS}]]></textFieldExpression>
             </textField>
+
+            <!-- EMPATES -->
             <textField>
-                <reportElement x="255" y="0" width="35" height="20"/>
+                <reportElement x="280" y="2" width="40" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -220,8 +254,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{EMPATES}]]></textFieldExpression>
             </textField>
+
+            <!-- PERDIDOS -->
             <textField>
-                <reportElement x="290" y="0" width="35" height="20"/>
+                <reportElement x="320" y="2" width="40" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -230,8 +266,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{PERDIDOS}]]></textFieldExpression>
             </textField>
+
+            <!-- GOLES A FAVOR -->
             <textField>
-                <reportElement x="325" y="0" width="35" height="20"/>
+                <reportElement x="360" y="2" width="45" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -240,8 +278,10 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{GOLES_A_FAVOR}]]></textFieldExpression>
             </textField>
+
+            <!-- GOLES EN CONTRA -->
             <textField>
-                <reportElement x="360" y="0" width="35" height="20"/>
+                <reportElement x="405" y="2" width="45" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -250,23 +290,29 @@
                 </textElement>
                 <textFieldExpression><![CDATA[$F{GOLES_EN_CONTRA}]]></textFieldExpression>
             </textField>
+
+            <!-- DIFERENCIA DE GOLES -->
             <textField>
-                <reportElement x="395" y="0" width="35" height="20"/>
+                <reportElement x="450" y="2" width="45" height="26"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$F{DIFERENCIA_GOLES}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{DIFERENCIA_GOLES}.intValue() >= 0 ?
+    "+" + $F{DIFERENCIA_GOLES} :
+    $F{DIFERENCIA_GOLES}]]></textFieldExpression>
             </textField>
+
+            <!-- PUNTOS -->
             <textField>
-                <reportElement x="430" y="0" width="40" height="20"/>
+                <reportElement x="495" y="2" width="55" height="26" forecolor="#0066CC"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="11" isBold="true"/>
+                    <font size="12" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{PUNTOS}]]></textFieldExpression>
             </textField>
@@ -274,17 +320,20 @@
     </detail>
 
     <pageFooter>
-        <band height="50">
+        <band height="60">
+            <line>
+                <reportElement x="0" y="5" width="555" height="1"/>
+            </line>
             <staticText>
-                <reportElement x="0" y="10" width="555" height="30"/>
-                <box>
-                    <topPen lineWidth="1.0"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isItalic="true"/>
+                <reportElement x="0" y="15" width="555" height="40"/>
+                <textElement textAlignment="Center" verticalAlignment="Top">
+                    <font size="7" isItalic="true"/>
                 </textElement>
-                <text><![CDATA[PJ: Partidos Jugados | G: Ganados | E: Empates | P: Perdidos | GF: Goles a Favor | GC: Goles en Contra | DIF: Diferencia de Goles | PTS: Puntos]]></text>
+                <text><![CDATA[PJ: Partidos Jugados | G: Ganados | E: Empates | P: Perdidos
+GF: Goles a Favor | GC: Goles en Contra | DIF: Diferencia de Goles | PTS: Puntos
+Verde: Clasificación directa | Amarillo: Repechaje | Rojo: Descenso]]></text>
             </staticText>
         </band>
     </pageFooter>
+
 </jasperReport>

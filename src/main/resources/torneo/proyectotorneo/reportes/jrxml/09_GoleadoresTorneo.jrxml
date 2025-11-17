@@ -3,14 +3,14 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
               http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="GoleadoresTorneo" pageWidth="595" pageHeight="842" 
-              columnWidth="535" leftMargin="30" rightMargin="30" 
+              name="GoleadoresTorneo" pageWidth="595" pageHeight="842"
+              columnWidth="535" leftMargin="30" rightMargin="30"
               topMargin="20" bottomMargin="20">
-    
+
     <style name="Title" fontSize="24" isBold="true"/>
     <style name="Column header" fontSize="10" isBold="true"/>
     <style name="Detail" fontSize="9"/>
-    
+
     <queryString>
         <![CDATA[SELECT 
             j.id_jugador,
@@ -26,31 +26,31 @@
         HAVING SUM(g.numero_goles) > 0
         ORDER BY SUM(g.numero_goles) DESC, j.apellido]]>
     </queryString>
-    
+
     <field name="ID_JUGADOR" class="java.math.BigDecimal"/>
     <field name="JUGADOR" class="java.lang.String"/>
     <field name="EQUIPO" class="java.lang.String"/>
     <field name="POSICION" class="java.lang.String"/>
     <field name="TOTAL_GOLES" class="java.math.BigDecimal"/>
     <field name="PARTIDOS_CON_GOL" class="java.math.BigDecimal"/>
-    
+
     <variable name="TOTAL_GOLES_TORNEO" class="java.math.BigDecimal" calculation="Sum">
         <variableExpression><![CDATA[$F{TOTAL_GOLES}]]></variableExpression>
     </variable>
-    
+
     <variable name="RANKING" class="java.lang.Integer" calculation="Count">
         <variableExpression><![CDATA[$F{ID_JUGADOR}]]></variableExpression>
     </variable>
-    
+
     <title>
         <band height="100">
             <rectangle>
                 <reportElement x="0" y="0" width="535" height="95" backcolor="#FFFFCC"/>
             </rectangle>
             <staticText>
-                <reportElement style="Title" x="0" y="15" width="535" height="40"/>
+                <reportElement style="Title" x="0" y="15" width="535" height="40" forecolor="#FF6600"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="28" isBold="true" forecolor="#FF6600"/>
+                    <font size="28" isBold="true"/>
                 </textElement>
                 <text><![CDATA[TABLA DE GOLEADORES]]></text>
             </staticText>
@@ -59,111 +59,137 @@
                 <textElement textAlignment="Center">
                     <font size="13" isBold="true"/>
                 </textElement>
-                <text><![CDATA[⚽ Máximos Anotadores del Torneo ⚽]]></text>
+                <text><![CDATA[Torneo Colombiano 2025]]></text>
             </staticText>
             <textField pattern="dd/MM/yyyy HH:mm">
-                <reportElement x="435" y="80" width="100" height="12"/>
+                <reportElement x="435" y="80" width="100" height="15"/>
                 <textElement textAlignment="Right">
-                    <font size="8"/>
+                    <font size="7"/>
                 </textElement>
                 <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
             </textField>
         </band>
     </title>
-    
+
     <columnHeader>
-        <band height="35">
+        <band height="40">
             <staticText>
-                <reportElement style="Column header" mode="Opaque" x="0" y="10" width="35" height="25" backcolor="#FFCC66"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[#]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" mode="Opaque" x="35" y="10" width="180" height="25" backcolor="#FFCC66"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Jugador]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" mode="Opaque" x="215" y="10" width="120" height="25" backcolor="#FFCC66"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Equipo]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" mode="Opaque" x="335" y="10" width="80" height="25" backcolor="#FFCC66"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Posición]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" mode="Opaque" x="415" y="10" width="60" height="25" backcolor="#FF6600" forecolor="#FFFFFF"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9" isBold="true"/>
-                </textElement>
-                <text><![CDATA[GOLES]]></text>
-            </staticText>
-            <staticText>
-                <reportElement style="Column header" mode="Opaque" x="475" y="10" width="60" height="25" backcolor="#FFCC66"/>
-                <box>
-                    <pen lineWidth="0.75"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8" isBold="true"/>
-                </textElement>
-                <text><![CDATA[Partidos con Gol]]></text>
-            </staticText>
-        </band>
-    </columnHeader>
-    
-    <detail>
-        <band height="24">
-            <textField>
-                <reportElement style="Detail" mode="Opaque" x="0" y="0" width="35" height="24" backcolor="#FFF9E6">
-                    <printWhenExpression><![CDATA[$V{RANKING} <= 3]]></printWhenExpression>
-                </reportElement>
-                <box>
-                    <pen lineWidth="0.5"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="11" isBold="true" forecolor="#FF6600"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$V{RANKING}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="Detail" x="0" y="0" width="35" height="24">
-                    <printWhenExpression><![CDATA[$V{RANKING} > 3]]></printWhenExpression>
-                </reportElement>
+                <reportElement style="Column header" mode="Opaque" x="0" y="10" width="40" height="30" backcolor="#FFE6CC"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9"/>
                 </textElement>
-                <textFieldExpression><![CDATA[$V{RANKING}]]></textFieldExpression>
+                <text><![CDATA[Pos.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="40" y="10" width="150" height="30" backcolor="#FFE6CC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Jugador]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="190" y="10" width="120" height="30" backcolor="#FFE6CC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Equipo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="310" y="10" width="75" height="30" backcolor="#FFE6CC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Posición]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="385" y="10" width="75" height="30" backcolor="#FFE6CC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Part. con Gol]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="460" y="10" width="75" height="30" backcolor="#FFE6CC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[GOLES]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="30">
+            <!-- Posición destacada para top 3 -->
+            <textField>
+                <reportElement x="0" y="0" width="40" height="30" backcolor="#FFD700">
+                    <printWhenExpression><![CDATA[$V{RANKING} == 1]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["🥇"]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement style="Detail" x="35" y="0" width="180" height="24"/>
+                <reportElement x="0" y="0" width="40" height="30" backcolor="#C0C0C0">
+                    <printWhenExpression><![CDATA[$V{RANKING} == 2]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["🥈"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="0" width="40" height="30" backcolor="#CD7F32">
+                    <printWhenExpression><![CDATA[$V{RANKING} == 3]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["🥉"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="0" width="40" height="30">
+                    <printWhenExpression><![CDATA[$V{RANKING} > 3]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{RANKING}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="40" y="0" width="150" height="30"/>
                 <box leftPadding="5">
                     <pen lineWidth="0.5"/>
                 </box>
@@ -173,7 +199,7 @@
                 <textFieldExpression><![CDATA[$F{JUGADOR}]]></textFieldExpression>
             </textField>
             <textField isBlankWhenNull="true">
-                <reportElement style="Detail" x="215" y="0" width="120" height="24"/>
+                <reportElement x="190" y="0" width="120" height="30"/>
                 <box leftPadding="5">
                     <pen lineWidth="0.5"/>
                 </box>
@@ -183,7 +209,7 @@
                 <textFieldExpression><![CDATA[$F{EQUIPO}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement style="Detail" x="335" y="0" width="80" height="24"/>
+                <reportElement x="310" y="0" width="75" height="30"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
@@ -193,103 +219,58 @@
                 <textFieldExpression><![CDATA[$F{POSICION}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement style="Detail" mode="Opaque" x="415" y="0" width="60" height="24" backcolor="#FFF4E6"/>
+                <reportElement x="385" y="0" width="75" height="30"/>
                 <box>
                     <pen lineWidth="0.5"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="14" isBold="true" forecolor="#FF6600"/>
-                </textElement>
-                <textFieldExpression><![CDATA[$F{TOTAL_GOLES}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement style="Detail" x="475" y="0" width="60" height="24"/>
-                <box>
-                    <pen lineWidth="0.5"/>
-                </box>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="8"/>
+                    <font size="9"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$F{PARTIDOS_CON_GOL}]]></textFieldExpression>
             </textField>
+            <textField>
+                <reportElement x="460" y="0" width="75" height="30" forecolor="#FF6600"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TOTAL_GOLES}]]></textFieldExpression>
+            </textField>
         </band>
     </detail>
-    
-    <pageFooter>
-        <band height="30">
-            <textField>
-                <reportElement x="215" y="10" width="80" height="20"/>
-                <textElement textAlignment="Right">
-                    <font size="8"/>
-                </textElement>
-                <textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
-            </textField>
-            <textField evaluationTime="Report">
-                <reportElement x="295" y="10" width="40" height="20"/>
-                <textElement>
-                    <font size="8"/>
-                </textElement>
-                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-            </textField>
-        </band>
-    </pageFooter>
-    
+
     <summary>
-        <band height="370">
-            <rectangle>
-                <reportElement mode="Opaque" x="0" y="10" width="535" height="30" backcolor="#FFCC66"/>
-            </rectangle>
+        <band height="60">
+            <line>
+                <reportElement x="0" y="5" width="535" height="1"/>
+                <graphicElement>
+                    <pen lineWidth="2.0" lineColor="#FF6600"/>
+                </graphicElement>
+            </line>
             <staticText>
-                <reportElement x="280" y="15" width="150" height="20"/>
-                <textElement textAlignment="Right">
-                    <font size="11" isBold="true"/>
+                <reportElement x="190" y="15" width="195" height="25" forecolor="#666666"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
                 </textElement>
-                <text><![CDATA[Total Goles del Torneo:]]></text>
+                <text><![CDATA[Total de Goles en el Torneo:]]></text>
             </staticText>
             <textField>
-                <reportElement x="430" y="15" width="95" height="20"/>
-                <textElement textAlignment="Center">
-                    <font size="13" isBold="true" forecolor="#FF6600"/>
+                <reportElement x="385" y="15" width="150" height="25" forecolor="#FF6600"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$V{TOTAL_GOLES_TORNEO}]]></textFieldExpression>
             </textField>
-            
             <staticText>
-                <reportElement x="10" y="50" width="250" height="25"/>
-                <textElement verticalAlignment="Middle">
-                    <font size="12" isBold="true"/>
+                <reportElement x="0" y="45" width="535" height="15" forecolor="#999999"/>
+                <textElement textAlignment="Center">
+                    <font size="8" isItalic="true"/>
                 </textElement>
-                <text><![CDATA[DISTRIBUCIÓN DE GOLES]]></text>
+                <text><![CDATA[* Tabla actualizada automáticamente después de cada jornada]]></text>
             </staticText>
-            
-            <pieChart>
-                <chart evaluationTime="Report">
-                    <reportElement x="10" y="80" width="515" height="280"/>
-                    <chartTitle>
-                        <font size="13" isBold="true"/>
-                        <titleExpression><![CDATA["Top 10 Goleadores - Participación Porcentual"]]></titleExpression>
-                    </chartTitle>
-                    <chartSubtitle/>
-                    <chartLegend position="Right">
-                        <font size="7"/>
-                    </chartLegend>
-                </chart>
-                <pieDataset>
-                    <dataset incrementType="Report">
-                        <incrementWhenExpression><![CDATA[$V{RANKING} <= 10]]></incrementWhenExpression>
-                    </dataset>
-                    <pieSeries>
-                        <keyExpression><![CDATA[$F{JUGADOR}]]></keyExpression>
-                        <valueExpression><![CDATA[$F{TOTAL_GOLES}]]></valueExpression>
-                    </pieSeries>
-                </pieDataset>
-                <piePlot isShowLabels="true" isCircular="true" labelFormat="{0}: {2}" legendLabelFormat="{0} ({1} goles)">
-                    <plot/>
-                    <itemLabel>
-                        <font size="7"/>
-                    </itemLabel>
-                </piePlot>
-            </pieChart>
         </band>
     </summary>
+
 </jasperReport>

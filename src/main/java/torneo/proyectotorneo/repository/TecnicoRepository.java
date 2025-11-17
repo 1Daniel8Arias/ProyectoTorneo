@@ -16,7 +16,8 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
     @Override
     public ArrayList<Tecnico> listarTodos() throws RepositoryException {
-        String sql = "SELECT T.ID_TECNICO,T.NOMBRE,T.APELLIDO,E.ID_EQUIPO,E.NOMBRE AS EQUIPO FROM TECNICO T JOIN EQUIPO E ON T.ID_EQUIPO = E.ID_EQUIPO";
+        String sql = "SELECT T.ID_TECNICO,T.NOMBRE,T.APELLIDO,E.ID_EQUIPO,E.NOMBRE AS EQUIPO FROM TECNICO T\n" +
+                "left JOIN EQUIPO E ON T.ID_EQUIPO = E.ID_EQUIPO";
         ArrayList<Tecnico> tecnicos = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -28,6 +29,7 @@ public class TecnicoRepository implements Repository<Tecnico> {
                 tecnico.setId(rs.getInt("ID_TECNICO"));
                 tecnico.setNombre(rs.getString("NOMBRE"));
                 tecnico.setApellido(rs.getString("APELLIDO"));
+
                 Equipo equipo = new Equipo();
                 equipo.setId(rs.getInt("ID_EQUIPO"));
                 equipo.setNombre(rs.getString("EQUIPO"));

@@ -16,7 +16,11 @@ public class CuerpoTecnicoRepository implements Repository<CuerpoTecnico> {
 
     @Override
     public ArrayList<CuerpoTecnico> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM CUERPO_TECNICO";
+        String sql = """
+SELECT T.ID_CUERPO_TECNICO, T.NOMBRE, T.APELLIDO, E.ID_EQUIPO,T.ESPECIALIDAD, E.NOMBRE AS EQUIPO FROM CUERPO_TECNICO T
+JOIN EQUIPO E ON E.ID_EQUIPO=T.ID_EQUIPO
+                                                                            
+""";
         ArrayList<CuerpoTecnico> cuerposTecnicos = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -29,6 +33,14 @@ public class CuerpoTecnicoRepository implements Repository<CuerpoTecnico> {
                 ct.setNombre(rs.getString("NOMBRE"));
                 ct.setApellido(rs.getString("APELLIDO"));
                 ct.setEspecialidad(rs.getString("ESPECIALIDAD"));
+
+                Equipo equipo = new Equipo();
+                equipo.setId(rs.getInt("ID_EQUIPO"));
+                equipo.setNombre(rs.getString("EQUIPO"));
+
+              ct.setEquipo(equipo);
+
+
                 cuerposTecnicos.add(ct);
             }
 

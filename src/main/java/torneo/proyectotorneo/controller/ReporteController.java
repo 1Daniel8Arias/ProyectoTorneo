@@ -142,8 +142,7 @@ public class ReporteController {
                 "06_CuerpoTecnicoPorEquipo",
                 "07_EstadiosPorDepartamento",
                 "08_TablaPosiciones",
-                "09_GoleadoresTorneo",
-                "10_EstadisticasTarjetas"
+                "09_GoleadoresTorneo"
         };
     }
 
@@ -161,7 +160,7 @@ public class ReporteController {
         nombres.put("07_EstadiosPorDepartamento", "Estadios por Departamento");
         nombres.put("08_TablaPosiciones", "Tabla de Posiciones");
         nombres.put("09_GoleadoresTorneo", "Goleadores del Torneo");
-        nombres.put("10_EstadisticasTarjetas", "Estadísticas de Tarjetas");
+
 
         return nombres.getOrDefault(nombreReporte, nombreReporte);
     }
