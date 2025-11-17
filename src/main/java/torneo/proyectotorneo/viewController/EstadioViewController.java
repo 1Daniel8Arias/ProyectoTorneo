@@ -51,8 +51,7 @@ public class EstadioViewController implements Initializable {
     @FXML
     private TableColumn<EquipoEstadio, String> colMunicipio;
 
-    @FXML
-    private TableColumn<EquipoEstadio, String> colCiudad;
+
 
     @FXML
     private TableColumn<EquipoEstadio, Void> colAcciones;
@@ -149,13 +148,7 @@ public class EstadioViewController implements Initializable {
             return new SimpleStringProperty("N/A");
         });
 
-        // Columna de ciudad
-        colCiudad.setCellValueFactory(cellData -> {
-            // NOTA: Actualmente no existe relación directa en tu modelo
-            // Si agregas ciudad al modelo Estadio, cambiar a:
-            // estadio.getCiudad().getNombre()
-            return new SimpleStringProperty("N/A");
-        });
+        
 
         // Configurar columna de acciones
         configurarColumnaAcciones();

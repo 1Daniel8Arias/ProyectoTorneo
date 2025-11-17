@@ -75,7 +75,7 @@ public class CardEquipoViewController {
         // ✅ ESTADIO - Buscar sede "Local", si no existe tomar el primero
         if (equipo.getEstadios() != null && !equipo.getEstadios().isEmpty()) {
             EquipoEstadio estadioPrincipal = equipo.getEstadios().stream()
-                    .filter(ee -> ee.getSede().toString().equalsIgnoreCase("Local"))
+                    .filter(ee -> ee.getSede().toString().equalsIgnoreCase("Local") || ee.getSede().toString().equalsIgnoreCase("Neutral") )
                     .findFirst()
                     .orElse(equipo.getEstadios().get(0));
 
