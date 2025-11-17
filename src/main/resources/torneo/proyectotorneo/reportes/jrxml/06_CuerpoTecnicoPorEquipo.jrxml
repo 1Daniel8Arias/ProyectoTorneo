@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="CuerpoTecnicoPorEquipo" pageWidth="595" pageHeight="842" 
+              columnWidth="535" leftMargin="30" rightMargin="30" 
+              topMargin="20" bottomMargin="20">
+    
+    <style name="Title" fontSize="24" isBold="true"/>
+    <style name="GroupHeader" fontSize="13" isBold="true"/>
+    <style name="Column header" fontSize="10" isBold="true"/>
+    <style name="Detail" fontSize="9"/>
+    
+    <queryString>
+        <![CDATA[SELECT 
+            e.id_equipo,
+            e.nombre AS nombre_equipo,
+            ct.id_cuerpo_tecnico,
+            ct.nombre || ' ' || ct.apellido AS miembro,
+            ct.especialidad,
+            t.nombre || ' ' || t.apellido AS director_tecnico
+        FROM equipo e
+        LEFT JOIN cuerpo_tecnico ct ON e.id_equipo = ct.id_equipo
+        LEFT JOIN tecnico t ON e.id_equipo = t.id_equipo
+        ORDER BY e.nombre, ct.especialidad, ct.apellido]]>
+    </queryString>
+    
+    <field name="ID_EQUIPO" class="java.math.BigDecimal"/>
+    <field name="NOMBRE_EQUIPO" class="java.lang.String"/>
+    <field name="ID_CUERPO_TECNICO" class="java.math.BigDecimal"/>
+    <field name="MIEMBRO" class="java.lang.String"/>
+    <field name="ESPECIALIDAD" class="java.lang.String"/>
+    <field name="DIRECTOR_TECNICO" class="java.lang.String"/>
+    
+    <variable name="CONTADOR_MIEMBROS" class="java.lang.Integer" resetType="Group" resetGroup="Equipo" calculation="Count">
+        <variableExpression><![CDATA[$F{ID_CUERPO_TECNICO}]]></variableExpression>
+    </variable>
+    
+    <group name="Equipo">
+        <groupExpression><![CDATA[$F{NOMBRE_EQUIPO}]]></groupExpression>
+        <groupHeader>
+            <band height="70">
+                <rectangle>
+                    <reportElement mode="Opaque" x="0" y="5" width="535" height="30" backcolor="#6699CC"/>
+                </rectangle>
+                <textField>
+                    <reportElement style="GroupHeader" x="10" y="10" width="400" height="20" forecolor="#FFFFFF"/>
+                    <textElement verticalAlignment="Middle">
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{NOMBRE_EQUIPO}]]></textFieldExpression>
+                </textField>
+                <textField isBlankWhenNull="true">
+                    <reportElement x="10" y="40" width="400" height="20"/>
+                    <textElement>
+                        <font size="10" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["Director Técnico: " + $F{DIRECTOR_TECNICO}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement style="Column header" mode="Opaque" x="10" y="60" width="30" height="10" backcolor="#E6F2FF"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7"/>
+                    </textElement>
+                    <text><![CDATA[ID]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement style="Column header" mode="Opaque" x="40" y="60" width="200" height="10" backcolor="#E6F2FF"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7"/>
+                    </textElement>
+                    <text><![CDATA[Nombre Completo]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement style="Column header" mode="Opaque" x="240" y="60" width="180" height="10" backcolor="#E6F2FF"/>
+                    <box>
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7"/>
+                    </textElement>
+                    <text><![CDATA[Especialidad / Rol]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="30">
+                <rectangle>
+                    <reportElement x="10" y="5" width="410" height="20" backcolor="#F0F0F0"/>
+                </rectangle>
+                <staticText>
+                    <reportElement x="220" y="8" width="120" height="15"/>
+                    <textElement textAlignment="Right">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Total Miembros:]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="340" y="8" width="70" height="15"/>
+                    <textElement textAlignment="Center">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{CONTADOR_MIEMBROS}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement style="Title" x="0" y="10" width="535" height="35"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[CUERPO TÉCNICO POR EQUIPO]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="535" height="20" forecolor="#666666"/>
+                <textElement textAlignment="Center">
+                    <font size="11"/>
+                </textElement>
+                <text><![CDATA[Personal Técnico y Especialistas por Equipo]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="435" y="60" width="100" height="15"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    
+    <detail>
+        <band height="18">
+            <textField isBlankWhenNull="true">
+                <reportElement style="Detail" x="10" y="0" width="30" height="18"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ID_CUERPO_TECNICO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement style="Detail" x="40" y="0" width="200" height="18"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MIEMBRO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement style="Detail" x="240" y="0" width="180" height="18"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ESPECIALIDAD}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="215" y="10" width="80" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="295" y="10" width="40" height="20"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

@@ -1,14 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="torneo.proyectotorneo.viewController.ReporteViewController"
+            prefHeight="700.0" prefWidth="1000.0"
+            style="-fx-background-color: #f5f5f5;">
 
-</AnchorPane>
+    <!-- ENCABEZADO -->
+    <top>
+        <VBox style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+            <Label text="📊 SISTEMA DE REPORTES" textFill="white">
+                <font>
+                    <Font name="System Bold" size="24"/>
+                </font>
+            </Label>
+            <Label text="Generación y Exportación de Reportes del Torneo"
+                   textFill="#ecf0f1" style="-fx-padding: 5 0 0 0;">
+                <font>
+                    <Font size="14"/>
+                </font>
+            </Label>
+        </VBox>
+    </top>
+
+    <!-- PANEL IZQUIERDO - LISTA DE REPORTES -->
+    <left>
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15;">
+            <Label text="Reportes Disponibles" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+
+            <Separator/>
+
+            <ListView fx:id="listViewReportes" prefWidth="280" prefHeight="500"
+                      style="-fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnGenerarReporte" text="📄 Generar"
+                        onAction="#handleGenerarReporte"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-cursor: hand;"
+                        prefWidth="130"/>
+
+                <Button fx:id="btnExportarPDF" text="💾 Exportar PDF"
+                        onAction="#handleExportarPDF"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                               -fx-font-weight: bold; -fx-cursor: hand;"
+                        prefWidth="130" disable="true"/>
+            </HBox>
+        </VBox>
+    </left>
+
+    <!-- PANEL CENTRAL - VISOR DE REPORTES -->
+    <center>
+        <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: white;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label fx:id="lblTituloReporte" text="Seleccione un reporte"
+                       style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label fx:id="lblEstado" text=""
+                       style="-fx-text-fill: #7f8c8d; -fx-font-style: italic;"/>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Aquí se mostrará la vista previa del reporte -->
+            <ScrollPane fx:id="scrollPaneReporte" fitToWidth="true" fitToHeight="true"
+                        style="-fx-background-color: #ecf0f1; -fx-border-color: #bdc3c7;">
+                <StackPane fx:id="contenedorReporte" alignment="CENTER"
+                           prefHeight="550" style="-fx-background-color: #ecf0f1;">
+                    <Label text="📋 No hay reporte cargado"
+                           style="-fx-font-size: 16; -fx-text-fill: #95a5a6;"/>
+                </StackPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <!-- PANEL INFERIOR - INFORMACIÓN -->
+    <bottom>
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-background-color: #34495e; -fx-padding: 10;">
+            <Label text="💡 Tip: Seleccione un reporte y haga clic en 'Generar' para visualizarlo"
+                   textFill="white"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lblTotalReportes" text="Total: 10 reportes"
+                   textFill="white" style="-fx-font-weight: bold;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

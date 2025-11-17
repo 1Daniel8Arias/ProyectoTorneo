@@ -148,7 +148,7 @@ public class EstadioViewController implements Initializable {
             return new SimpleStringProperty("N/A");
         });
 
-        
+
 
         // Configurar columna de acciones
         configurarColumnaAcciones();

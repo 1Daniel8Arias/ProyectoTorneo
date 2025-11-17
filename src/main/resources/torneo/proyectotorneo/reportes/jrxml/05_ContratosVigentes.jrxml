@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ContratosVigentes" pageWidth="595" pageHeight="842" 
+              columnWidth="535" leftMargin="30" rightMargin="30" 
+              topMargin="20" bottomMargin="20">
+    
+    <style name="Title" fontSize="24" isBold="true"/>
+    <style name="Column header" fontSize="10" isBold="true"/>
+    <style name="Detail" fontSize="9"/>
+    
+    <queryString>
+        <![CDATA[SELECT 
+            c.id_contrato,
+            j.nombre || ' ' || j.apellido AS jugador,
+            e.nombre AS equipo,
+            c.fecha_inicio,
+            c.fecha_fin,
+            c.salario,
+            TRUNC(c.fecha_fin - SYSDATE) AS dias_restantes,
+            CASE 
+                WHEN c.fecha_fin < SYSDATE THEN 'Vencido'
+                WHEN TRUNC(c.fecha_fin - SYSDATE) <= 30 THEN 'Por Vencer'
+                ELSE 'Vigente'
+            END AS estado
+        FROM contrato c
+        INNER JOIN jugador j ON c.id_jugador = j.id_jugador
+        LEFT JOIN equipo e ON j.id_equipo = e.id_equipo
+        WHERE c.fecha_fin >= ADD_MONTHS(SYSDATE, -1)
+        ORDER BY c.fecha_fin, j.apellido]]>
+    </queryString>
+    
+    <field name="ID_CONTRATO" class="java.math.BigDecimal"/>
+    <field name="JUGADOR" class="java.lang.String"/>
+    <field name="EQUIPO" class="java.lang.String"/>
+    <field name="FECHA_INICIO" class="java.sql.Timestamp"/>
+    <field name="FECHA_FIN" class="java.sql.Timestamp"/>
+    <field name="SALARIO" class="java.math.BigDecimal"/>
+    <field name="DIAS_RESTANTES" class="java.math.BigDecimal"/>
+    <field name="ESTADO" class="java.lang.String"/>
+    
+    <variable name="TOTAL_CONTRATOS" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{ID_CONTRATO}]]></variableExpression>
+    </variable>
+    
+    <variable name="SUMA_SALARIOS" class="java.math.BigDecimal" calculation="Sum">
+        <variableExpression><![CDATA[$F{SALARIO}]]></variableExpression>
+    </variable>
+    
+    <title>
+        <band height="90">
+            <staticText>
+                <reportElement style="Title" x="0" y="10" width="535" height="35"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[CONTRATOS VIGENTES DE JUGADORES]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="535" height="20" forecolor="#666666"/>
+                <textElement textAlignment="Center">
+                    <font size="11"/>
+                </textElement>
+                <text><![CDATA[Análisis de Contratos Activos y Próximos a Vencer]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="435" y="70" width="100" height="15"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="85" width="535" height="1" forecolor="#CC6600"/>
+                <graphicElement>
+                    <pen lineWidth="2.0"/>
+                </graphicElement>
+            </line>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="35">
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="0" y="10" width="35" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="35" y="10" width="120" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Jugador]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="155" y="10" width="85" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Equipo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="240" y="10" width="60" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[F. Inicio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="300" y="10" width="60" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[F. Fin]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="360" y="10" width="70" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Salario]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="430" y="10" width="45" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Días Rest.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="475" y="10" width="60" height="25" backcolor="#FFCC99"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Estado]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="22">
+            <textField>
+                <reportElement style="Detail" x="0" y="0" width="35" height="22"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ID_CONTRATO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="35" y="0" width="120" height="22"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{JUGADOR}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement style="Detail" x="155" y="0" width="85" height="22"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{EQUIPO}]]></textFieldExpression>
+            </textField>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement style="Detail" x="240" y="0" width="60" height="22"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FECHA_INICIO}]]></textFieldExpression>
+            </textField>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement style="Detail" x="300" y="0" width="60" height="22"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FECHA_FIN}]]></textFieldExpression>
+            </textField>
+            <textField pattern="$#,##0.00">
+                <reportElement style="Detail" x="360" y="0" width="70" height="22"/>
+                <box rightPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SALARIO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="430" y="0" width="45" height="22"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DIAS_RESTANTES}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="475" y="0" width="60" height="22">
+                    <printWhenExpression><![CDATA[$F{ESTADO}.equals("Vigente")]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7" isBold="true" forecolor="#009900"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="475" y="0" width="60" height="22">
+                    <printWhenExpression><![CDATA[$F{ESTADO}.equals("Por Vencer")]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7" isBold="true" forecolor="#FF9900"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="475" y="0" width="60" height="22">
+                    <printWhenExpression><![CDATA[$F{ESTADO}.equals("Vencido")]]></printWhenExpression>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7" isBold="true" forecolor="#CC0000"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ESTADO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="30">
+            <textField>
+                <reportElement x="215" y="10" width="80" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="295" y="10" width="40" height="20"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    
+    <summary>
+        <band height="60">
+            <rectangle>
+                <reportElement mode="Opaque" x="0" y="10" width="535" height="40" backcolor="#F0F0F0"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="200" y="15" width="120" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Contratos:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="320" y="15" width="80" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TOTAL_CONTRATOS}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="170" y="30" width="150" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total en Salarios:]]></text>
+            </staticText>
+            <textField pattern="$#,##0.00">
+                <reportElement x="320" y="30" width="120" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{SUMA_SALARIOS}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

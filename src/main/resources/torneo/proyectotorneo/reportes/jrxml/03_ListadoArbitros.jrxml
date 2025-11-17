@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ListadoArbitros" pageWidth="595" pageHeight="842" 
+              columnWidth="535" leftMargin="30" rightMargin="30" 
+              topMargin="20" bottomMargin="20">
+    
+    <style name="Title" fontSize="26" isBold="true"/>
+    <style name="Column header" fontSize="12" isBold="true"/>
+    <style name="Detail" fontSize="10"/>
+    
+    <queryString>
+        <![CDATA[SELECT 
+            a.id_arbitro,
+            a.nombre,
+            a.apellido,
+            COUNT(DISTINCT ap.id_partido) AS partidos_dirigidos,
+            SUM(CASE WHEN ap.tipo = 'Principal' THEN 1 ELSE 0 END) AS partidos_principal,
+            SUM(CASE WHEN ap.tipo = 'Asistente' THEN 1 ELSE 0 END) AS partidos_asistente
+        FROM arbitro a
+        LEFT JOIN arbitro_partido ap ON a.id_arbitro = ap.id_arbitro
+        GROUP BY a.id_arbitro, a.nombre, a.apellido
+        ORDER BY a.apellido, a.nombre]]>
+    </queryString>
+    
+    <field name="ID_ARBITRO" class="java.math.BigDecimal"/>
+    <field name="NOMBRE" class="java.lang.String"/>
+    <field name="APELLIDO" class="java.lang.String"/>
+    <field name="PARTIDOS_DIRIGIDOS" class="java.math.BigDecimal"/>
+    <field name="PARTIDOS_PRINCIPAL" class="java.math.BigDecimal"/>
+    <field name="PARTIDOS_ASISTENTE" class="java.math.BigDecimal"/>
+    
+    <variable name="TOTAL_ARBITROS" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$F{ID_ARBITRO}]]></variableExpression>
+    </variable>
+    
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement style="Title" x="0" y="13" width="535" height="35"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <text><![CDATA[LISTADO DE ÁRBITROS]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="435" y="55" width="100" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="0" y="75" width="535" height="1" forecolor="#33CC33"/>
+                <graphicElement>
+                    <pen lineWidth="2.0"/>
+                </graphicElement>
+            </line>
+        </band>
+    </title>
+    
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="0" y="10" width="40" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="40" y="10" width="130" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Nombre]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="170" y="10" width="130" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Apellido]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="300" y="10" width="78" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Total Partidos]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="378" y="10" width="78" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Como Principal]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="456" y="10" width="79" height="20" backcolor="#CCFFCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Como Asistente]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement style="Detail" x="0" y="0" width="40" height="20"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ID_ARBITRO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="40" y="0" width="130" height="20"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="170" y="0" width="130" height="20"/>
+                <box leftPadding="5">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{APELLIDO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="300" y="0" width="78" height="20"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PARTIDOS_DIRIGIDOS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="378" y="0" width="78" height="20"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PARTIDOS_PRINCIPAL}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="Detail" x="456" y="0" width="79" height="20"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PARTIDOS_ASISTENTE}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    
+    <pageFooter>
+        <band height="40">
+            <textField>
+                <reportElement x="215" y="20" width="80" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="295" y="20" width="40" height="20"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    
+    <summary>
+        <band height="50">
+            <staticText>
+                <reportElement x="350" y="15" width="100" height="20"/>
+                <textElement textAlignment="Right">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total Árbitros:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="450" y="15" width="85" height="20"/>
+                <textElement textAlignment="Center">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TOTAL_ARBITROS}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>
