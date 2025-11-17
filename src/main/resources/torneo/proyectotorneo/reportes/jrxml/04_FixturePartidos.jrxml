@@ -3,17 +3,17 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
               http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="FixturePartidos" pageWidth="595" pageHeight="842" 
-              columnWidth="535" leftMargin="30" rightMargin="30" 
+              name="FixturePartidos" pageWidth="595" pageHeight="842"
+              columnWidth="535" leftMargin="30" rightMargin="30"
               topMargin="20" bottomMargin="20">
-    
+
     <style name="Title" fontSize="24" isBold="true"/>
     <style name="GroupHeader" fontSize="14" isBold="true" forecolor="#FFFFFF"/>
     <style name="Column header" fontSize="11" isBold="true"/>
     <style name="Detail" fontSize="9"/>
-    
+
     <queryString>
-        <![CDATA[SELECT 
+        <![CDATA[SELECT
             j.id_jornada,
             j.numero_jornada,
             j.fecha_inicio,
@@ -27,7 +27,7 @@
             a.nombre || ' ' || a.apellido AS arbitro_principal,
             rf.goles_local,
             rf.goles_visitante,
-            CASE 
+            CASE
                 WHEN rf.goles_local IS NOT NULL THEN 'Finalizado'
                 WHEN p.fecha_hora < SYSDATE THEN 'En Curso'
                 ELSE 'Por Jugar'
@@ -43,7 +43,7 @@
         LEFT JOIN resultado_final rf ON p.id_partido = rf.id_partido
         ORDER BY j.numero_jornada, p.fecha_hora]]>
     </queryString>
-    
+
     <field name="ID_JORNADA" class="java.math.BigDecimal"/>
     <field name="NUMERO_JORNADA" class="java.math.BigDecimal"/>
     <field name="FECHA_INICIO" class="java.sql.Timestamp"/>
@@ -58,7 +58,7 @@
     <field name="GOLES_LOCAL" class="java.math.BigDecimal"/>
     <field name="GOLES_VISITANTE" class="java.math.BigDecimal"/>
     <field name="ESTADO" class="java.lang.String"/>
-    
+
     <group name="Jornada">
         <groupExpression><![CDATA[$F{NUMERO_JORNADA}]]></groupExpression>
         <groupHeader>
@@ -90,7 +90,7 @@
             </band>
         </groupHeader>
     </group>
-    
+
     <title>
         <band height="90">
             <staticText>
@@ -116,7 +116,7 @@
             </textField>
         </band>
     </title>
-    
+
     <detail>
         <band height="70">
             <rectangle>
@@ -202,7 +202,7 @@
             </textField>
         </band>
     </detail>
-    
+
     <pageFooter>
         <band height="30">
             <textField>

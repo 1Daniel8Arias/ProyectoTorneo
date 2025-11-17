@@ -3,49 +3,47 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
               http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
-              name="ListadoJugadores" pageWidth="595" pageHeight="842" 
-              columnWidth="535" leftMargin="30" rightMargin="30" 
+              name="ListadoJugadores" pageWidth="595" pageHeight="842"
+              columnWidth="535" leftMargin="30" rightMargin="30"
               topMargin="20" bottomMargin="20">
-    
+
     <property name="ireport.zoom" value="1.0"/>
     <property name="ireport.x" value="0"/>
     <property name="ireport.y" value="0"/>
-    
+
     <style name="Title" fontSize="26" isBold="true"/>
     <style name="SubTitle" fontSize="14" forecolor="#666666"/>
     <style name="Column header" fontSize="12" isBold="true"/>
     <style name="Detail" fontSize="10"/>
-    
+
     <parameter name="LOGO_PATH" class="java.lang.String" isForPrompting="false"/>
-    
+
     <queryString>
         <![CDATA[SELECT 
             j.id_jugador,
             j.nombre,
             j.apellido,
-            j.fecha_nacimiento,
             j.posicion,
             e.nombre AS nombre_equipo
         FROM jugador j
         LEFT JOIN equipo e ON j.id_equipo = e.id_equipo
         ORDER BY j.apellido, j.nombre]]>
     </queryString>
-    
+
     <field name="ID_JUGADOR" class="java.math.BigDecimal"/>
     <field name="NOMBRE" class="java.lang.String"/>
     <field name="APELLIDO" class="java.lang.String"/>
-    <field name="FECHA_NACIMIENTO" class="java.sql.Timestamp"/>
     <field name="POSICION" class="java.lang.String"/>
     <field name="NOMBRE_EQUIPO" class="java.lang.String"/>
-    
+
     <variable name="TOTAL_JUGADORES" class="java.lang.Integer" calculation="Count">
         <variableExpression><![CDATA[$F{ID_JUGADOR}]]></variableExpression>
     </variable>
-    
+
     <background>
         <band splitType="Stretch"/>
     </background>
-    
+
     <title>
         <band height="80" splitType="Stretch">
             <staticText>
@@ -68,11 +66,11 @@
             </line>
         </band>
     </title>
-    
+
     <pageHeader>
         <band height="10" splitType="Stretch"/>
     </pageHeader>
-    
+
     <columnHeader>
         <band height="30" splitType="Stretch">
             <staticText>
@@ -129,7 +127,7 @@
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="9"/>
                 </textElement>
-                <text><![CDATA[F. Nacimiento]]></text>
+
             </staticText>
             <staticText>
                 <reportElement style="Column header" x="325" y="10" width="80" height="20"/>
@@ -161,7 +159,7 @@
             </staticText>
         </band>
     </columnHeader>
-    
+
     <detail>
         <band height="20" splitType="Stretch">
             <textField>
@@ -250,11 +248,11 @@
             </textField>
         </band>
     </detail>
-    
+
     <columnFooter>
         <band height="5" splitType="Stretch"/>
     </columnFooter>
-    
+
     <pageFooter>
         <band height="40" splitType="Stretch">
             <textField>
@@ -273,7 +271,7 @@
             </textField>
         </band>
     </pageFooter>
-    
+
     <summary>
         <band height="50" splitType="Stretch">
             <staticText>
