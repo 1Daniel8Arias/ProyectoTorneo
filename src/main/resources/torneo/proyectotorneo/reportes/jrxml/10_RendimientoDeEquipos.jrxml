@@ -1,8 +1,10 @@
-<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="RendimientoDeEquipos" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69f0e155-cfbe-4ca8-a92d-0c6a7039dff5">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="10_RendimientoDeEquipos" printOrder="Horizontal" pageWidth="1800" pageHeight="700" columnWidth="1760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f9b659f1-8b34-40f7-84fd-108f9906ad9b">
     <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-    <query language="sql"><![CDATA[SELECT
+    <queryString>
+        <![CDATA[SELECT
     e.nombre AS equipo,
     t.puntos,
     t.ganados,
@@ -13,8 +15,8 @@
     (t.goles_a_favor - t.goles_en_contra) AS dg
 FROM TABLA_POSICION t
 JOIN equipo e ON e.id_equipo = t.id_equipo
-ORDER BY t.puntos DESC
-]]></query>
+ORDER BY t.puntos DESC]]>
+    </queryString>
     <field name="EQUIPO" class="java.lang.String">
         <property name="com.jaspersoft.studio.field.name" value="EQUIPO"/>
         <property name="com.jaspersoft.studio.field.label" value="EQUIPO"/>
@@ -47,51 +49,87 @@ ORDER BY t.puntos DESC
         <property name="com.jaspersoft.studio.field.name" value="DG"/>
         <property name="com.jaspersoft.studio.field.label" value="DG"/>
     </field>
-    <background splitType="Stretch"/>
-    <title height="30" splitType="Stretch">
-        <element kind="staticText" uuid="5fd8bcfb-c60a-443a-8fee-fb7e23f7c403" x="0" y="0" width="555" height="30" fontName="Arial Black" fontSize="16.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
-            <text><![CDATA[RENDIMIENTO DE EQUIPOS]]></text>
-        </element>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="60" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="10" width="1751" height="50" uuid="1fece593-bf74-4408-b9f2-3a99e907acea"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="37" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reporte de Rendimiento de Equipos]]></text>
+            </staticText>
+        </band>
     </title>
-    <pageHeader height="18" splitType="Stretch"/>
-    <columnHeader height="24" splitType="Stretch"/>
+    <pageHeader>
+        <band height="16" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="11" splitType="Stretch"/>
+    </columnHeader>
     <detail>
-        <band height="20" splitType="Stretch"/>
+        <band height="8" splitType="Stretch"/>
     </detail>
-    <columnFooter splitType="Stretch"/>
-    <pageFooter splitType="Stretch"/>
-    <summary height="427" splitType="Stretch">
-        <element kind="chart" chartType="bar" uuid="0790271a-bd7c-4e58-9219-b398c6f16344" x="0" y="-62" width="555" height="420" evaluationTime="Report">
-            <dataset kind="category">
-                <series>
-                    <seriesExpression><![CDATA[$F{PUNTOS}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{PUNTOS}]]></valueExpression>
-                </series>
-                <series>
-                    <seriesExpression><![CDATA[$F{GF}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{GF}]]></valueExpression>
-                </series>
-                <series>
-                    <seriesExpression><![CDATA[$F{GC}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{GC}]]></valueExpression>
-                </series>
-                <series>
-                    <seriesExpression><![CDATA[$F{DG}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{GANADOS}]]></valueExpression>
-                </series>
-                <series>
-                    <seriesExpression><![CDATA[$F{GANADOS}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{DG}]]></valueExpression>
-                </series>
-            </dataset>
-            <plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
-                <itemLabel/>
-            </plot>
-        </element>
+    <columnFooter>
+        <band height="15" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="7" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="427" splitType="Stretch">
+            <barChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="-10" y="-40" width="1760" height="427" uuid="28befa28-cf1e-43d4-ad14-bb0102f1027c"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Puntos"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PUNTOS}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["GF"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GF}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["GC"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GC}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["DG"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{DG}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Ganados"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GANADOS}]]></valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <barPlot>
+                    <plot/>
+                    <itemLabel/>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </categoryAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </valueAxisFormat>
+                </barPlot>
+            </barChart>
+        </band>
     </summary>
 </jasperReport>

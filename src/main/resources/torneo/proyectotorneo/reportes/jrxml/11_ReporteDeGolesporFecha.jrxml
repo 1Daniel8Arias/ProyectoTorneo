@@ -1,21 +1,11 @@
-<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="ReportedeGolesporFecha" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="40c63207-9bf3-4b60-abe8-47cdbbe464c8">
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="11_ReporteDeGolesporFecha" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="89b35c1b-cf3b-4222-80e1-bd70a2ea9e5d">
     <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
     <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-    <query language="sql"><![CDATA[SELECT
-    j.jornada AS fecha,
-    COUNT(p.id_partido) AS partidos,
-    SUM(r.goles_local + r.goles_visitante) AS goles_totales,
-    CASE
-        WHEN COUNT(p.id_partido) = 0 THEN 0
-        ELSE ROUND(SUM(r.goles_local + r.goles_visitante) / COUNT(p.id_partido), 2)
-    END AS promedio_goles
-FROM jornada j
-LEFT JOIN partido p ON p.id_jornada = j.id_jornada
-LEFT JOIN resultado_final r ON r.id_partido = p.id_partido
-GROUP BY j.jornada
-ORDER BY j.jornada
-]]></query>
+    <queryString>
+        <![CDATA[SELECT j.jornada AS fecha, COUNT(p.id_partido) AS partidos, SUM(r.goles_local + r.goles_visitante) AS goles_totales, CASE WHEN COUNT(p.id_partido) = 0 THEN 0 ELSE ROUND(SUM(r.goles_local + r.goles_visitante) / COUNT(p.id_partido), 2) END AS promedio_goles FROM jornada j LEFT JOIN partido p ON p.id_jornada = j.id_jornada LEFT JOIN resultado_final r ON r.id_partido = p.id_partido GROUP BY j.jornada ORDER BY j.jornada]]>
+    </queryString>
     <field name="FECHA" class="java.math.BigDecimal">
         <property name="com.jaspersoft.studio.field.name" value="FECHA"/>
         <property name="com.jaspersoft.studio.field.label" value="FECHA"/>
@@ -32,34 +22,68 @@ ORDER BY j.jornada
         <property name="com.jaspersoft.studio.field.name" value="PROMEDIO_GOLES"/>
         <property name="com.jaspersoft.studio.field.label" value="PROMEDIO_GOLES"/>
     </field>
-    <background splitType="Stretch"/>
-    <title height="43" splitType="Stretch">
-        <element kind="staticText" uuid="174d0285-8b48-41c6-b36d-774a5d24581a" x="0" y="0" width="550" height="43" fontSize="22.0" hTextAlign="Center" vTextAlign="Middle">
-            <text><![CDATA[REPORTE DE GOLES POR FECHA]]></text>
-        </element>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="41" splitType="Stretch">
+            <staticText>
+                <reportElement x="-11" y="11" width="571" height="30" uuid="ff9d08a1-ffa1-447b-b322-201bcb1f7cbf"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="22" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reporte De Goles por Fecha]]></text>
+            </staticText>
+        </band>
     </title>
-    <pageHeader height="23" splitType="Stretch"/>
-    <columnHeader height="24" splitType="Stretch"/>
+    <pageHeader>
+        <band height="8" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="9" splitType="Stretch"/>
+    </columnHeader>
     <detail>
-        <band height="35" splitType="Stretch"/>
+        <band height="8" splitType="Stretch"/>
     </detail>
-    <columnFooter height="11" splitType="Stretch"/>
-    <pageFooter splitType="Stretch"/>
-    <summary height="430" splitType="Stretch">
-        <element kind="chart" chartType="line" uuid="abca835c-83b7-4d3d-9549-4852408e3a2d" x="20" y="5" width="534" height="420" evaluationTime="Report">
-            <dataset kind="category">
-                <series>
-                    <seriesExpression><![CDATA[$F{GOLES_TOTALES}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{GOLES_TOTALES}]]></valueExpression>
-                </series>
-                <series>
-                    <seriesExpression><![CDATA[$F{PROMEDIO_GOLES}]]></seriesExpression>
-                    <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{PROMEDIO_GOLES}]]></valueExpression>
-                </series>
-            </dataset>
-            <plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisVerticalTickLabels="false" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showShapes="true" showLines="true"/>
-        </element>
+    <columnFooter>
+        <band height="17" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="9" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="398" splitType="Stretch">
+            <lineChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="-10" y="10" width="570" height="380" uuid="1fb31a21-1b51-4a24-9679-cb9ffb58f9df"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Goles Totales"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GOLES_TOTALES}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Promedio"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PROMEDIO_GOLES}]]></valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <linePlot>
+                    <plot/>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </categoryAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </valueAxisFormat>
+                </linePlot>
+            </lineChart>
+        </band>
     </summary>
 </jasperReport>
