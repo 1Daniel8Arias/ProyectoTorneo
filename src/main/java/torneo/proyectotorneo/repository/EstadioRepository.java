@@ -35,6 +35,7 @@ public class EstadioRepository implements Repository<Estadio> {
                 d.ID_DEPARTAMENTO, 
                 d.NOMBRE AS NOMBRE_DEPARTAMENTO
             FROM ESTADIO e
+            
             JOIN MUNICIPIO m ON e.ID_MUNICIPIO = m.ID_MUNICIPIO
             JOIN DEPARTAMENTO d ON m.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
         """;

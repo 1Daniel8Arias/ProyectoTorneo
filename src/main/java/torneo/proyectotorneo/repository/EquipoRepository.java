@@ -15,16 +15,18 @@ public class EquipoRepository implements Repository<Equipo> {
     @Override
     public ArrayList<Equipo> listarTodos() throws RepositoryException {
         String sql = """
-        SELECT 
-            E.ID_EQUIPO,
-            E.NOMBRE AS NOMBRE_EQUIPO,
-            ES.NOMBRE AS NOMBRE_ESTADIO,
-            M.NOMBRE AS NOMBRE_MUNICIPIO,
-            S.SEDE
-        FROM EQUIPO E
+        
+                SELECT
+           E.ID_EQUIPO,
+           E.NOMBRE AS NOMBRE_EQUIPO,
+           ES.NOMBRE AS NOMBRE_ESTADIO,
+           M.NOMBRE AS NOMBRE_MUNICIPIO,
+         S.SEDE
+         FROM EQUIPO E
         JOIN EQUIPO_ESTADIO S ON S.ID_EQUIPO = E.ID_EQUIPO
         JOIN ESTADIO ES ON ES.ID_ESTADIO = S.ID_ESTADIO
         JOIN MUNICIPIO M ON ES.ID_MUNICIPIO = M.ID_MUNICIPIO
+        WHERE S.SEDE = 'Local'
         """;
 
         ArrayList<Equipo> equipos = new ArrayList<>();

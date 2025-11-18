@@ -36,14 +36,11 @@ public class EstadioViewController implements Initializable {
     @FXML
     private TableColumn<EquipoEstadio, String> colNombre;
 
-    @FXML
-    private TableColumn<EquipoEstadio, String> colTipo;
 
     @FXML
     private TableColumn<EquipoEstadio, Integer> colCapacidad;
 
-    @FXML
-    private TableColumn<EquipoEstadio, String> colEquipo;
+
 
     @FXML
     private TableColumn<EquipoEstadio, String> colDepartamento;
@@ -110,12 +107,7 @@ public class EstadioViewController implements Initializable {
             return new SimpleStringProperty(nombre);
         });
 
-        // Columna de tipo (Local/Neutral)
-        colTipo.setCellValueFactory(cellData -> {
-            TipoSede tipo = cellData.getValue().getSede();
-            String tipoStr = tipo != null ? tipo.name() : "N/A";
-            return new SimpleStringProperty(tipoStr);
-        });
+
 
         // Columna de capacidad
         colCapacidad.setCellValueFactory(cellData -> {
@@ -124,12 +116,7 @@ public class EstadioViewController implements Initializable {
             return new SimpleIntegerProperty(capacidad).asObject();
         });
 
-        // Columna de equipo
-        colEquipo.setCellValueFactory(cellData -> {
-            EquipoEstadio ee = cellData.getValue();
-            String nombreEquipo = (ee.getEquipo() != null) ? ee.getEquipo().getNombre() : "Sin equipo";
-            return new SimpleStringProperty(nombreEquipo);
-        });
+
 
         // Columna de departamento
         colDepartamento.setCellValueFactory(cellData -> {
@@ -208,7 +195,7 @@ public class EstadioViewController implements Initializable {
                 TipoSede.Local.name(),
                 TipoSede.Neutral.name()
         );
-        cmbTipo.setItems(tipos);
+
         cmbTipo.setValue("Todos");
 
         // Listener para filtrar cuando se selecciona un tipo
