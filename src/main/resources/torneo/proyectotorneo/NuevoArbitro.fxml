@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="456.0" prefWidth="385.0" stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.NuevoArbitroViewController">
+    <top>
+        <VBox spacing="10" styleClass="header-container">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+            <children>
+                <Label fx:id="lblTitulo" styleClass="page-title" text="Nuevo Arbitro">
+                    <font>
+                        <Font name="System Bold" size="28" />
+                    </font>
+                </Label>
+                <Label styleClass="subtitle" text="Complete la información del Arbitro">
+                    <font>
+                        <Font size="14" />
+                    </font>
+                </Label>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" prefHeight="470.0" prefWidth="468.0" styleClass="content-container">
+            <content>
+                <VBox spacing="20">
+                    <padding>
+                        <Insets bottom="30" left="30" right="30" top="30" />
+                    </padding>
+                    <children>
+                        <VBox spacing="15" styleClass="form-section">
+                            <children>
+                                <Label styleClass="section-title" text="📋 Información Personal">
+                                    <font>
+                                        <Font name="System Bold" size="16" />
+                                    </font>
+                                </Label>
+                                <GridPane hgap="15" vgap="15">
+                                    <columnConstraints>
+                                        <ColumnConstraints percentWidth="87.0" />
+                                        <ColumnConstraints percentWidth="13.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints />
+                                        <RowConstraints />
+                                    </rowConstraints>
+                                    <children>
+                                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                            <children>
+                                                <Label styleClass="form-label" text="Nombre *" />
+                                                <TextField fx:id="txtNombre" prefHeight="39.0" prefWidth="316.0" promptText="Ej: James" styleClass="form-field" />
+                                                <VBox spacing="5">
+                                                    <children>
+                                                        <Label styleClass="form-label" text="Apellido *" />
+                                                        <TextField fx:id="txtApellido" promptText="Ej: Rodríguez" styleClass="form-field" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="600.0" spacing="15" styleClass="footer-container">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+            <children>
+                <Button fx:id="btnCancelar" onAction="#handleCancelar" styleClass="btn-secondary" text="Cancelar">
+                    <font>
+                        <Font size="14" />
+                    </font>
+                </Button>
+                <Button fx:id="btnGuardar" onAction="#handleGuardar" styleClass="btn-primary" text="💾 Guardar">
+                    <font>
+                        <Font size="14" />
+                    </font>
+                </Button>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

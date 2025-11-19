@@ -16,7 +16,8 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
     @Override
     public ArrayList<Tecnico> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM TECNICO";
+        String sql = "SELECT T.ID_TECNICO,T.NOMBRE,T.APELLIDO,E.ID_EQUIPO,E.NOMBRE AS EQUIPO FROM TECNICO T\n" +
+                "left JOIN EQUIPO E ON T.ID_EQUIPO = E.ID_EQUIPO";
         ArrayList<Tecnico> tecnicos = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -28,8 +29,10 @@ public class TecnicoRepository implements Repository<Tecnico> {
                 tecnico.setId(rs.getInt("ID_TECNICO"));
                 tecnico.setNombre(rs.getString("NOMBRE"));
                 tecnico.setApellido(rs.getString("APELLIDO"));
+
                 Equipo equipo = new Equipo();
                 equipo.setId(rs.getInt("ID_EQUIPO"));
+                equipo.setNombre(rs.getString("EQUIPO"));
                 tecnico.setEquipo(equipo);
                 tecnicos.add(tecnico);
             }
@@ -43,7 +46,12 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
     @Override
     public Tecnico buscarPorId(int id) throws RepositoryException {
-        String sql = "SELECT * FROM TECNICO WHERE ID_TECNICO = ?";
+        String sql = """
+                    SELECT t.*, e.ID_EQUIPO, e.NOMBRE AS NOMBRE_EQUIPO
+                    FROM TECNICO t
+                    LEFT JOIN EQUIPO e ON t.ID_EQUIPO = e.ID_EQUIPO
+                    WHERE t.ID_TECNICO = ?
+                """;
         Tecnico tecnico = null;
 
         try (Connection conn = Conexion.getInstance();
@@ -58,9 +66,13 @@ public class TecnicoRepository implements Repository<Tecnico> {
                     tecnico.setNombre(rs.getString("NOMBRE"));
                     tecnico.setApellido(rs.getString("APELLIDO"));
 
-                    Equipo equipo = new Equipo();
-                    equipo.setId(rs.getInt("ID_EQUIPO"));
-                    tecnico.setEquipo(equipo);
+                    // Cargar Equipo si existe
+                    if (rs.getObject("ID_EQUIPO") != null) {
+                        Equipo equipo = new Equipo();
+                        equipo.setId(rs.getInt("ID_EQUIPO"));
+                        equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+                        tecnico.setEquipo(equipo);
+                    }
                 }
             }
 
@@ -175,9 +187,16 @@ public class TecnicoRepository implements Repository<Tecnico> {
 
     //avanzada 4
     public ArrayList<Tecnico> listarTecnicosSinEquipo() throws RepositoryException {
-        String sql = "SELECT t.ID_TECNICO, t.NOMBRE, t.APELLIDO " +
-                "FROM TECNICO t WHERE t.ID_EQUIPO NOT IN (" +
-                "SELECT e.ID_EQUIPO FROM EQUIPO e)";
+        String sql = """ 
+                SELECT t.ID_TECNICO, t.NOMBRE, t.APELLIDO
+               FROM TECNICO t
+               WHERE NOT EXISTS (
+               SELECT 1
+               FROM EQUIPO e
+               WHERE e.ID_EQUIPO = t.ID_EQUIPO)
+                """;
+
+
         ArrayList<Tecnico> lista = new ArrayList<>();
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);

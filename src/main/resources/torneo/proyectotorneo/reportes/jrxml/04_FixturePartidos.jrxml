@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FixturePartidos" pageWidth="595" pageHeight="842"
+              columnWidth="535" leftMargin="30" rightMargin="30"
+              topMargin="20" bottomMargin="20">
+
+    <style name="Title" fontSize="24" isBold="true"/>
+    <style name="GroupHeader" fontSize="14" isBold="true"/>
+    <style name="Column header" fontSize="11" isBold="true"/>
+    <style name="Detail" fontSize="9"/>
+
+    <queryString>
+        <![CDATA[SELECT
+            j.id_jornada,
+            j.jornada AS numero_jornada,
+            p.id_partido,
+            p.fecha,
+            p.hora,
+            el.nombre AS equipo_local,
+            ev.nombre AS equipo_visitante,
+            est.nombre AS estadio,
+            m.nombre AS municipio,
+            a.nombre || ' ' || a.apellido AS arbitro_principal,
+            rf.goles_local,
+            rf.goles_visitante,
+            CASE
+                WHEN rf.goles_local IS NOT NULL THEN 'Finalizado'
+                WHEN p.fecha < TRUNC(SYSDATE) THEN 'En Curso'
+                WHEN p.fecha = TRUNC(SYSDATE) AND p.hora < TO_CHAR(SYSDATE, 'HH24:MI') THEN 'En Curso'
+                ELSE 'Por Jugar'
+            END AS estado
+        FROM jornada j
+        INNER JOIN partido p ON j.id_jornada = p.id_jornada
+        INNER JOIN equipo el ON p.id_equipo_local = el.id_equipo
+        INNER JOIN equipo ev ON p.id_equipo_visitante = ev.id_equipo
+        INNER JOIN estadio est ON p.id_estadio = est.id_estadio
+        INNER JOIN municipio m ON est.id_municipio = m.id_municipio
+        LEFT JOIN arbitro_partido ap ON p.id_partido = ap.id_partido AND ap.tipo = 'Principal'
+        LEFT JOIN arbitro a ON ap.id_arbitro = a.id_arbitro
+        LEFT JOIN resultado_final rf ON p.id_partido = rf.id_partido
+        ORDER BY j.jornada, p.fecha, p.hora]]>
+    </queryString>
+
+    <field name="ID_JORNADA" class="java.math.BigDecimal"/>
+    <field name="NUMERO_JORNADA" class="java.math.BigDecimal"/>
+    <field name="ID_PARTIDO" class="java.math.BigDecimal"/>
+    <field name="FECHA" class="java.sql.Date"/>
+    <field name="HORA" class="java.lang.String"/>
+    <field name="EQUIPO_LOCAL" class="java.lang.String"/>
+    <field name="EQUIPO_VISITANTE" class="java.lang.String"/>
+    <field name="ESTADIO" class="java.lang.String"/>
+    <field name="MUNICIPIO" class="java.lang.String"/>
+    <field name="ARBITRO_PRINCIPAL" class="java.lang.String"/>
+    <field name="GOLES_LOCAL" class="java.math.BigDecimal"/>
+    <field name="GOLES_VISITANTE" class="java.math.BigDecimal"/>
+    <field name="ESTADO" class="java.lang.String"/>
+
+    <group name="Jornada">
+        <groupExpression><![CDATA[$F{NUMERO_JORNADA}]]></groupExpression>
+        <groupHeader>
+            <band height="50">
+                <rectangle>
+                    <reportElement mode="Opaque" x="0" y="10" width="535" height="35" backcolor="#3366FF"/>
+                </rectangle>
+                <textField>
+                    <reportElement x="10" y="15" width="250" height="25" forecolor="#FFFFFF"/>
+                    <textElement verticalAlignment="Middle">
+                        <font size="14" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA["JORNADA " + $F{NUMERO_JORNADA}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+    </group>
+
+    <title>
+        <band height="90">
+            <staticText>
+                <reportElement style="Title" x="0" y="10" width="535" height="40"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="26" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FIXTURE DE PARTIDOS]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="50" width="535" height="20" forecolor="#666666"/>
+                <textElement textAlignment="Center">
+                    <font size="12"/>
+                </textElement>
+                <text><![CDATA[Programación de Partidos por Jornada]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="435" y="70" width="100" height="15"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="30">
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="0" y="5" width="80" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Fecha/Hora]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="80" y="5" width="100" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Equipo Local]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="180" y="5" width="100" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Equipo Visitante]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="280" y="5" width="90" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Estadio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="370" y="5" width="80" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Árbitro]]></text>
+            </staticText>
+            <staticText>
+                <reportElement style="Column header" mode="Opaque" x="450" y="5" width="85" height="25" backcolor="#CCCCCC"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Resultado/Estado]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="25">
+            <textField>
+                <reportElement x="0" y="0" width="80" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[new java.text.SimpleDateFormat("dd/MM").format($F{FECHA}) + " " + $F{HORA}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="80" y="0" width="100" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{EQUIPO_LOCAL}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="180" y="0" width="100" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{EQUIPO_VISITANTE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="0" width="90" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ESTADIO}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement x="370" y="0" width="80" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="7"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ARBITRO_PRINCIPAL}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="0" width="85" height="25"/>
+                <box leftPadding="3">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{GOLES_LOCAL} != null ?
+    $F{GOLES_LOCAL} + " - " + $F{GOLES_VISITANTE} :
+    $F{ESTADO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="25">
+            <textField>
+                <reportElement x="435" y="5" width="100" height="15"/>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+
+</jasperReport>

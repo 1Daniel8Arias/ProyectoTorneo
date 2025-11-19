@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="12_ReporteDePosicionesDeJugadores" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d3a752e3-6b55-426b-9e8c-420a2b3fe8ac">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <queryString>
+        <![CDATA[SELECT
+    posicion,
+    COUNT(*) AS cantidad
+FROM jugador
+GROUP BY posicion
+ORDER BY posicion
+]]>
+    </queryString>
+    <field name="POSICION" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="POSICION"/>
+        <property name="com.jaspersoft.studio.field.label" value="POSICION"/>
+    </field>
+    <field name="CANTIDAD" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="CANTIDAD"/>
+        <property name="com.jaspersoft.studio.field.label" value="CANTIDAD"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="42" splitType="Stretch">
+            <staticText>
+                <reportElement x="-10" y="12" width="570" height="30" uuid="c9fc32b3-5460-4afe-a4b4-3b9828616b74"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="22" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reporte de Posiciones de Jugadores]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="11" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="20" splitType="Stretch"/>
+    </columnHeader>
+    <detail>
+        <band height="18" splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band height="6" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="6" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="397" splitType="Stretch">
+            <pie3DChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="-10" y="0" width="570" height="397" uuid="6a5065cc-2f02-43c7-9b56-7723dc6f2c61"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <pieDataset>
+                    <keyExpression><![CDATA[$F{POSICION}]]></keyExpression>
+                    <valueExpression><![CDATA[$F{CANTIDAD}]]></valueExpression>
+                    <labelExpression><![CDATA[$F{POSICION} + " (" + $F{CANTIDAD} + ")"
+]]></labelExpression>
+                </pieDataset>
+                <pie3DPlot>
+                    <plot/>
+                    <itemLabel/>
+                </pie3DPlot>
+            </pie3DChart>
+        </band>
+    </summary>
+</jasperReport>

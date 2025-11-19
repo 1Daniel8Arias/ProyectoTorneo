@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600" prefWidth="650" stylesheets="@style/estilo1.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="torneo.proyectotorneo.viewController.NuevoPartidoViewController">
+
+    <!-- Header -->
+    <top>
+        <VBox spacing="10" styleClass="header-container">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+            <Label fx:id="lblTitulo" styleClass="page-title" text="Nuevo Partido">
+                <font>
+                    <Font name="System Bold" size="28" />
+                </font>
+            </Label>
+            <Label styleClass="subtitle" text="Complete la información del partido">
+                <font>
+                    <Font size="14" />
+                </font>
+            </Label>
+        </VBox>
+    </top>
+
+    <!-- Contenido Principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-container">
+            <VBox spacing="20">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+
+                <!-- Información del Partido -->
+                <VBox spacing="15" styleClass="form-section">
+                    <Label styleClass="section-title" text="⚽ Información del Partido">
+                        <font>
+                            <Font name="System Bold" size="16" />
+                        </font>
+                    </Label>
+
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" />
+                            <ColumnConstraints percentWidth="50" />
+                        </columnConstraints>
+
+                        <!-- Fecha -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="form-label" text="Fecha *" />
+                            <DatePicker fx:id="dpFecha" maxWidth="Infinity" promptText="Seleccione la fecha" styleClass="form-field" />
+                        </VBox>
+
+                        <!-- Hora -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="form-label" text="Hora *" />
+                            <TextField fx:id="txtHora" promptText="HH:MM (Ej: 15:30)" styleClass="form-field" />
+                        </VBox>
+
+                        <!-- Jornada -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <Label styleClass="form-label" text="Jornada *" />
+                            <ComboBox fx:id="cmbJornada" maxWidth="Infinity" promptText="Seleccione jornada" styleClass="form-field" />
+                        </VBox>
+
+                        <!-- Estadio -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label styleClass="form-label" text="Estadio *" />
+                            <ComboBox fx:id="cmbEstadio" maxWidth="Infinity" promptText="Seleccione estadio" styleClass="form-field" />
+                        </VBox>
+
+                        <rowConstraints>
+                            <RowConstraints />
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <!-- Equipos -->
+                <VBox spacing="15" styleClass="form-section">
+                    <Label styleClass="section-title" text="🏆 Equipos">
+                        <font>
+                            <Font name="System Bold" size="16" />
+                        </font>
+                    </Label>
+
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" />
+                            <ColumnConstraints percentWidth="50" />
+                        </columnConstraints>
+
+                        <!-- Equipo Local -->
+                        <VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <Label styleClass="form-label" text="Equipo Local *" />
+                            <ComboBox fx:id="cmbEquipoLocal" maxWidth="Infinity" promptText="Seleccione equipo local" styleClass="form-field" />
+                        </VBox>
+
+                        <!-- Equipo Visitante -->
+                        <VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <Label styleClass="form-label" text="Equipo Visitante *" />
+                            <ComboBox fx:id="cmbEquipoVisitante" maxWidth="Infinity" promptText="Seleccione equipo visitante" styleClass="form-field" />
+                        </VBox>
+
+                        <rowConstraints>
+                            <RowConstraints />
+                        </rowConstraints>
+                    </GridPane>
+                </VBox>
+
+                <!-- Nota informativa -->
+                <HBox styleClass="info-box">
+                    <Label styleClass="info-text" text="ℹ️  Los campos marcados con * son obligatorios">
+                        <font>
+                            <Font size="12" />
+                        </font>
+                    </Label>
+                </HBox>
+
+                <!-- Instrucciones adicionales -->
+                <VBox spacing="8" style="-fx-background-color: #f0f9ff; -fx-padding: 15; -fx-background-radius: 8;">
+                    <Label text="📌 Recomendaciones:" style="-fx-font-weight: bold; -fx-text-fill: #1e40af;">
+                        <font>
+                            <Font size="13" />
+                        </font>
+                    </Label>
+                    <Label text="• El equipo local y visitante no pueden ser el mismo" style="-fx-text-fill: #3b82f6;">
+                        <font>
+                            <Font size="12" />
+                        </font>
+                    </Label>
+                    <Label text="• La hora debe estar en formato de 24 horas (HH:MM)" style="-fx-text-fill: #3b82f6;">
+                        <font>
+                            <Font size="12" />
+                        </font>
+                    </Label>
+                    <Label text="• Verifique que la fecha sea correcta antes de guardar" style="-fx-text-fill: #3b82f6;">
+                        <font>
+                            <Font size="12" />
+                        </font>
+                    </Label>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <!-- Footer con botones -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="15" styleClass="footer-container">
+            <padding>
+                <Insets bottom="20" left="30" right="30" top="20" />
+            </padding>
+            <Button fx:id="btnCancelar" onAction="#handleCancelar" styleClass="btn-secondary" text="Cancelar">
+                <font>
+                    <Font size="14" />
+                </font>
+            </Button>
+            <Button fx:id="btnGuardar" onAction="#handleGuardar" styleClass="btn-primary" text="💾 Guardar">
+                <font>
+                    <Font size="14" />
+                </font>
+            </Button>
+        </HBox>
+    </bottom>
+</BorderPane>

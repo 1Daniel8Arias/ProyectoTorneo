@@ -2,15 +2,9 @@ package torneo.proyectotorneo.service;
 
 import torneo.proyectotorneo.exeptions.EstadioNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
-import torneo.proyectotorneo.model.Equipo;
-import torneo.proyectotorneo.model.EquipoEstadio;
-import torneo.proyectotorneo.model.Estadio;
-import torneo.proyectotorneo.model.Partido;
+import torneo.proyectotorneo.model.*;
 import torneo.proyectotorneo.model.enums.TipoSede;
-import torneo.proyectotorneo.repository.EquipoEstadioRepository;
-import torneo.proyectotorneo.repository.EquipoRepository;
-import torneo.proyectotorneo.repository.EstadioRepository;
-import torneo.proyectotorneo.repository.PartidoRepository;
+import torneo.proyectotorneo.repository.*;
 
 import java.util.ArrayList;
 
@@ -20,12 +14,14 @@ public class EstadioService {
     private final EquipoEstadioRepository equipoEstadioRepository;
     private final PartidoRepository partidoRepository;
     private final EquipoRepository equipoRepository;
+    private final DepartamentoRepository departamentoRepository;
 
     public EstadioService() {
         this.estadioRepository = new EstadioRepository();
         this.equipoEstadioRepository = new EquipoEstadioRepository();
         this.partidoRepository = new PartidoRepository();
         this.equipoRepository = new EquipoRepository();
+        this.departamentoRepository = new DepartamentoRepository();
     }
 
     /**
@@ -125,14 +121,7 @@ public class EstadioService {
     /**
      * Obtiene todos los estadios de un equipo
      */
-    public ArrayList<EquipoEstadio> obtenerEstadiosDeEquipo(int idEquipo)
-            throws EstadioNoEncontradoException {
-        try {
-            return equipoEstadioRepository.buscarPorEquipo(idEquipo);
-        } catch (RepositoryException e) {
-            throw new EstadioNoEncontradoException("Error al obtener los estadios: " + e.getMessage());
-        }
-    }
+
 
     /**
      * Obtiene el historial de partidos jugados en un estadio
@@ -184,7 +173,7 @@ public class EstadioService {
                             "Equipos que lo usan como sede neutral: %d\n",
                     estadio.getNombre(),
                     estadio.getCapacidad(),
-                    estadio.getDepartamento() != null ? estadio.getDepartamento().getNombre() : "N/A",
+                    estadio.getMunicipio() != null ? estadio.getMunicipio().getNombre() : "N/A",
                     totalPartidos,
                     equiposLocales,
                     equiposNeutrales
@@ -268,8 +257,87 @@ public class EstadioService {
             throw new EstadioNoEncontradoException("La capacidad debe ser mayor a cero");
         }
 
-        if (estadio.getDepartamento() == null) {
+        if (estadio.getMunicipio() == null) {
             throw new EstadioNoEncontradoException("El departamento del estadio es obligatorio");
         }
     }
+
+    /**
+     * Guarda un nuevo estadio
+     */
+    public void guardarEstadio(Estadio estadio) throws EstadioNoEncontradoException {
+        try {
+            if (estadio == null || estadio.getNombre() == null || estadio.getNombre().trim().isEmpty()) {
+                throw new EstadioNoEncontradoException("El estadio y su nombre no pueden ser nulos o vacíos");
+            }
+            if (estadio.getCapacidad() <= 0) {
+                throw new EstadioNoEncontradoException("La capacidad del estadio debe ser mayor a 0");
+            }
+            estadioRepository.guardar(estadio);
+        } catch (RepositoryException e) {
+            throw new EstadioNoEncontradoException("Error al guardar el estadio: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista estadios por departamento
+     */
+    public ArrayList<Estadio> listarEstadiosPorDepartamento(String nombreDepartamento) throws EstadioNoEncontradoException {
+        try {
+            if (nombreDepartamento == null || nombreDepartamento.trim().isEmpty()) {
+                throw new EstadioNoEncontradoException("El nombre del departamento no puede ser nulo o vacío");
+            }
+
+            ArrayList<Estadio> todosLosEstadios = estadioRepository.listarTodos();
+            ArrayList<Estadio> estadiosPorDepartamento = new ArrayList<>();
+
+            for (Estadio estadio : todosLosEstadios) {
+                if (estadio.getMunicipio() != null &&
+                        estadio.getMunicipio() != null &&
+                        estadio.getMunicipio().getNombre().equalsIgnoreCase(nombreDepartamento)) {
+                    estadiosPorDepartamento.add(estadio);
+                }
+            }
+
+            return estadiosPorDepartamento;
+        } catch (RepositoryException e) {
+            throw new EstadioNoEncontradoException("Error al listar estadios por departamento: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista estadios con capacidad mínima especificada
+     */
+    public ArrayList<Estadio> listarEstadiosPorCapacidadMinima(int capacidadMinima) throws EstadioNoEncontradoException {
+        try {
+            if (capacidadMinima <= 0) {
+                throw new EstadioNoEncontradoException("La capacidad mínima debe ser mayor a 0");
+            }
+
+            ArrayList<Estadio> todosLosEstadios = estadioRepository.listarTodos();
+            ArrayList<Estadio> estadiosFiltrados = new ArrayList<>();
+
+            for (Estadio estadio : todosLosEstadios) {
+                if (estadio.getCapacidad() >= capacidadMinima) {
+                    estadiosFiltrados.add(estadio);
+                }
+            }
+
+            return estadiosFiltrados;
+        } catch (RepositoryException e) {
+            throw new EstadioNoEncontradoException("Error al listar estadios por capacidad: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista todos los departamentos disponibles
+     */
+    public ArrayList<Departamento> listarDepartamentos() throws EstadioNoEncontradoException {
+        try {
+            return departamentoRepository.listarTodos();
+        } catch (RepositoryException e) {
+            throw new EstadioNoEncontradoException("Error al listar departamentos: " + e.getMessage());
+        }
+    }
+
 }

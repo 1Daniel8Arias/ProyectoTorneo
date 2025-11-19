@@ -57,13 +57,19 @@ public class HomeViewController {
     private VBox VBoxMenu;
 
     @FXML
-    private Button arbitros;
+    private Button btnArbitros;
 
     @FXML
     private Button btnEquipos;
 
     @FXML
-    private Button btnEstadisticas;
+    private Button btnEstadios;
+
+    @FXML
+    private Button btnCuerpoTecnico;
+
+    @FXML
+    private Button btnTecnico;
 
     @FXML
     private Button btnInicio;
@@ -114,6 +120,35 @@ public class HomeViewController {
 
         btnPartidos.setOnAction(event ->
                 cambiarContenido("/torneo/proyectotorneo/Partido.fxml"));
+
+        btnInicio.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/HOME.fxml"));
+
+        btnTecnico.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Tecnico.fxml"));
+
+        btnEquipos.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Equipo.fxml"));
+
+        btnCuerpoTecnico.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/CuerpoTecnico.fxml"));
+
+        btnArbitros.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Arbitro.fxml"));
+
+        btnEstadios.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Estadio.fxml"));
+
+        btnSanciones.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Sancion.fxml"));
+
+        btnTabla.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Tabla.fxml"));
+
+        btnReportes.setOnAction(event ->
+                cambiarContenido("/torneo/proyectotorneo/Reporte.fxml"));
+
+
     }
 
 

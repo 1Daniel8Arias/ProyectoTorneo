@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="11_ReporteDeGolesporFecha" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="89b35c1b-cf3b-4222-80e1-bd70a2ea9e5d">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <queryString>
+        <![CDATA[SELECT j.jornada AS fecha, COUNT(p.id_partido) AS partidos, SUM(r.goles_local + r.goles_visitante) AS goles_totales, CASE WHEN COUNT(p.id_partido) = 0 THEN 0 ELSE ROUND(SUM(r.goles_local + r.goles_visitante) / COUNT(p.id_partido), 2) END AS promedio_goles FROM jornada j LEFT JOIN partido p ON p.id_jornada = j.id_jornada LEFT JOIN resultado_final r ON r.id_partido = p.id_partido GROUP BY j.jornada ORDER BY j.jornada]]>
+    </queryString>
+    <field name="FECHA" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="FECHA"/>
+        <property name="com.jaspersoft.studio.field.label" value="FECHA"/>
+    </field>
+    <field name="PARTIDOS" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="PARTIDOS"/>
+        <property name="com.jaspersoft.studio.field.label" value="PARTIDOS"/>
+    </field>
+    <field name="GOLES_TOTALES" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="GOLES_TOTALES"/>
+        <property name="com.jaspersoft.studio.field.label" value="GOLES_TOTALES"/>
+    </field>
+    <field name="PROMEDIO_GOLES" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="PROMEDIO_GOLES"/>
+        <property name="com.jaspersoft.studio.field.label" value="PROMEDIO_GOLES"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="41" splitType="Stretch">
+            <staticText>
+                <reportElement x="-11" y="11" width="571" height="30" uuid="ff9d08a1-ffa1-447b-b322-201bcb1f7cbf"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="22" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reporte De Goles por Fecha]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="8" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="9" splitType="Stretch"/>
+    </columnHeader>
+    <detail>
+        <band height="8" splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band height="17" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="9" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="398" splitType="Stretch">
+            <lineChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="-10" y="10" width="570" height="380" uuid="1fb31a21-1b51-4a24-9679-cb9ffb58f9df"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Goles Totales"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GOLES_TOTALES}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Promedio"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{FECHA}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PROMEDIO_GOLES}]]></valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <linePlot>
+                    <plot/>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </categoryAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </valueAxisFormat>
+                </linePlot>
+            </lineChart>
+        </band>
+    </summary>
+</jasperReport>

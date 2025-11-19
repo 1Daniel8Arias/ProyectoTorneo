@@ -12,7 +12,32 @@ import java.util.ArrayList;
 public class PartidoRepository implements Repository<Partido> {
     @Override
     public ArrayList<Partido> listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM PARTIDO";
+        String sql = """
+            SELECT 
+                p.ID_PARTIDO,
+                p.FECHA,
+                p.HORA,
+                p.ID_JORNADA,
+                j.JORNADA AS NUMERO_JORNADA,
+                el.ID_EQUIPO AS ID_LOCAL,
+                el.NOMBRE AS NOMBRE_LOCAL,
+                ev.ID_EQUIPO AS ID_VISITANTE,
+                ev.NOMBRE AS NOMBRE_VISITANTE,
+                e.ID_ESTADIO,
+                e.NOMBRE AS NOMBRE_ESTADIO,
+                e.CAPACIDAD,
+                rf.ID_RESULTADO_FINAL,
+                rf.GOLES_LOCAL,
+                rf.GOLES_VISITANTE
+            FROM PARTIDO p
+            INNER JOIN JORNADA j ON p.ID_JORNADA = j.ID_JORNADA
+            INNER JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO
+            INNER JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO
+            INNER JOIN ESTADIO e ON p.ID_ESTADIO = e.ID_ESTADIO
+            LEFT JOIN RESULTADO_FINAL rf ON p.ID_PARTIDO = rf.ID_PARTIDO
+            ORDER BY p.FECHA DESC, p.HORA DESC
+            """;
+
         ArrayList<Partido> partidos = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -22,22 +47,45 @@ public class PartidoRepository implements Repository<Partido> {
             while (rs.next()) {
                 Partido partido = new Partido();
                 partido.setIdPartido(rs.getInt("ID_PARTIDO"));
-                partido.setFecha(rs.getDate("FECHA").toLocalDate());
+
+                // Manejo seguro de fecha y hora
+                Date fechaSQL = rs.getDate("FECHA");
+                if (fechaSQL != null) partido.setFecha(fechaSQL.toLocalDate());
                 partido.setHora(rs.getString("HORA"));
 
-                Equipo local = new Equipo();
-                local.setId(rs.getInt("ID_EQUIPO_LOCAL"));
-                Equipo visitante = new Equipo();
-                visitante.setId(rs.getInt("ID_EQUIPO_VISITANTE"));
-                Estadio estadio = new Estadio();
-                estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                // Jornada
                 Jornada jornada = new Jornada();
                 jornada.setIdJornada(rs.getInt("ID_JORNADA"));
-
-                partido.setEquipoLocal(local);
-                partido.setEquipoVisitante(visitante);
-                partido.setEstadio(estadio);
+                jornada.setNumeroJornada(rs.getInt("NUMERO_JORNADA"));
                 partido.setJornada(jornada);
+
+                // Equipo local
+                Equipo local = new Equipo();
+                local.setId(rs.getInt("ID_LOCAL"));
+                local.setNombre(rs.getString("NOMBRE_LOCAL"));
+                partido.setEquipoLocal(local);
+
+                // Equipo visitante
+                Equipo visitante = new Equipo();
+                visitante.setId(rs.getInt("ID_VISITANTE"));
+                visitante.setNombre(rs.getString("NOMBRE_VISITANTE"));
+                partido.setEquipoVisitante(visitante);
+
+                // Estadio
+                Estadio estadio = new Estadio();
+                estadio.setIdEstadio(rs.getInt("ID_ESTADIO"));
+                estadio.setNombre(rs.getString("NOMBRE_ESTADIO"));
+                estadio.setCapacidad(rs.getInt("CAPACIDAD"));
+                partido.setEstadio(estadio);
+
+                // Resultado final (puede ser null si no hay registro)
+                if (rs.getObject("ID_RESULTADO_FINAL") != null) {
+                    ResultadoFinal rf = new ResultadoFinal();
+                    rf.setIdResultadoFinal(rs.getInt("ID_RESULTADO_FINAL"));
+                    rf.setGolesLocal(rs.getInt("GOLES_LOCAL"));
+                    rf.setGolesVisitante(rs.getInt("GOLES_VISITANTE"));
+                    partido.setResultadoFinal(rf);
+                }
 
                 partidos.add(partido);
             }
@@ -48,6 +96,7 @@ public class PartidoRepository implements Repository<Partido> {
 
         return partidos;
     }
+
 
     @Override
     public Partido buscarPorId(int id) throws RepositoryException {
@@ -294,14 +343,21 @@ public class PartidoRepository implements Repository<Partido> {
     //consulta intermedia 5
 
     public ArrayList<Partido> listarPartidosConEquiposYEstadio() throws RepositoryException {
-        String sql = "SELECT p.ID_PARTIDO, p.FECHA, p.HORA, " +
-                "el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS LOCAL_NOMBRE, " +
-                "ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS VISITANTE_NOMBRE, " +
-                "s.ID_ESTADIO, s.NOMBRE AS ESTADIO_NOMBRE " +
-                "FROM PARTIDO p " +
-                "JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO " +
-                "JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO " +
-                "JOIN ESTADIO s ON p.ID_ESTADIO = s.ID_ESTADIO";
+        String sql = """
+                SELECT p.ID_PARTIDO, p.FECHA, p.HORA, p.ID_JORNADA, 
+                el.ID_EQUIPO AS ID_LOCAL, el.NOMBRE AS LOCAL_NOMBRE, 
+                ev.ID_EQUIPO AS ID_VISITANTE, ev.NOMBRE AS VISITANTE_NOMBRE, 
+                s.ID_ESTADIO, s.NOMBRE AS ESTADIO_NOMBRE,  
+                j.JORNADA AS NUMERO_JORNADA,  
+                rf.ID_RESULTADO_FINAL, rf.GOLES_LOCAL, rf.GOLES_VISITANTE 
+                FROM PARTIDO p 
+                JOIN EQUIPO el ON p.ID_EQUIPO_LOCAL = el.ID_EQUIPO 
+                JOIN EQUIPO ev ON p.ID_EQUIPO_VISITANTE = ev.ID_EQUIPO 
+                JOIN ESTADIO s ON p.ID_ESTADIO = s.ID_ESTADIO 
+                JOIN JORNADA j ON p.ID_JORNADA = j.ID_JORNADA  
+                LEFT JOIN RESULTADO_FINAL rf ON p.ID_PARTIDO = rf.ID_PARTIDO  
+                """;
+
         ArrayList<Partido> lista = new ArrayList<>();
         try (Connection conn = Conexion.getInstance();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -326,6 +382,22 @@ public class PartidoRepository implements Repository<Partido> {
                 s.setIdEstadio(rs.getInt("ID_ESTADIO"));
                 s.setNombre(rs.getString("ESTADIO_NOMBRE"));
                 p.setEstadio(s);
+
+                //  AGREGAR: Cargar jornada
+                Jornada jornada = new Jornada();
+                jornada.setIdJornada(rs.getInt("ID_JORNADA"));
+                jornada.setNumeroJornada(rs.getInt("NUMERO_JORNADA"));
+                p.setJornada(jornada);
+
+                //  AGREGAR: Cargar resultado final si existe
+                int idResultado = rs.getInt("ID_RESULTADO_FINAL");
+                if (!rs.wasNull()) {  // Si existe un resultado final
+                    ResultadoFinal rf = new ResultadoFinal();
+                    rf.setIdResultadoFinal(idResultado);
+                    rf.setGolesLocal(rs.getInt("GOLES_LOCAL"));
+                    rf.setGolesVisitante(rs.getInt("GOLES_VISITANTE"));
+                    p.setResultadoFinal(rf);
+                }
 
                 lista.add(p);
             }

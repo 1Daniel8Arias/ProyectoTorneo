@@ -1,5 +1,6 @@
 package torneo.proyectotorneo.service;
 
+import torneo.proyectotorneo.exeptions.ArbitroNoEncontradoException;
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Arbitro;
 import torneo.proyectotorneo.model.ArbitroPartido;
@@ -234,6 +235,93 @@ public class ArbitroService {
      */
     public ArrayList<Arbitro> listarArbitrosConConteoDePartidos() throws RepositoryException {
         return arbitroRepository.listarArbitrosConConteoDePartidos();
+    }
+
+    /**
+     * Guarda un nuevo árbitro
+     */
+    public void guardarArbitro(Arbitro arbitro) throws ArbitroNoEncontradoException {
+        try {
+            if (arbitro == null) {
+                throw new ArbitroNoEncontradoException("El árbitro no puede ser nulo");
+            }
+            if (arbitro.getNombre() == null || arbitro.getNombre().trim().isEmpty()) {
+                throw new ArbitroNoEncontradoException("El nombre del árbitro es obligatorio");
+            }
+            if (arbitro.getApellido() == null || arbitro.getApellido().trim().isEmpty()) {
+                throw new ArbitroNoEncontradoException("El apellido del árbitro es obligatorio");
+            }
+            arbitroRepository.guardar(arbitro);
+        } catch (RepositoryException e) {
+            throw new ArbitroNoEncontradoException("Error al guardar el árbitro: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista árbitros que tienen partidos asignados
+     */
+    public ArrayList<Arbitro> listarArbitrosConPartidos() throws ArbitroNoEncontradoException {
+        try {
+            ArrayList<Arbitro> todosLosArbitros = arbitroRepository.listarTodos();
+            ArrayList<Arbitro> arbitrosConPartidos = new ArrayList<>();
+            ArrayList<ArbitroPartido> asignaciones = arbitroPartidoRepository.listarTodos();
+
+            for (Arbitro arbitro : todosLosArbitros) {
+                boolean tienePartidos = false;
+                for (ArbitroPartido ap : asignaciones) {
+                    if (ap.getArbitro().getIdArbitro().equals(arbitro.getIdArbitro())) {
+                        tienePartidos = true;
+                        break;
+                    }
+                }
+                if (tienePartidos) {
+                    arbitrosConPartidos.add(arbitro);
+                }
+            }
+
+            return arbitrosConPartidos;
+        } catch (RepositoryException e) {
+            throw new ArbitroNoEncontradoException("Error al listar árbitros con partidos: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Lista árbitros por tipo (Principal, Asistente, Cuarto)
+     */
+    public ArrayList<Arbitro> listarArbitrosPorTipo(String tipo) throws ArbitroNoEncontradoException {
+        try {
+            if (tipo == null || tipo.trim().isEmpty()) {
+                throw new ArbitroNoEncontradoException("El tipo de árbitro no puede ser nulo o vacío");
+            }
+
+            if (!tipo.equals("Principal") && !tipo.equals("Asistente") && !tipo.equals("Cuarto")) {
+                throw new ArbitroNoEncontradoException("Tipo de árbitro inválido. Debe ser: Principal, Asistente o Cuarto");
+            }
+
+            ArrayList<Arbitro> todosLosArbitros = arbitroRepository.listarTodos();
+            ArrayList<Arbitro> arbitrosPorTipo = new ArrayList<>();
+            ArrayList<ArbitroPartido> asignaciones = arbitroPartidoRepository.listarTodos();
+
+            // Obtener árbitros que han sido asignados con ese tipo
+            for (ArbitroPartido ap : asignaciones) {
+                if (ap.getTipo().equals(tipo)) {
+                    boolean yaAgregado = false;
+                    for (Arbitro arbitro : arbitrosPorTipo) {
+                        if (arbitro.getIdArbitro().equals(ap.getArbitro().getIdArbitro())) {
+                            yaAgregado = true;
+                            break;
+                        }
+                    }
+                    if (!yaAgregado) {
+                        arbitrosPorTipo.add(ap.getArbitro());
+                    }
+                }
+            }
+
+            return arbitrosPorTipo;
+        } catch (RepositoryException e) {
+            throw new ArbitroNoEncontradoException("Error al listar árbitros por tipo: " + e.getMessage());
+        }
     }
 
 }

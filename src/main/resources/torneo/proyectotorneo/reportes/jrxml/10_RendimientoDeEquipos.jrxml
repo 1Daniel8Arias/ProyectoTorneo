@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.5.final using JasperReports Library version 6.21.5-74d586df47b25dbd05bd0957999819196e59934a  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="10_RendimientoDeEquipos" printOrder="Horizontal" pageWidth="1800" pageHeight="700" columnWidth="1760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f9b659f1-8b34-40f7-84fd-108f9906ad9b">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.jrdax"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <queryString>
+        <![CDATA[SELECT
+    e.nombre AS equipo,
+    t.puntos,
+    t.ganados,
+    t.empates,
+    t.perdidos,
+    t.goles_a_favor AS gf,
+    t.goles_en_contra AS gc,
+    (t.goles_a_favor - t.goles_en_contra) AS dg
+FROM TABLA_POSICION t
+JOIN equipo e ON e.id_equipo = t.id_equipo
+ORDER BY t.puntos DESC]]>
+    </queryString>
+    <field name="EQUIPO" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.name" value="EQUIPO"/>
+        <property name="com.jaspersoft.studio.field.label" value="EQUIPO"/>
+    </field>
+    <field name="PUNTOS" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="PUNTOS"/>
+        <property name="com.jaspersoft.studio.field.label" value="PUNTOS"/>
+    </field>
+    <field name="GANADOS" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="GANADOS"/>
+        <property name="com.jaspersoft.studio.field.label" value="GANADOS"/>
+    </field>
+    <field name="EMPATES" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="EMPATES"/>
+        <property name="com.jaspersoft.studio.field.label" value="EMPATES"/>
+    </field>
+    <field name="PERDIDOS" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="PERDIDOS"/>
+        <property name="com.jaspersoft.studio.field.label" value="PERDIDOS"/>
+    </field>
+    <field name="GF" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="GF"/>
+        <property name="com.jaspersoft.studio.field.label" value="GF"/>
+    </field>
+    <field name="GC" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="GC"/>
+        <property name="com.jaspersoft.studio.field.label" value="GC"/>
+    </field>
+    <field name="DG" class="java.math.BigDecimal">
+        <property name="com.jaspersoft.studio.field.name" value="DG"/>
+        <property name="com.jaspersoft.studio.field.label" value="DG"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="60" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="10" width="1751" height="50" uuid="1fece593-bf74-4408-b9f2-3a99e907acea"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="37" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reporte de Rendimiento de Equipos]]></text>
+            </staticText>
+        </band>
+    </title>
+    <pageHeader>
+        <band height="16" splitType="Stretch"/>
+    </pageHeader>
+    <columnHeader>
+        <band height="11" splitType="Stretch"/>
+    </columnHeader>
+    <detail>
+        <band height="8" splitType="Stretch"/>
+    </detail>
+    <columnFooter>
+        <band height="15" splitType="Stretch"/>
+    </columnFooter>
+    <pageFooter>
+        <band height="7" splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="427" splitType="Stretch">
+            <barChart>
+                <chart evaluationTime="Report">
+                    <reportElement x="-10" y="-40" width="1760" height="427" uuid="28befa28-cf1e-43d4-ad14-bb0102f1027c"/>
+                    <chartTitle/>
+                    <chartSubtitle/>
+                    <chartLegend/>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Puntos"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PUNTOS}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["GF"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GF}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["GC"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GC}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["DG"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{DG}]]></valueExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["Ganados"
+]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{EQUIPO}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{GANADOS}]]></valueExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <barPlot>
+                    <plot/>
+                    <itemLabel/>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </categoryAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000"/>
+                    </valueAxisFormat>
+                </barPlot>
+            </barChart>
+        </band>
+    </summary>
+</jasperReport>

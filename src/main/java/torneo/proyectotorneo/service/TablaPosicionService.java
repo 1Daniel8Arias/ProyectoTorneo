@@ -1,7 +1,9 @@
 package torneo.proyectotorneo.service;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
+import torneo.proyectotorneo.exeptions.TablaPosicionNoEncontradaException;
 import torneo.proyectotorneo.model.Equipo;
+import torneo.proyectotorneo.model.Partido;
 import torneo.proyectotorneo.model.ResultadoFinal;
 import torneo.proyectotorneo.model.TablaPosicion;
 import torneo.proyectotorneo.repository.EquipoRepository;
@@ -21,44 +23,6 @@ public class TablaPosicionService {
         this.tablaPosicionRepository = new TablaPosicionRepository();
         this.equipoRepository = new EquipoRepository();
         this.resultadoFinalRepository = new ResultadoFinalRepository();
-    }
-
-    /**
-     * Obtiene la tabla de posiciones ordenada
-     * Criterios: Puntos, Diferencia de goles, Goles a favor
-     */
-    public ArrayList<TablaPosicion> obtenerTablaPosiciones() throws RepositoryException {
-        ArrayList<TablaPosicion> tabla = tablaPosicionRepository.listarTodos();
-
-        // Ordenar por: 1) Puntos DESC, 2) Diferencia de goles DESC, 3) Goles a favor DESC
-        tabla.sort(Comparator
-                .comparingInt(TablaPosicion::getPuntos).reversed()
-                .thenComparingInt(TablaPosicion::getDiferenciaGoles).reversed()
-                .thenComparingInt(TablaPosicion::getGolesAFavor).reversed()
-        );
-
-        return tabla;
-    }
-
-    /**
-     * Inicializa la tabla de posiciones para un equipo
-     */
-    public void inicializarPosicionEquipo(Equipo equipo) throws RepositoryException {
-        if (equipo == null || equipo.getId() == null) {
-            throw new RepositoryException("El equipo no puede ser nulo");
-        }
-
-        TablaPosicion posicion = new TablaPosicion();
-        posicion.setEquipo(equipo);
-        posicion.setGanados(0);
-        posicion.setEmpates(0);
-        posicion.setPerdidos(0);
-        posicion.setGolesAFavor(0);
-        posicion.setGolesEnContra(0);
-        posicion.setDiferenciaGoles(0);
-        posicion.setPuntos(0);
-
-        tablaPosicionRepository.guardar(posicion);
     }
 
     /**
@@ -253,5 +217,178 @@ public class TablaPosicionService {
         }
 
         return resultado.toString();
+    }
+
+    public TablaPosicion buscarTablaPosicionPorId(int id) {
+        try {
+            TablaPosicion tabla = tablaPosicionRepository.buscarPorId(id);
+            if (tabla == null) {
+                throw new TablaPosicionNoEncontradaException("No se encontró la tabla de posición con ID: " + id);
+            }
+            return tabla;
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al buscar la tabla de posición: " + e.getMessage());
+        }
+    }
+
+    public void guardarTablaPosicion(TablaPosicion tablaPosicion) {
+        try {
+            if (tablaPosicion == null || tablaPosicion.getEquipo() == null) {
+                throw new TablaPosicionNoEncontradaException("La tabla de posición y el equipo no pueden ser nulos");
+            }
+            tablaPosicionRepository.guardar(tablaPosicion);
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al guardar la tabla de posición: " + e.getMessage());
+        }
+    }
+
+    public void actualizarTablaPosicion(TablaPosicion tablaPosicion) {
+        try {
+            if (tablaPosicion == null || tablaPosicion.getIdTabla() == null) {
+                throw new TablaPosicionNoEncontradaException("La tabla de posición y su ID no pueden ser nulos");
+            }
+            tablaPosicionRepository.actualizar(tablaPosicion);
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al actualizar la tabla de posición: " + e.getMessage());
+        }
+    }
+
+    public void eliminarTablaPosicion(int id) {
+        try {
+            TablaPosicion tabla = tablaPosicionRepository.buscarPorId(id);
+            if (tabla == null) {
+                throw new TablaPosicionNoEncontradaException("No se encontró la tabla de posición con ID: " + id);
+            }
+            tablaPosicionRepository.eliminar(id);
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al eliminar la tabla de posición: " + e.getMessage());
+        }
+    }
+
+
+    public TablaPosicion buscarTablaPosicionPorEquipo(int idEquipo) {
+        try {
+            ArrayList<TablaPosicion> todasLasTablas = tablaPosicionRepository.listarTodos();
+            for (TablaPosicion tabla : todasLasTablas) {
+                if (tabla.getEquipo() != null && tabla.getEquipo().getId().equals(idEquipo)) {
+                    return tabla;
+                }
+            }
+            throw new TablaPosicionNoEncontradaException("No se encontró la tabla de posición para el equipo con ID: " + idEquipo);
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al buscar la tabla de posición por equipo: " + e.getMessage());
+        }
+    }
+
+    public ArrayList<TablaPosicion> ordenarTablaPorPuntos() {
+        try {
+            ArrayList<TablaPosicion> tabla = tablaPosicionRepository.listarTodos();
+            tabla.sort(Comparator.comparingInt(TablaPosicion::getPuntos).reversed());
+            return tabla;
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al ordenar la tabla por puntos: " + e.getMessage());
+        }
+    }
+
+    public ArrayList<TablaPosicion> ordenarTablaPorDiferenciaGoles() throws TablaPosicionNoEncontradaException {
+        try {
+            ArrayList<TablaPosicion> tabla = tablaPosicionRepository.listarTodos();
+            tabla.sort(Comparator.comparingInt(TablaPosicion::getDiferenciaGoles).reversed());
+            return tabla;
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al ordenar la tabla por diferencia de goles: " + e.getMessage());
+        }
+    }
+
+
+    public void actualizarTablaDespuesDePartido(Partido partido) throws TablaPosicionNoEncontradaException {
+        try {
+            if (partido == null || partido.getResultadoFinal() == null) {
+                throw new TablaPosicionNoEncontradaException("El partido y su resultado no pueden ser nulos");
+            }
+
+            ResultadoFinal resultado = partido.getResultadoFinal();
+            Equipo equipoLocal = partido.getEquipoLocal();
+            Equipo equipoVisitante = partido.getEquipoVisitante();
+
+            // Buscar las tablas de posición de ambos equipos
+            TablaPosicion tablaLocal = buscarTablaPosicionPorEquipo(equipoLocal.getId());
+            TablaPosicion tablaVisitante = buscarTablaPosicionPorEquipo(equipoVisitante.getId());
+
+            // Actualizar goles
+            tablaLocal.setGolesAFavor(tablaLocal.getGolesAFavor() + resultado.getGolesLocal());
+            tablaLocal.setGolesEnContra(tablaLocal.getGolesEnContra() + resultado.getGolesVisitante());
+
+            tablaVisitante.setGolesAFavor(tablaVisitante.getGolesAFavor() + resultado.getGolesVisitante());
+            tablaVisitante.setGolesEnContra(tablaVisitante.getGolesEnContra() + resultado.getGolesLocal());
+
+            // Determinar ganador y actualizar estadísticas
+            if (resultado.getGolesLocal() > resultado.getGolesVisitante()) {
+                // Gana el local
+                tablaLocal.setGanados(tablaLocal.getGanados() + 1);
+                tablaLocal.setPuntos(tablaLocal.getPuntos() + 3);
+                tablaVisitante.setPerdidos(tablaVisitante.getPerdidos() + 1);
+            } else if (resultado.getGolesLocal() < resultado.getGolesVisitante()) {
+                // Gana el visitante
+                tablaVisitante.setGanados(tablaVisitante.getGanados() + 1);
+                tablaVisitante.setPuntos(tablaVisitante.getPuntos() + 3);
+                tablaLocal.setPerdidos(tablaLocal.getPerdidos() + 1);
+            } else {
+                // Empate
+                tablaLocal.setEmpates(tablaLocal.getEmpates() + 1);
+                tablaLocal.setPuntos(tablaLocal.getPuntos() + 1);
+                tablaVisitante.setEmpates(tablaVisitante.getEmpates() + 1);
+                tablaVisitante.setPuntos(tablaVisitante.getPuntos() + 1);
+            }
+
+            // Calcular diferencia de goles
+            tablaLocal.setDiferenciaGoles(tablaLocal.getGolesAFavor() - tablaLocal.getGolesEnContra());
+            tablaVisitante.setDiferenciaGoles(tablaVisitante.getGolesAFavor() - tablaVisitante.getGolesEnContra());
+
+            // Guardar cambios
+            actualizarTablaPosicion(tablaLocal);
+            actualizarTablaPosicion(tablaVisitante);
+
+        } catch (RepositoryException e) {
+            throw new TablaPosicionNoEncontradaException("Error al actualizar la tabla después del partido: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Obtiene la tabla de posiciones ordenada
+     * Criterios: Puntos, Diferencia de goles, Goles a favor
+     */
+    public ArrayList<TablaPosicion> obtenerTablaPosiciones() throws RepositoryException {
+        ArrayList<TablaPosicion> tabla = tablaPosicionRepository.listarTodos();
+
+        // Ordenar por: 1) Puntos DESC, 2) Diferencia de goles DESC, 3) Goles a favor DESC
+        tabla.sort(Comparator
+                .comparingInt(TablaPosicion::getPuntos).reversed()
+                .thenComparingInt(TablaPosicion::getDiferenciaGoles).reversed()
+                .thenComparingInt(TablaPosicion::getGolesAFavor).reversed()
+        );
+
+        return tabla;
+    }
+
+    /**
+     * Inicializa la tabla de posiciones para un equipo
+     */
+    public void inicializarPosicionEquipo(Equipo equipo) throws RepositoryException {
+        if (equipo == null || equipo.getId() == null) {
+            throw new RepositoryException("El equipo no puede ser nulo");
+        }
+
+        TablaPosicion posicion = new TablaPosicion();
+        posicion.setEquipo(equipo);
+        posicion.setGanados(0);
+        posicion.setEmpates(0);
+        posicion.setPerdidos(0);
+        posicion.setGolesAFavor(0);
+        posicion.setGolesEnContra(0);
+        posicion.setDiferenciaGoles(0);
+        posicion.setPuntos(0);
+
+        tablaPosicionRepository.guardar(posicion);
     }
 }

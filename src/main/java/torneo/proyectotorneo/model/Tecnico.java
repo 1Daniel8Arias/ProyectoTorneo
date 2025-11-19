@@ -12,4 +12,12 @@ public class Tecnico {
     private String nombre;
     private String apellido;
     private Equipo equipo;
+
+    public String getNombreCompleto() {
+        return nombre + " " + apellido;
+    }
+
+    public String getNombreEquipo() {
+        return equipo != null ? equipo.getNombre() : "Sin equipo";
+    }
 }

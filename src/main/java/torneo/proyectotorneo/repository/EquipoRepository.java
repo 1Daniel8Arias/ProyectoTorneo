@@ -13,8 +13,22 @@ import java.util.ArrayList;
 public class EquipoRepository implements Repository<Equipo> {
 
     @Override
-    public ArrayList listarTodos() throws RepositoryException {
-        String sql = "SELECT * FROM EQUIPO";
+    public ArrayList<Equipo> listarTodos() throws RepositoryException {
+        String sql = """
+        
+                SELECT
+           E.ID_EQUIPO,
+           E.NOMBRE AS NOMBRE_EQUIPO,
+           ES.NOMBRE AS NOMBRE_ESTADIO,
+           M.NOMBRE AS NOMBRE_MUNICIPIO,
+         S.SEDE
+         FROM EQUIPO E
+        JOIN EQUIPO_ESTADIO S ON S.ID_EQUIPO = E.ID_EQUIPO
+        JOIN ESTADIO ES ON ES.ID_ESTADIO = S.ID_ESTADIO
+        JOIN MUNICIPIO M ON ES.ID_MUNICIPIO = M.ID_MUNICIPIO
+        WHERE S.SEDE = 'Local' OR S.SEDE IS NULL
+        """;
+
         ArrayList<Equipo> equipos = new ArrayList<>();
 
         try (Connection conn = Conexion.getInstance();
@@ -22,18 +36,42 @@ public class EquipoRepository implements Repository<Equipo> {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
+
                 Equipo equipo = new Equipo();
                 equipo.setId(rs.getInt("ID_EQUIPO"));
-                equipo.setNombre(rs.getString("NOMBRE"));
+                equipo.setNombre(rs.getString("NOMBRE_EQUIPO"));
+
+                // --- Estadio ---
+                Municipio municipio = new Municipio();
+                municipio.setNombre(rs.getString("NOMBRE_MUNICIPIO"));
+
+                Estadio estadio = new Estadio();
+                estadio.setNombre(rs.getString("NOMBRE_ESTADIO"));
+                estadio.setMunicipio(municipio);
+
+                EquipoEstadio equipoEstadio = new EquipoEstadio();
+                equipoEstadio.setEquipo(equipo);
+                equipoEstadio.setEstadio(estadio);
+                equipoEstadio.setSede(TipoSede.valueOf(rs.getString("SEDE")));
+
+
+
+                ArrayList<EquipoEstadio> equiposEstadio = new ArrayList<>();
+                equiposEstadio.add(equipoEstadio);
+
+                // Guardar relación en Equipo
+                equipo.setEstadios(equiposEstadio);
+
                 equipos.add(equipo);
             }
 
         } catch (SQLException e) {
-            throw new RepositoryException("Error al listar los equipos " + e.getMessage());
+            throw new RepositoryException("Error al listar los equipos: " + e.getMessage());
         }
 
         return equipos;
     }
+
 
     @Override
     public Equipo buscarPorId(int id) throws RepositoryException {

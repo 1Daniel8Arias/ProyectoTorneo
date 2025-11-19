@@ -2,6 +2,7 @@ package torneo.proyectotorneo.repository;
 
 import torneo.proyectotorneo.exeptions.RepositoryException;
 import torneo.proyectotorneo.model.Departamento;
+import torneo.proyectotorneo.model.Municipio;
 import torneo.proyectotorneo.repository.service.Repository;
 import torneo.proyectotorneo.utils.Conexion;
 
@@ -51,6 +52,9 @@ public class DepartamentoRepository implements Repository<Departamento> {
                     depto = new Departamento();
                     depto.setIdDepartamento(rs.getInt("ID_DEPARTAMENTO"));
                     depto.setNombre(rs.getString("NOMBRE"));
+
+                    // Cargar lista de municipios
+                    depto.setListaMunicipios(listarMunicipiosPorDepartamento(id));
                 }
             }
 
@@ -60,6 +64,7 @@ public class DepartamentoRepository implements Repository<Departamento> {
 
         return depto;
     }
+
 
     @Override
     public void guardar(Departamento depto) throws RepositoryException {
@@ -106,4 +111,25 @@ public class DepartamentoRepository implements Repository<Departamento> {
             throw new RepositoryException("Error al eliminar el departamento: " + e.getMessage());
         }
     }
+
+    private ArrayList<Municipio> listarMunicipiosPorDepartamento(int idDepartamento) throws SQLException {
+        ArrayList<Municipio> lista = new ArrayList<>();
+        String sql = "SELECT * FROM MUNICIPIO WHERE ID_DEPARTAMENTO = ?";
+
+        try (Connection conn = Conexion.getInstance();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idDepartamento);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Municipio municipio = new Municipio();
+                municipio.setIdMunicipio(rs.getInt("ID_MUNICIPIO"));
+                municipio.setNombre(rs.getString("NOMBRE"));
+                lista.add(municipio);
+            }
+        }
+
+        return lista;
+    }
+
 }
