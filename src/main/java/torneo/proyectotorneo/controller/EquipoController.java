@@ -61,4 +61,6 @@ public class EquipoController {
     public int obtenerIdEquipoPorNombre(String nombreEquipo) throws RepositoryException {
         return modelFactoryController.getTorneoService().obtenerIdEquipoPorNombre(nombreEquipo);
     }
+
+
 }

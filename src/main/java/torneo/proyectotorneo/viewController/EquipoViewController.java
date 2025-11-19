@@ -50,7 +50,48 @@ public class EquipoViewController {
 
     @FXML
     void handleNuevoEquipo(ActionEvent event) {
-        // Implementar creación de nuevo equipo según necesites
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/torneo/proyectotorneo/NuevoEquipo.fxml")
+            );
+
+            Node root = loader.load();
+
+            NuevoEquipoViewController controlador = loader.getController();
+            controlador.initAttributes();
+
+            // Abrir ventana modal
+            javafx.scene.Scene scene = new javafx.scene.Scene((javafx.scene.Parent) root);
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setScene(scene);
+            stage.setTitle("Nuevo Equipo");
+            stage.showAndWait();
+
+            // Objeto devuelto
+            Equipo nuevo = controlador.getEquipoCreado();
+
+            if (nuevo != null) {
+                // Agregar tarjeta visual
+                FXMLLoader cardLoader = new FXMLLoader(getClass().getResource("/torneo/proyectotorneo/CardEquipo.fxml"));
+                Node card = cardLoader.load();
+
+                CardEquipoViewController cardController = cardLoader.getController();
+                cardController.setEquipo(nuevo);
+
+                // mostrar campos por defecto (igual al initialize)
+                cardController.mostrarCampos(false, true, false, true);
+
+                flowContainer.getChildren().add(card);
+
+                // actualizar contador
+                lblContador.setText("Equipos (" + flowContainer.getChildren().size() + ")");
+            }
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            System.err.println("Error al crear nuevo equipo: " + ex.getMessage());
+        }
     }
 
     /**

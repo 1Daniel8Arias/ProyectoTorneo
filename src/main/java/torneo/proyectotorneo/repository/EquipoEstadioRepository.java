@@ -88,14 +88,23 @@ public class EquipoEstadioRepository {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, equipoEstadio.getEquipo().getId());
-            ps.setInt(2, equipoEstadio.getEstadio().getIdEstadio());
+
+            // 🔥 Permitir estadio null
+            if (equipoEstadio.getEstadio() == null || equipoEstadio.getEstadio().getIdEstadio() == null) {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(2, equipoEstadio.getEstadio().getIdEstadio());
+            }
+
             ps.setString(3, equipoEstadio.getSede().name());
+
             ps.executeUpdate();
 
         } catch (SQLException e) {
             throw new RepositoryException("Error al guardar equipo-estadio: " + e.getMessage());
         }
     }
+
 
     public void eliminar(int idEquipo, int idEstadio) throws RepositoryException {
         String sql = "DELETE FROM EQUIPO_ESTADIO WHERE ID_EQUIPO = ? AND ID_ESTADIO = ?";

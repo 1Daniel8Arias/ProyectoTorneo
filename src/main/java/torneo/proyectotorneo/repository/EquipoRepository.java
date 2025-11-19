@@ -26,7 +26,7 @@ public class EquipoRepository implements Repository<Equipo> {
         JOIN EQUIPO_ESTADIO S ON S.ID_EQUIPO = E.ID_EQUIPO
         JOIN ESTADIO ES ON ES.ID_ESTADIO = S.ID_ESTADIO
         JOIN MUNICIPIO M ON ES.ID_MUNICIPIO = M.ID_MUNICIPIO
-        WHERE S.SEDE = 'Local'
+        WHERE S.SEDE = 'Local' OR S.SEDE IS NULL
         """;
 
         ArrayList<Equipo> equipos = new ArrayList<>();

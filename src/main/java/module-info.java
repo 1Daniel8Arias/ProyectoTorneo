@@ -9,7 +9,11 @@ module torneo.proyectotorneo {
     // ⭐ AGREGAR ESTAS LÍNEAS PARA JASPER
     requires jasperreports;
     requires java.xml;
-    requires javafx.swing;  // ⭐ IMPORTANTE: Permite usar SwingNode
+    requires javafx.swing;
+
+    requires javafx.graphics;
+
+    // ⭐ IMPORTANTE: Permite usar SwingNode
 
     opens torneo.proyectotorneo to javafx.fxml;
     exports torneo.proyectotorneo;
